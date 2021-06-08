@@ -1,85 +1,98 @@
-// include the basic windows header file
 #include <windows.h>
-#include <windowsx.h>
 
-// this is the main message handler for the program
-LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+#include "Definition.h"
+#include "Debug.h"
+
+// Window Message Processor
+LRESULT CALLBACK WindowProc(
+	_In_ HWND hWnd,
+	_In_ UINT message,
+	_In_ WPARAM wParam,
+	_In_ LPARAM lParam)
 {
-    // sort through and find what code to run for the message given
-    switch (message)
-    {
-        // this message is read when the window is closed
-    case WM_DESTROY:
-    {
-        // close the application entirely
-        PostQuitMessage(0);
-        return 0;
-    } break;
-    }
+	switch (message)
+	{
+	case WM_DESTROY:
+		PostQuitMessage(0);
+		return 0;
+	}
 
-    // Handle any messages the switch statement didn't
-    return DefWindowProc(hWnd, message, wParam, lParam);
+	return DefWindowProc(hWnd, message, wParam, lParam);
 }
 
-// the entry point for any Windows program
-int WINAPI WinMain(HINSTANCE hInstance,
-    HINSTANCE hPrevInstance,
-    LPSTR lpCmdLine,
-    int nCmdShow)
+HWND CreateGameWindow(
+	HINSTANCE hInstance,
+	int nCmdShow,
+	LPCWSTR WindowClassName,
+	LPCWSTR WindowTitle,
+	int ScreenWidth,
+	int ScreenHeight)
 {
-    // the handle for the window, filled by a function
-    HWND hWnd;
-    // this struct holds information for the window class
-    WNDCLASSEX wc;
+	WNDCLASSEX wc;
 
-    // clear out the window class for use
-    ZeroMemory(&wc, sizeof(WNDCLASSEX));
+	ZeroMemory(&wc, sizeof(WNDCLASSEX));
 
-    // fill in the struct with the needed information
-    wc.cbSize = sizeof(WNDCLASSEX);
-    wc.style = CS_HREDRAW | CS_VREDRAW;
-    wc.lpfnWndProc = WindowProc;
-    wc.hInstance = hInstance;
-    wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-    wc.hbrBackground = (HBRUSH)COLOR_WINDOW;
-    wc.lpszClassName = L"WindowClass1";
+	wc.cbSize = sizeof(WNDCLASSEX);
+	wc.hInstance = hInstance;
+	wc.style = CS_HREDRAW | CS_VREDRAW;
+	wc.lpfnWndProc = WindowProc;
+	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+	wc.hbrBackground = (HBRUSH)COLOR_WINDOW;
+	wc.lpszClassName = WindowClassName;
 
-    // register the window class
-    RegisterClassEx(&wc);
+	RegisterClassEx(&wc);
 
-    // create the window and use the result as the handle
-    hWnd = CreateWindowEx(NULL,
-        L"WindowClass1",    // name of the window class
-        L"Our First Windowed Program",   // title of the window
-        WS_OVERLAPPEDWINDOW,    // window style
-        300,    // x-position of the window
-        300,    // y-position of the window
-        500,    // width of the window
-        400,    // height of the window
-        NULL,    // we have no parent window, NULL
-        NULL,    // we aren't using menus, NULL
-        hInstance,    // application handle
-        NULL);    // used with multiple windows, NULL
+	HWND hWnd = CreateWindow(
+		WindowClassName,
+		WindowTitle,
+		WS_OVERLAPPEDWINDOW,
+		CW_USEDEFAULT,		// X-position of the window
+		CW_USEDEFAULT,		// Y-position of the window
+		ScreenWidth,
+		ScreenHeight,
+		NULL,		// No parent window, NULL
+		NULL,		// No menu, NULL
+		hInstance,
+		NULL);
 
-// display the window on the screen
-    ShowWindow(hWnd, nCmdShow);
+	if (!hWnd)
+	{
+		DWORD ErrCode = GetLastError();
+		OutputDebugString(L"[ERROR] CreateWindow failed");
+		return 0;
+	}
+	ShowWindow(hWnd, nCmdShow);
+	return hWnd;
+}
 
-    // enter the main loop:
 
-    // this struct holds Windows event messages
-    MSG msg;
+// Entry point
+int WINAPI WinMain(
+	_In_     HINSTANCE	hInstance,
+	_In_opt_ HINSTANCE	hPrevInstance,
+	_In_     LPSTR		lpCmdLine,
+	_In_     int		nCmdShow)
+{
+	HWND hWnd = CreateGameWindow(
+		hInstance, nCmdShow,
+		WINDOW_CLASS_NAME, MAIN_WINDOW_TITLE,
+		SCREEN_WIDTH, SCREEN_HEIGHT);
+	if (hWnd == 0) return 0;
 
-    // wait for the next message in the queue, store the result in 'msg'
-    while (GetMessage(&msg, NULL, 0, 0))
-    {
-        // translate keystroke messages into the right format
-        TranslateMessage(&msg);
+	MSG msg;
+	// Window message loop
+	while (TRUE)
+	{
+		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+		{
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+		if (msg.message == WM_QUIT) break;
 
-        // send the message to the WindowProc function
-        DispatchMessage(&msg);
-    }
 
-    // return this part of the WM_QUIT message to Windows
-    return msg.wParam;
+	}
+
+	return msg.wParam;
 }
 
