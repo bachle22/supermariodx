@@ -7,6 +7,8 @@
 #include "Game.h"
 #include "GameObject.h"
 
+using namespace std;
+
 #define BRICK_TEXTURE_PATH L"brick.png"
 #define MARIO_TEXTURE_PATH L"mario.png"
 
@@ -38,69 +40,6 @@ LRESULT CALLBACK WindowProc(
 	return DefWindowProc(hWnd, message, wParam, lParam);
 }
 
-// Set up and initialize DirectX
-//void InitDirectX(HWND hWnd)
-//{
-//	d3d = Direct3DCreate9(D3D_SDK_VERSION);		// Create the Direct3D interface
-//
-//	D3DPRESENT_PARAMETERS d3dpp;				// Struct to hold various device information
-//
-//	ZeroMemory(&d3dpp, sizeof(d3dpp));			// Clear out the struct for use
-//	d3dpp.Windowed = TRUE;						// Program windowed, not fullscreen
-//	d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;	// Discard old frames
-//	d3dpp.BackBufferFormat = D3DFMT_X8R8G8B8;	// 32-bit RGB pixel format, where 8 bits are reserved for each color.
-//	d3dpp.hDeviceWindow = hWnd;					// Set the window to be used by DirectX
-//
-//	// Retrieve window width & height so that we can create backbuffer height & width accordingly 
-//	RECT r;
-//	GetClientRect(hWnd, &r);
-//
-//	BackBufferWidth = r.right + 1;
-//	BackBufferHeight = r.bottom + 1;
-//
-//	d3dpp.BackBufferHeight = BackBufferHeight;
-//	d3dpp.BackBufferWidth = BackBufferWidth;
-//
-//	// Create a device class using this information and information from the d3dpp stuct
-//	d3d->CreateDevice(
-//		D3DADAPTER_DEFAULT,						// Use default GPU
-//		D3DDEVTYPE_HAL,
-//		hWnd,
-//		D3DCREATE_HARDWARE_VERTEXPROCESSING,	// D3DCREATE_SOFTWARE_VERTEXPROCESSING is not recommended since Windows version 1607
-//		&d3dpp,
-//		&d3ddev);
-//
-//	if (d3ddev == NULL)
-//	{
-//		OutputDebugString(L"[ERROR] CreateDevice failed\n");
-//		return;
-//	}
-//
-//	d3ddev->GetBackBuffer(0, 0, D3DBACKBUFFER_TYPE_MONO, &backBuffer);
-//
-//	// Initialize Direct3DX helper library
-//	D3DXCreateSprite(d3ddev, &spriteHandler);
-//}
-
-//void LoadResources(void)
-//{
-//	HRESULT result = D3DXCreateTextureFromFileEx(
-//		d3ddev,								// Pointer to Direct3D device object
-//		BRICK_TEXTURE_PATH,					// Path to the image to load
-//		D3DX_DEFAULT_NONPOW2, 				// Auto texture width (get from file)
-//		D3DX_DEFAULT_NONPOW2, 				// Auto texture height (get from file)
-//		1,
-//		D3DUSAGE_DYNAMIC,
-//		D3DFMT_UNKNOWN,
-//		D3DPOOL_DEFAULT,
-//		D3DX_DEFAULT,
-//		D3DX_DEFAULT,
-//		D3DCOLOR_XRGB(255, 255, 255),		// Transparent color
-//		NULL,
-//		NULL,
-//		&texBrick);
-//}
-
 void LoadResources()
 {
 	CGame* game = CGame::GetInstance();
@@ -124,13 +63,30 @@ void Render(void)
 
 	// Render sprites & animation
 	spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
-	
+
 	mario->Render();
 	brick->Render();
 
 	spriteHandler->End();
 	d3ddev->EndScene();
 	d3ddev->Present(NULL, NULL, NULL, NULL);    // Displays the created frame
+}
+
+/*
+	Update world status for this frame
+	dt: time period between beginning of last frame and beginning of this frame
+*/
+void Update(DWORD dt)
+{
+	/*
+	for (int i=0;i<n;i++)
+		objects[i]->Update(dt);
+	*/
+
+	mario->Update(dt);
+	brick->Update(dt);
+
+	DebugOut(L"01 - Skeleton %0.1f, %0.1f \n", mario->GetX(), mario->GetY());
 }
 
 HWND CreateGameWindow(
@@ -171,7 +127,7 @@ HWND CreateGameWindow(
 	if (!hWnd)
 	{
 		DWORD ErrCode = GetLastError();
-		OutputDebugString(L"[ERROR] CreateWindow failed");
+		DebugOutTitle(L"[ERROR] CreateWindow failed");
 		return 0;
 	}
 	ShowWindow(hWnd, nCmdShow);
@@ -180,19 +136,43 @@ HWND CreateGameWindow(
 
 WPARAM HandleWindowMessage(void)
 {
+	bool isDone = 0;
 	MSG msg;
-
-	DWORD frameStart = GetTickCount();
+	DWORD frameStart = GetTickCount64();
 	DWORD tickPerFrame = 1000 / MAX_FRAME_RATE;
-	while (TRUE)
+
+	while (!isDone)
 	{
 		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
+
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
+
+			switch (msg.message)
+			{
+			case WM_QUIT:
+				isDone = 1;
+				break;
+			case WM_SIZING:
+				// TODO: Handle window resizing
+				break;
+			}
 		}
-		if (msg.message == WM_QUIT) break;
-		Render();
+
+		DWORD now = GetTickCount64();
+
+		// dt: the time between (beginning of last frame) and now
+		// this frame: the frame we are about to render
+		DWORD dt = now - frameStart;
+
+		if (dt >= tickPerFrame)
+		{
+			frameStart = now;
+			Update(dt);
+			Render();
+		}
+		else Sleep(tickPerFrame - dt);
 	}
 	return msg.wParam;
 }

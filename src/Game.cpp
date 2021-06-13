@@ -6,21 +6,18 @@ CGame* CGame::__instance = NULL;
 
 void CGame::Init(HWND hWnd)
 {
-	LPDIRECT3D9 d3d = Direct3DCreate9(D3D_SDK_VERSION);
-
+	d3d = Direct3DCreate9(D3D_SDK_VERSION);
 	this->hWnd = hWnd;
+	D3DPRESENT_PARAMETERS d3dpp;				// Struct to hold various device information
 
-	D3DPRESENT_PARAMETERS d3dpp;
-
-	ZeroMemory(&d3dpp, sizeof(d3dpp));
-
-	d3dpp.Windowed = TRUE;
-	d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
-	d3dpp.BackBufferFormat = D3DFMT_X8R8G8B8;
+	ZeroMemory(&d3dpp, sizeof(d3dpp));			// Clear out the struct for use
+	d3dpp.Windowed = TRUE;						// Program windowed, not fullscreen
+	d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;	// Discard old frames
+	d3dpp.BackBufferFormat = D3DFMT_X8R8G8B8;	// 32-bit RGB pixel format, where 8 bits are reserved for each color.
+	d3dpp.hDeviceWindow = hWnd;					// Set the window to be used by DirectX
 	d3dpp.BackBufferCount = 1;
 
-
-	// retrieve WindowClient width & height to set back buffer width & height accordingly
+	// Retrieve window width & height so that we can create backbuffer height & width accordingly 
 	RECT r;
 	GetClientRect(hWnd, &r);
 
@@ -30,26 +27,27 @@ void CGame::Init(HWND hWnd)
 	backBufferWidth = d3dpp.BackBufferWidth;
 	backBufferHeight = d3dpp.BackBufferHeight;
 
+	// Create a device class using this information and information from the d3dpp stuct
 	d3d->CreateDevice(
-		D3DADAPTER_DEFAULT,
+		D3DADAPTER_DEFAULT,						// Use default GPU
 		D3DDEVTYPE_HAL,
 		hWnd,
-		D3DCREATE_SOFTWARE_VERTEXPROCESSING,
+		D3DCREATE_HARDWARE_VERTEXPROCESSING,	// D3DCREATE_SOFTWARE_VERTEXPROCESSING is not recommended since Windows version 1607
 		&d3dpp,
-		&d3ddv);
+		&d3ddev);
 
-	if (d3ddv == NULL)
+	if (d3ddev == NULL)
 	{
-		OutputDebugString(L"[ERROR] CreateDevice failed\n");
+		DebugOut(L"[ERROR] CreateDevice failed\n");
 		return;
 	}
 
-	d3ddv->GetBackBuffer(0, 0, D3DBACKBUFFER_TYPE_MONO, &backBuffer);
+	d3ddev->GetBackBuffer(0, 0, D3DBACKBUFFER_TYPE_MONO, &backBuffer);
 
 	// Initialize sprite helper from Direct3DX helper library
-	D3DXCreateSprite(d3ddv, &spriteHandler);
+	D3DXCreateSprite(d3ddev, &spriteHandler);
 
-	OutputDebugString(L"[INFO] InitGame done;\n");
+	DebugOut(L"[INFO] InitGame done;\n");
 }
 
 /*
@@ -82,13 +80,13 @@ LPDIRECT3DTEXTURE9 CGame::LoadTexture(LPCWSTR texturePath)
 {
 	LPDIRECT3DTEXTURE9 texture;
 
-	LPDIRECT3DDEVICE9 d3ddv = CGame::GetInstance()->GetDirect3DDevice();
+	LPDIRECT3DDEVICE9 d3ddev = CGame::GetInstance()->GetDirect3DDevice();
 
 	HRESULT result = D3DXCreateTextureFromFileEx(
-		d3ddv,								// Pointer to Direct3D device object
-		texturePath,						// Path to the image to load
-		D3DX_DEFAULT_NONPOW2,				// Texture width
-		D3DX_DEFAULT_NONPOW2,				// Texture height
+		d3ddev,									// Pointer to Direct3D device object
+		texturePath,							// Path to the image to load
+		D3DX_DEFAULT_NONPOW2,					// Texture width
+		D3DX_DEFAULT_NONPOW2,					// Texture height
 		1,
 		D3DUSAGE_DYNAMIC,
 		D3DFMT_UNKNOWN,
@@ -102,11 +100,11 @@ LPDIRECT3DTEXTURE9 CGame::LoadTexture(LPCWSTR texturePath)
 
 	if (result != D3D_OK)
 	{
-		OutputDebugString(L"[ERROR] CreateTextureFromFile failed. File: %s\n");
+		DebugOut(L"[ERROR] CreateTextureFromFile failed. File: %s\n");
 		return NULL;
 	}
 
-	OutputDebugString(L"[INFO] Texture loaded Ok from file: %s \n");
+	DebugOut(L"[INFO] Texture loaded Ok from file: %s \n");
 	return texture;
 }
 
@@ -114,7 +112,7 @@ CGame::~CGame()
 {
 	if (spriteHandler != NULL) spriteHandler->Release();
 	if (backBuffer != NULL) backBuffer->Release();
-	if (d3ddv != NULL) d3ddv->Release();
+	if (d3ddev != NULL) d3ddev->Release();
 	if (d3d != NULL) d3d->Release();
 }
 
