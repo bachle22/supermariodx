@@ -3,7 +3,7 @@
 #include <windows.h>
 #include <d3dx9.h>
 
-class CGameObject
+class GameObject
 {
 protected:
 	float x;
@@ -17,22 +17,12 @@ public:
 	float GetX() { return x; }
 	float GetY() { return y; }
 
-	CGameObject(float x = 0.0f, float y = 0.0f, LPDIRECT3DTEXTURE9 texture = NULL);
+	GameObject(float x = 0.0f, float y = 0.0f, LPDIRECT3DTEXTURE9 texture = NULL);
 
 	virtual void Update(DWORD dt) { };
 	virtual void Render();
 
-	~CGameObject();
+	~GameObject();
 };
-typedef CGameObject* LPGAMEOBJECT;
 
-class CMario : public CGameObject
-{
-	float vx;
-public:
-	CMario(float x, float y, float vx, LPDIRECT3DTEXTURE9 texture) :CGameObject(x, y, texture)
-	{
-		this->vx = vx;
-	};
-	void Update(DWORD dt);
-};
+typedef GameObject* LPGAMEOBJECT;

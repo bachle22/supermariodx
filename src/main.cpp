@@ -2,24 +2,24 @@
 #include <d3d9.h>
 #include <d3dx9.h>
 
+#include "Animations.h"
 #include "Debug.h"
 #include "Definition.h"
 #include "Game.h"
-#include "GameObject.h"
+#include "Mario.h"
+#include "Textures.h"
+#include "Sprites.h"
 
-using namespace std;
+#define BACKGROUND_COLOR D3DCOLOR_XRGB(200, 200, 255)
 
-#define BRICK_TEXTURE_PATH L"brick.png"
-#define MARIO_TEXTURE_PATH L"mario.png"
-
-CMario* mario;
+Mario* mario;
 #define MARIO_START_X 10.0f
 #define MARIO_START_Y 130.0f
 #define MARIO_START_VX 0.1f
 
-CGameObject* brick;
-#define BRICK_X 10.0f
-#define BRICK_Y 100.0f
+#define ID_TEX_MARIO 0
+#define ID_TEX_ENEMY 10
+#define ID_TEX_MISC 20
 
 LPDIRECT3DTEXTURE9 texMario = NULL;
 LPDIRECT3DTEXTURE9 texBrick = NULL;
@@ -42,51 +42,85 @@ LRESULT CALLBACK WindowProc(
 
 void LoadResources()
 {
-	CGame* game = CGame::GetInstance();
-	texBrick = game->LoadTexture(BRICK_TEXTURE_PATH);
-	texMario = game->LoadTexture(MARIO_TEXTURE_PATH);
+	Textures* textures = Textures::GetInstance();
 
-	mario = new CMario(MARIO_START_X, MARIO_START_Y, MARIO_START_VX, texMario);
-	brick = new CGameObject(BRICK_X, BRICK_Y, texBrick);
+	textures->Add(ID_TEX_MARIO, L"..\\assets\\textures\\mario.png", D3DCOLOR_XRGB(176, 224, 248));
+
+
+	Sprites* sprites = Sprites::GetInstance();
+
+	LPDIRECT3DTEXTURE9 texMario = textures->Get(ID_TEX_MARIO);
+
+	sprites->Add(10001, 246, 154, 259, 181, texMario);
+	sprites->Add(10002, 275, 154, 290, 181, texMario);
+	sprites->Add(10003, 304, 154, 321, 181, texMario);
+
+	sprites->Add(10011, 186, 154, 199, 181, texMario);
+	sprites->Add(10012, 155, 154, 170, 181, texMario);
+	sprites->Add(10013, 125, 154, 140, 181, texMario);
+
+	LPDIRECT3DTEXTURE9 texMisc = textures->Get(ID_TEX_MISC);
+	sprites->Add(20001, 300, 117, 315, 132, texMisc);
+	sprites->Add(20002, 318, 117, 333, 132, texMisc);
+	sprites->Add(20003, 336, 117, 351, 132, texMisc);
+	sprites->Add(20004, 354, 117, 369, 132, texMisc);
+
+
+	Animations* animations = Animations::GetInstance();
+	LPANIMATION ani;
+
+	ani = new Animation(100);
+	ani->Add(10001);
+	ani->Add(10002);
+	ani->Add(10003);
+	animations->Add(500, ani);
+
+	ani = new Animation(100);
+	ani->Add(10011);
+	ani->Add(10012);
+	ani->Add(10013);
+	animations->Add(501, ani);
+
+	
+	ani = new Animation(100);
+	ani->Add(20001,1000);
+	ani->Add(20002);
+	ani->Add(20003);
+	ani->Add(20004);
+	animations->Add(510, ani);
+	
+
+	mario = new Mario(MARIO_START_X, MARIO_START_Y, MARIO_START_VX);
+
 }
 
 void Render(void)
 {
-
-	CGame* game = CGame::GetInstance();
+	Game* game = Game::GetInstance();
 	LPDIRECT3DDEVICE9 d3ddev = game->GetDirect3DDevice();
-	LPDIRECT3DSURFACE9 bb = game->GetBackBuffer();
+	LPDIRECT3DSURFACE9 backbuffer = game->GetBackBuffer();
 	LPD3DXSPRITE spriteHandler = game->GetSpriteHandler();
+
+
 	// Clear out back buffer
-	d3ddev->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_BLACK, 1.0f, 0);
+	d3ddev->Clear(0, NULL, D3DCLEAR_TARGET, BACKGROUND_COLOR, 1.0f, 0);
 	d3ddev->BeginScene();
 
 	// Render sprites & animation
 	spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
 
 	mario->Render();
-	brick->Render();
+	DebugOutTitle(L"01 - Sprite %0.1f %0.1f", mario->GetX(), mario->GetY());
 
 	spriteHandler->End();
 	d3ddev->EndScene();
+
 	d3ddev->Present(NULL, NULL, NULL, NULL);    // Displays the created frame
 }
 
-/*
-	Update world status for this frame
-	dt: time period between beginning of last frame and beginning of this frame
-*/
 void Update(DWORD dt)
 {
-	/*
-	for (int i=0;i<n;i++)
-		objects[i]->Update(dt);
-	*/
-
 	mario->Update(dt);
-	brick->Update(dt);
-
-	DebugOut(L"01 - Skeleton %0.1f, %0.1f \n", mario->GetX(), mario->GetY());
 }
 
 HWND CreateGameWindow(
@@ -189,8 +223,9 @@ int WINAPI WinMain(
 		SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	if (hWnd == 0) return 0;
+	SetDebugWindow(hWnd);
 
-	CGame* game = CGame::GetInstance();
+	Game* game = Game::GetInstance();
 	game->Init(hWnd);
 	LoadResources();
 	HandleWindowMessage();

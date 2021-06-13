@@ -1,5 +1,12 @@
-#include <Windows.h>
-#include "debug.h"
+#include <signal.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <windows.h>
+
+#include "Debug.h"
 
 HWND _hwnd = NULL;
 
@@ -21,4 +28,3 @@ void SetDebugWindow(HWND hwnd)
 {
 	_hwnd = hwnd;
 }
-//////////////////////////////////////////

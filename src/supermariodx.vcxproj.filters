@@ -14,6 +14,12 @@
     <Filter Include="Objects">
       <UniqueIdentifier>{7a35efd0-af59-4037-9dba-ccd19bcb788b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Objects\Mario">
+      <UniqueIdentifier>{46460a55-fc89-4281-a8d8-3c1f0bddd9b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\NPCs">
+      <UniqueIdentifier>{09b4214f-a044-4c54-8cda-13ac57b3a1cf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Debug.cpp">
@@ -25,6 +31,18 @@
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
       <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Mario.cpp">
+      <Filter>Objects\Mario</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprites.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Textures.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Animations.cpp">
+      <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -39,6 +57,18 @@
     </ClInclude>
     <ClInclude Include="GameObject.h">
       <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Mario.h">
+      <Filter>Objects\Mario</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprites.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Textures.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Animations.h">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -2,9 +2,9 @@
 #include "Debug.h"
 #include "Game.h"
 
-CGame* CGame::__instance = NULL;
+Game* Game::__instance = NULL;
 
-void CGame::Init(HWND hWnd)
+void Game::Init(HWND hWnd)
 {
 	d3d = Direct3DCreate9(D3D_SDK_VERSION);
 	this->hWnd = hWnd;
@@ -53,7 +53,7 @@ void CGame::Init(HWND hWnd)
 /*
 	Utility function to wrap LPD3DXSPRITE::Draw
 */
-void CGame::Draw(float x, float y, LPDIRECT3DTEXTURE9 texture)
+void Game::Draw(float x, float y, LPDIRECT3DTEXTURE9 texture)
 {
 	D3DXVECTOR3 p(x, y, 0);
 	spriteHandler->Draw(texture, NULL, NULL, &p, D3DCOLOR_XRGB(255, 255, 255));
@@ -62,7 +62,7 @@ void CGame::Draw(float x, float y, LPDIRECT3DTEXTURE9 texture)
 /*
 	Utility function to wrap LPD3DXSPRITE::Draw
 */
-void CGame::Draw(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom)
+void Game::Draw(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom)
 {
 	D3DXVECTOR3 p(x, y, 0);
 	RECT r;
@@ -73,42 +73,8 @@ void CGame::Draw(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top
 	spriteHandler->Draw(texture, &r, NULL, &p, D3DCOLOR_XRGB(255, 255, 255));
 }
 
-/*
-	Utility function to wrap D3DXCreateTextureFromFileEx
-*/
-LPDIRECT3DTEXTURE9 CGame::LoadTexture(LPCWSTR texturePath)
-{
-	LPDIRECT3DTEXTURE9 texture;
 
-	LPDIRECT3DDEVICE9 d3ddev = CGame::GetInstance()->GetDirect3DDevice();
-
-	HRESULT result = D3DXCreateTextureFromFileEx(
-		d3ddev,									// Pointer to Direct3D device object
-		texturePath,							// Path to the image to load
-		D3DX_DEFAULT_NONPOW2,					// Texture width
-		D3DX_DEFAULT_NONPOW2,					// Texture height
-		1,
-		D3DUSAGE_DYNAMIC,
-		D3DFMT_UNKNOWN,
-		D3DPOOL_DEFAULT,
-		D3DX_DEFAULT,
-		D3DX_DEFAULT,
-		D3DCOLOR_XRGB(255, 255, 255),			// Transparent color
-		NULL,
-		NULL,
-		&texture);								// Created texture pointer
-
-	if (result != D3D_OK)
-	{
-		DebugOut(L"[ERROR] CreateTextureFromFile failed. File: %s\n");
-		return NULL;
-	}
-
-	DebugOut(L"[INFO] Texture loaded Ok from file: %s \n");
-	return texture;
-}
-
-CGame::~CGame()
+Game::~Game()
 {
 	if (spriteHandler != NULL) spriteHandler->Release();
 	if (backBuffer != NULL) backBuffer->Release();
@@ -116,8 +82,8 @@ CGame::~CGame()
 	if (d3d != NULL) d3d->Release();
 }
 
-CGame* CGame::GetInstance()
+Game* Game::GetInstance()
 {
-	if (__instance == NULL) __instance = new CGame();
+	if (__instance == NULL) __instance = new Game();
 	return __instance;
 }
