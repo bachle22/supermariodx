@@ -2,27 +2,39 @@
 
 #include <windows.h>
 #include <d3dx9.h>
+#include <vector>
+
+#include "Animations.h"
 
 class GameObject
 {
 protected:
+
 	float x;
 	float y;
 
-	// This should be a pointer to an object containing all graphic/sound/audio assets for rendering this object. 
-	// For now, just a pointer to a single texture
-	LPDIRECT3DTEXTURE9 texture;
+	float vx;
+	float vy;
+
+	int nx;
+
+	int state;
+
+	static std::vector<LPANIMATION> animations;
+
 public:
 	void SetPosition(float x, float y) { this->x = x, this->y = y; }
-	float GetX() { return x; }
-	float GetY() { return y; }
+	void SetSpeed(float vx, float vy) { this->vx = vx, this->vy = vy; }
 
-	GameObject(float x = 0.0f, float y = 0.0f, LPDIRECT3DTEXTURE9 texture = NULL);
+	void SetState(int state) { this->state = state; }
+	int GetState() { return this->state; }
 
-	virtual void Update(DWORD dt) { };
-	virtual void Render();
 
+	static void AddAnimation(int aniId);
+
+	GameObject();
+
+	void Update(DWORD dt);
+	void Render();
 	~GameObject();
 };
-
-typedef GameObject* LPGAMEOBJECT;

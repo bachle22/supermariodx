@@ -88,9 +88,11 @@ void LoadResources()
 	ani->Add(20003);
 	ani->Add(20004);
 	animations->Add(510, ani);
-	
 
-	mario = new Mario(MARIO_START_X, MARIO_START_Y, MARIO_START_VX);
+	mario = new Mario();
+	Mario::AddAnimation(500);
+	Mario::AddAnimation(501);
+	mario->SetPosition(MARIO_START_X, MARIO_START_Y);
 
 }
 
@@ -110,7 +112,6 @@ void Render(void)
 	spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
 
 	mario->Render();
-	DebugOutTitle(L"01 - Sprite %0.1f %0.1f", mario->GetX(), mario->GetY());
 
 	spriteHandler->End();
 	d3ddev->EndScene();

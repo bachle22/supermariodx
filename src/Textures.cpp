@@ -34,10 +34,10 @@ void Textures::Add(int id, LPCWSTR filePath, D3DCOLOR transparentColor)
 	LPDIRECT3DTEXTURE9 texture;
 
 	result = D3DXCreateTextureFromFileEx(
-		d3ddv,								// Pointer to Direct3D device object
-		filePath,							// Path to the image to load
-		info.Width,							// Texture width
-		info.Height,						// Texture height
+		d3ddv,									// Pointer to Direct3D device object
+		filePath,								// Path to the image to load
+		info.Width,								// Texture width
+		info.Height,							// Texture height
 		1,
 		D3DUSAGE_DYNAMIC,
 		D3DFMT_UNKNOWN,

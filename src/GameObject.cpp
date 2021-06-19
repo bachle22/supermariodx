@@ -1,28 +1,38 @@
-#include <d3dx9.h>
+#pragma once
 
-#include "debug.h"
+#include <d3dx9.h>
+#include <vector>
+
 #include "Game.h"
 #include "GameObject.h"
+#include "Sprites.h"
 
-/*
-	Initialize game object and load a texture
-*/
-GameObject::GameObject(float x, float y, LPDIRECT3DTEXTURE9 tex)
+std::vector<LPANIMATION> GameObject::animations;
+
+GameObject::GameObject()
 {
-	this->x = x;
-	this->y = y;
-	this->texture = tex;
+	x = y = 0;
+	vx = vy = 0;
+	nx = 1;
+}
+
+void GameObject::Update(DWORD dt)
+{
+	x += vx * dt;
+	y += vy * dt;
 }
 
 void GameObject::Render()
 {
-	Game::GetInstance()->Draw(x, y, texture);
 }
+
+void GameObject::AddAnimation(int aniId)
+{
+	LPANIMATION ani = Animations::GetInstance()->Get(aniId);
+	animations.push_back(ani);
+}
+
 
 GameObject::~GameObject()
 {
-	if (texture != NULL) texture->Release();
 }
-
-#define MARIO_VX 0.1f
-#define MARIO_WIDTH 20

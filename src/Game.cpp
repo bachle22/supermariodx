@@ -24,9 +24,6 @@ void Game::Init(HWND hWnd)
 	d3dpp.BackBufferHeight = r.bottom + 1;
 	d3dpp.BackBufferWidth = r.right + 1;
 
-	backBufferWidth = d3dpp.BackBufferWidth;
-	backBufferHeight = d3dpp.BackBufferHeight;
-
 	// Create a device class using this information and information from the d3dpp stuct
 	d3d->CreateDevice(
 		D3DADAPTER_DEFAULT,						// Use default GPU
@@ -48,15 +45,6 @@ void Game::Init(HWND hWnd)
 	D3DXCreateSprite(d3ddev, &spriteHandler);
 
 	DebugOut(L"[INFO] InitGame done;\n");
-}
-
-/*
-	Utility function to wrap LPD3DXSPRITE::Draw
-*/
-void Game::Draw(float x, float y, LPDIRECT3DTEXTURE9 texture)
-{
-	D3DXVECTOR3 p(x, y, 0);
-	spriteHandler->Draw(texture, NULL, NULL, &p, D3DCOLOR_XRGB(255, 255, 255));
 }
 
 /*
