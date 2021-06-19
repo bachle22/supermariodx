@@ -44,6 +44,9 @@
     <ClCompile Include="Animations.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Debug.h">
@@ -68,6 +71,9 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="Animations.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
       <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>

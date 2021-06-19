@@ -1,4 +1,6 @@
 #include "Mario.h"
+#include "Debug.h"
+#include "Definition.h"
 
 void Mario::Update(DWORD dt)
 {
@@ -12,7 +14,7 @@ void Mario::Update(DWORD dt)
 	}
 
 	// simple screen edge collision!!!
-	if (vx > 0 && x > 290) x = 290;
+	if (vx > 0 && x > SCREEN_WIDTH - 30) x = SCREEN_WIDTH - 30;
 	if (vx < 0 && x < 0) x = 0;
 }
 

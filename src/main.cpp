@@ -9,10 +9,47 @@
 #include "Mario.h"
 #include "Textures.h"
 #include "Sprites.h"
+#include "Input.h"
 
 #define BACKGROUND_COLOR D3DCOLOR_XRGB(200, 200, 255)
 
+Game* game;
 Mario* mario;
+
+class CSampleKeyHander : public CKeyEventHandler
+{
+	virtual void KeyState(BYTE* states);
+	virtual void OnKeyDown(int KeyCode);
+	virtual void OnKeyUp(int KeyCode);
+};
+
+CSampleKeyHander* keyHandler;
+
+void CSampleKeyHander::OnKeyDown(int KeyCode)
+{
+	DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
+	switch (KeyCode)
+	{
+	case DIK_SPACE:
+		mario->SetState(MARIO_STATE_JUMP);
+		break;
+	}
+}
+
+void CSampleKeyHander::OnKeyUp(int KeyCode)
+{
+	DebugOut(L"[INFO] KeyUp: %d\n", KeyCode);
+}
+
+void CSampleKeyHander::KeyState(BYTE* states)
+{
+	if (game->IsKeyDown(DIK_RIGHT))
+		mario->SetState(MARIO_STATE_WALKING_RIGHT);
+	else if (game->IsKeyDown(DIK_LEFT))
+		mario->SetState(MARIO_STATE_WALKING_LEFT);
+	else mario->SetState(MARIO_STATE_IDLE);
+}
+
 #define MARIO_START_X 10.0f
 #define MARIO_START_Y 130.0f
 #define MARIO_START_VX 0.1f
@@ -51,23 +88,28 @@ void LoadResources()
 
 	LPDIRECT3DTEXTURE9 texMario = textures->Get(ID_TEX_MARIO);
 
-	sprites->Add(10001, 246, 154, 259, 181, texMario);
+	sprites->Add(10001, 246, 154, 260, 181, texMario);
+
 	sprites->Add(10002, 275, 154, 290, 181, texMario);
 	sprites->Add(10003, 304, 154, 321, 181, texMario);
 
-	sprites->Add(10011, 186, 154, 199, 181, texMario);
+	sprites->Add(10011, 186, 154, 200, 181, texMario);
+
 	sprites->Add(10012, 155, 154, 170, 181, texMario);
 	sprites->Add(10013, 125, 154, 140, 181, texMario);
-
-	LPDIRECT3DTEXTURE9 texMisc = textures->Get(ID_TEX_MISC);
-	sprites->Add(20001, 300, 117, 315, 132, texMisc);
-	sprites->Add(20002, 318, 117, 333, 132, texMisc);
-	sprites->Add(20003, 336, 117, 351, 132, texMisc);
-	sprites->Add(20004, 354, 117, 369, 132, texMisc);
 
 
 	Animations* animations = Animations::GetInstance();
 	LPANIMATION ani;
+
+	ani = new Animation(100);
+	ani->Add(10001);
+	animations->Add(400, ani);
+
+	ani = new Animation(100);
+	ani->Add(10011);
+	animations->Add(401, ani);
+
 
 	ani = new Animation(100);
 	ani->Add(10001);
@@ -81,17 +123,11 @@ void LoadResources()
 	ani->Add(10013);
 	animations->Add(501, ani);
 
-	
-	ani = new Animation(100);
-	ani->Add(20001,1000);
-	ani->Add(20002);
-	ani->Add(20003);
-	ani->Add(20004);
-	animations->Add(510, ani);
-
 	mario = new Mario();
-	Mario::AddAnimation(500);
-	Mario::AddAnimation(501);
+	Mario::AddAnimation(400);		// idle right
+	Mario::AddAnimation(401);		// idle left
+	Mario::AddAnimation(500);		// walk right
+	Mario::AddAnimation(501);		// walk left
 	mario->SetPosition(MARIO_START_X, MARIO_START_Y);
 
 }
@@ -162,10 +198,11 @@ HWND CreateGameWindow(
 	if (!hWnd)
 	{
 		DWORD ErrCode = GetLastError();
-		DebugOutTitle(L"[ERROR] CreateWindow failed");
+		DebugOut(L"[ERROR] CreateWindow failed");
 		return 0;
 	}
 	ShowWindow(hWnd, nCmdShow);
+	UpdateWindow(hWnd);
 	return hWnd;
 }
 
@@ -204,6 +241,7 @@ WPARAM HandleWindowMessage(void)
 		if (dt >= tickPerFrame)
 		{
 			frameStart = now;
+			game->ProcessKeyboard();
 			Update(dt);
 			Render();
 		}
@@ -223,11 +261,14 @@ int WINAPI WinMain(
 		WINDOW_CLASS_NAME, MAIN_WINDOW_TITLE,
 		SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	if (hWnd == 0) return 0;
-	SetDebugWindow(hWnd);
+	//SetDebugWindow(hWnd);
 
-	Game* game = Game::GetInstance();
+	game = Game::GetInstance();
 	game->Init(hWnd);
+
+	keyHandler = new CSampleKeyHander();
+	game->InitKeyboard(keyHandler);
+
 	LoadResources();
 	HandleWindowMessage();
 
