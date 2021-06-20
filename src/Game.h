@@ -24,17 +24,37 @@ class Game
 	DIDEVICEOBJECTDATA keyEvents[KEYBOARD_BUFFER_SIZE];		// Buffered keyboard data
 	LPKEYEVENTHANDLER keyHandler;
 
+	float cam_x = 0.0f;
+	float cam_y = 0.0f;
+
 public:
 	void Init(HWND hWnd);
 	void InitKeyboard(LPKEYEVENTHANDLER handler);
-	void Draw(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom);
+	void Draw(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom, int alpha = 255);
 
 	int IsKeyDown(int KeyCode);
 	void ProcessKeyboard();
 
+	static void SweptAABB(
+		float ml,			// move left 
+		float mt,			// move top
+		float mr,			// move right 
+		float mb,			// move bottom
+		float dx,			// 
+		float dy,			// 
+		float sl,			// static left
+		float st,
+		float sr,
+		float sb,
+		float& t,
+		float& nx,
+		float& ny);
+
 	LPDIRECT3DDEVICE9 GetDirect3DDevice() { return this->d3ddev; }
 	LPDIRECT3DSURFACE9 GetBackBuffer() { return backBuffer; }
 	LPD3DXSPRITE GetSpriteHandler() { return this->spriteHandler; }
+
+	void SetCamPos(float x, float y) { cam_x = x; cam_y = y; }
 
 	static Game* GetInstance();
 

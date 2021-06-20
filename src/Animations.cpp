@@ -10,7 +10,7 @@ void Animation::Add(int spriteId, DWORD time)
 	frames.push_back(frame);
 }
 
-void Animation::Render(float x, float y)
+void Animation::Render(float x, float y, int alpha)
 {
 	DWORD now = GetTickCount64();
 	if (currentFrame == -1)
@@ -31,7 +31,7 @@ void Animation::Render(float x, float y)
 
 	}
 
-	frames[currentFrame]->GetSprite()->Draw(x, y);
+	frames[currentFrame]->GetSprite()->Draw(x, y, alpha);
 }
 
 Animations* Animations::__instance = NULL;

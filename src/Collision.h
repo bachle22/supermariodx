@@ -1,11 +1,7 @@
 #pragma once
 
 #include "GameObject.h"
-
-#define ID_TEX_BBOX -100		// special texture to draw object bounding box
-
-struct CollisionEvent;
-typedef CollisionEvent* LPCOLLISIONEVENT;
+#include "Definition.h"
 
 struct CollisionEvent
 {
@@ -18,3 +14,4 @@ struct CollisionEvent
 		return a->t < b->t;
 	}
 };
+

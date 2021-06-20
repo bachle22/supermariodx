@@ -25,10 +25,10 @@ Sprites* Sprites::GetInstance()
 	return __instance;
 }
 
-void Sprite::Draw(float x, float y)
+void Sprite::Draw(float x, float y, int alpha)
 {
 	Game* game = Game::GetInstance();
-	game->Draw(x, y, texture, left, top, right, bottom);
+	game->Draw(x, y, texture, left, top, right, bottom, alpha);
 }
 
 void Sprites::Add(int id, int left, int top, int right, int bottom, LPDIRECT3DTEXTURE9 tex)

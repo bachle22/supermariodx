@@ -5,9 +5,8 @@
 #include <vector>
 
 #include "Animations.h"
-
-class GameObject;
-typedef GameObject* LPGAMEOBJECT;
+#include "Collision.h"
+#include "Definition.h"
 
 class GameObject
 {
@@ -31,19 +30,33 @@ protected:
 	std::vector<LPANIMATION> animations;
 
 public:
+	GameObject();
 	void SetPosition(float x, float y) { this->x = x, this->y = y; }
 	void SetSpeed(float vx, float vy) { this->vx = vx, this->vy = vy; }
+	virtual void SetState(int state) { this->state = state; }
 
-	void SetState(int state) { this->state = state; }
+	void GetPosition(float& x, float& y) { x = this->x; y = this->y; }
+	void GetSpeed(float& vx, float& vy) { vx = this->vx; vy = this->vy; }
 	int GetState() { return this->state; }
 
+	void RenderBoundingBox(void);
+
+	LPCOLLISIONEVENT SweptAABBEx(LPGAMEOBJECT coO);
+	void CalculatePotentialCollisions(std::vector<LPGAMEOBJECT>* coObjects, std::vector<LPCOLLISIONEVENT>& coEvents);
+	void FilterCollision(
+		std::vector<LPCOLLISIONEVENT>& coEvents,
+		std::vector<LPCOLLISIONEVENT>& coEventsResult,
+		float& min_tx,
+		float& min_ty,
+		float& nx,
+		float& ny
+	);
 
 	void AddAnimation(int aniId);
 
-	GameObject();
-
 	virtual void Update(DWORD dt, std::vector<LPGAMEOBJECT>* coObjects = NULL);
-	void Render();
+	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom) = 0;
+	virtual void Render() = 0;
 	~GameObject();
 };
 

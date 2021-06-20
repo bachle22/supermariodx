@@ -40,7 +40,7 @@ void Goomba::Render()
 	}
 
 	animations[ani]->Render(x, y);
-	//RenderBoundingBox();
+	RenderBoundingBox();
 }
 
 void Goomba::SetState(int state)

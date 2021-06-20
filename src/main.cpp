@@ -17,21 +17,22 @@
 
 #define BACKGROUND_COLOR D3DCOLOR_XRGB(200, 200, 255)
 
+
 Game* game;
 Mario* mario;
 Goomba* goomba;
 std::vector<LPGAMEOBJECT> objects;
 
-class CSampleKeyHander : public CKeyEventHandler
+class SampleKeyHandler : public Input
 {
 	virtual void KeyState(BYTE* states);
 	virtual void OnKeyDown(int KeyCode);
 	virtual void OnKeyUp(int KeyCode);
 };
 
-CSampleKeyHander* keyHandler;
+SampleKeyHandler* keyHandler;
 
-void CSampleKeyHander::OnKeyDown(int KeyCode)
+void SampleKeyHandler::OnKeyDown(int KeyCode)
 {
 	DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 	switch (KeyCode)
@@ -39,33 +40,32 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 	case DIK_SPACE:
 		mario->SetState(MARIO_STATE_JUMP);
 		break;
+	case DIK_A: // reset
+		mario->SetState(MARIO_STATE_IDLE);
+		mario->SetLevel(MARIO_LEVEL_BIG);
+		mario->SetPosition(50.0f, 0.0f);
+		mario->SetSpeed(0, 0);
+		break;
 	}
 }
 
-void CSampleKeyHander::OnKeyUp(int KeyCode)
+void SampleKeyHandler::OnKeyUp(int KeyCode)
 {
 	DebugOut(L"[INFO] KeyUp: %d\n", KeyCode);
 }
 
-void CSampleKeyHander::KeyState(BYTE* states)
+void SampleKeyHandler::KeyState(BYTE* states)
 {
+	// disable control key when Mario die 
+	if (mario->GetState() == MARIO_STATE_DIE) return;
 	if (game->IsKeyDown(DIK_RIGHT))
 		mario->SetState(MARIO_STATE_WALKING_RIGHT);
 	else if (game->IsKeyDown(DIK_LEFT))
 		mario->SetState(MARIO_STATE_WALKING_LEFT);
-	else mario->SetState(MARIO_STATE_IDLE);
+	else
+		mario->SetState(MARIO_STATE_IDLE);
 }
 
-#define MARIO_START_X 10.0f
-#define MARIO_START_Y 130.0f
-#define MARIO_START_VX 0.1f
-
-#define ID_TEX_MARIO 0
-#define ID_TEX_ENEMY 10
-#define ID_TEX_MISC 20
-
-LPDIRECT3DTEXTURE9 texMario = NULL;
-LPDIRECT3DTEXTURE9 texBrick = NULL;
 
 LRESULT CALLBACK WindowProc(
 	_In_ HWND hWnd,
@@ -228,7 +228,7 @@ void LoadResources()
 	}
 
 
-	for (int i = 0; i < 30; i++)
+	for (int i = 0; i < 100; i++)
 	{
 		Brick* brick = new Brick();
 		brick->AddAnimation(601);
@@ -263,7 +263,8 @@ void Render(void)
 	// Render sprites & animation
 	spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
 
-	mario->Render();
+	for (int i = 0; i < objects.size(); i++)
+		objects[i]->Render();
 
 	spriteHandler->End();
 	d3ddev->EndScene();
@@ -271,9 +272,34 @@ void Render(void)
 	d3ddev->Present(NULL, NULL, NULL, NULL);    // Displays the created frame
 }
 
+/*
+	Update world status for this frame
+	dt: time period between beginning of last frame and beginning of this frame
+*/
 void Update(DWORD dt)
 {
-	mario->Update(dt);
+	// TO-DO: This is a "dirty" way, need a more organized way 
+
+	std::vector<LPGAMEOBJECT> coObjects;
+	for (int i = 1; i < objects.size(); i++)
+	{
+		coObjects.push_back(objects[i]);
+	}
+
+	for (int i = 0; i < objects.size(); i++)
+	{
+		objects[i]->Update(dt, &coObjects);
+	}
+
+	// Update camera to follow mario
+	float cx, cy;
+	mario->GetPosition(cx, cy);
+
+	cx -= SCREEN_WIDTH / 2;
+	cy -= SCREEN_HEIGHT / 2;
+
+	Game::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
+
 }
 
 HWND CreateGameWindow(
@@ -382,10 +408,11 @@ int WINAPI WinMain(
 	game = Game::GetInstance();
 	game->Init(hWnd);
 
-	keyHandler = new CSampleKeyHander();
+	keyHandler = new SampleKeyHandler();
 	game->InitKeyboard(keyHandler);
 
 	LoadResources();
+	SetWindowPos(hWnd, 0, 0, 0, SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER);
 	HandleWindowMessage();
 
 }
