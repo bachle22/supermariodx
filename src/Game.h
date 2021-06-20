@@ -33,7 +33,7 @@ class Game
 	int screen_height;
 
 	std::unordered_map<int, LPSCENE> scenes;
-	int current_scene = 0;
+	int current_scene;
 
 public:
 	void Init(HWND hWnd);
@@ -44,6 +44,11 @@ public:
 
 	int IsKeyDown(int KeyCode);
 	void ProcessKeyboard();
+
+	void _ParseSection_SETTINGS(std::string line);
+	void _ParseSection_SCENES(std::string line);
+
+	void Load(LPCWSTR gameFile);
 
 	int GetScreenWidth() { return screen_width; }
 	int GetScreenHeight() { return screen_height; }

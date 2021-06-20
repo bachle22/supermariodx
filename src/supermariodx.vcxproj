@@ -31,6 +31,7 @@
     <ClCompile Include="Mario.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Sprites.cpp" />
+    <ClCompile Include="Strings.cpp" />
     <ClCompile Include="Textures.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -47,6 +48,7 @@
     <ClInclude Include="Mario.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Sprites.h" />
+    <ClInclude Include="Strings.h" />
     <ClInclude Include="Textures.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

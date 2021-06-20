@@ -29,6 +29,9 @@
     <Filter Include="Objects\Static">
       <UniqueIdentifier>{718e95f9-890a-40e8-84ce-fe8a45a5c22d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Utilities\Strings">
+      <UniqueIdentifier>{cc6ce59c-e24b-462c-8ced-901bd1ab9c0e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Debug.cpp">
@@ -67,6 +70,9 @@
     </ClCompile>
     <ClCompile Include="Scene.cpp">
       <Filter>Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Strings.cpp">
+      <Filter>Utilities\Strings</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -111,6 +117,9 @@
     </ClInclude>
     <ClInclude Include="Scene.h">
       <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Strings.h">
+      <Filter>Utilities\Strings</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
