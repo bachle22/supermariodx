@@ -20,6 +20,9 @@
     <Filter Include="Objects\Player">
       <UniqueIdentifier>{46460a55-fc89-4281-a8d8-3c1f0bddd9b5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Objects\Static">
+      <UniqueIdentifier>{718e95f9-890a-40e8-84ce-fe8a45a5c22d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Debug.cpp">
@@ -46,6 +49,12 @@
     </ClCompile>
     <ClCompile Include="Input.cpp">
       <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Brick.cpp">
+      <Filter>Objects\Static</Filter>
+    </ClCompile>
+    <ClCompile Include="Goomba.cpp">
+      <Filter>Objects\NPCs</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -78,6 +87,12 @@
     </ClInclude>
     <ClInclude Include="Collision.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Brick.h">
+      <Filter>Objects\Static</Filter>
+    </ClInclude>
+    <ClInclude Include="Goomba.h">
+      <Filter>Objects\NPCs</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -14,10 +14,11 @@ GameObject::GameObject()
 	nx = 1;
 }
 
-void GameObject::Update(DWORD dt)
+void GameObject::Update(DWORD dt, std::vector<LPGAMEOBJECT>* coObjects)
 {
-	x += vx * dt;
-	y += vy * dt;
+	this->dt = dt;
+	dx = vx * dt;
+	dy = vy * dt;
 }
 
 void GameObject::Render()

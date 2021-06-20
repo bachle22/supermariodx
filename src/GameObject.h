@@ -6,12 +6,18 @@
 
 #include "Animations.h"
 
+class GameObject;
+typedef GameObject* LPGAMEOBJECT;
+
 class GameObject
 {
 protected:
 
 	float x;
 	float y;
+
+	float dx;	// dx = vx*dt
+	float dy;	// dy = vy*dt
 
 	float vx;
 	float vy;
@@ -36,7 +42,8 @@ public:
 
 	GameObject();
 
-	void Update(DWORD dt);
+	virtual void Update(DWORD dt, std::vector<LPGAMEOBJECT>* coObjects = NULL);
 	void Render();
 	~GameObject();
 };
+
