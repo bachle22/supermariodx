@@ -4,12 +4,13 @@
 #include <windows.h>
 
 #define DIRECTINPUT_VERSION 0x0800
-#define KEYBOARD_BUFFER_SIZE 1024
+
+constexpr int KEYBOARD_BUFFER_SIZE = 1024;
 
 /*
 Abstract class to define keyboard event handlers
 */
-class Input
+class InputHandler
 {
 public:
 	virtual void KeyState(BYTE* state) = 0;
@@ -17,4 +18,4 @@ public:
 	virtual void OnKeyUp(int KeyCode) = 0;
 };
 
-typedef Input* LPKEYEVENTHANDLER;
+typedef InputHandler* LPKEYEVENTHANDLER;

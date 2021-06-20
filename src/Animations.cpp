@@ -1,4 +1,5 @@
 #include "Animations.h"
+#include "Debug.h"
 
 void Animation::Add(int spriteId, DWORD time)
 {
@@ -49,5 +50,19 @@ void Animations::Add(int id, LPANIMATION ani)
 
 LPANIMATION Animations::Get(int id)
 {
-	return animations[id];
+	LPANIMATION ani = animations[id];
+	if (ani == NULL)
+		DebugOut(L"[ERROR] Failed to find animation id: %d\n", id);
+	return ani;
+}
+
+void Animations::Clear(void)
+{
+	for (auto x : animations)
+	{
+		LPANIMATION ani = x.second;
+		delete ani;
+	}
+
+	animations.clear();
 }

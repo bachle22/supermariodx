@@ -42,6 +42,7 @@ class Animations
 public:
 	void Add(int id, LPANIMATION ani);
 	LPANIMATION Get(int id);
+	void Clear();
 
 	static Animations* GetInstance();
 };

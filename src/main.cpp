@@ -23,7 +23,7 @@ Mario* mario;
 Goomba* goomba;
 std::vector<LPGAMEOBJECT> objects;
 
-class SampleKeyHandler : public Input
+class SampleKeyHandler : public InputHandler
 {
 	virtual void KeyState(BYTE* states);
 	virtual void OnKeyDown(int KeyCode);

@@ -23,6 +23,9 @@
     <Filter Include="Objects\Static">
       <UniqueIdentifier>{718e95f9-890a-40e8-84ce-fe8a45a5c22d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Animations">
+      <UniqueIdentifier>{e5fe289a-dc3c-4f59-b495-2bd13b3f076c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Debug.cpp">
@@ -44,9 +47,6 @@
     <ClCompile Include="Textures.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="Animations.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="Input.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -55,6 +55,12 @@
     </ClCompile>
     <ClCompile Include="Goomba.cpp">
       <Filter>Objects\NPCs</Filter>
+    </ClCompile>
+    <ClCompile Include="Animations.cpp">
+      <Filter>Animations</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationSets.cpp">
+      <Filter>Animations</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -79,9 +85,6 @@
     <ClInclude Include="Textures.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="Animations.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="Input.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -93,6 +96,12 @@
     </ClInclude>
     <ClInclude Include="Goomba.h">
       <Filter>Objects\NPCs</Filter>
+    </ClInclude>
+    <ClInclude Include="Animations.h">
+      <Filter>Animations</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationSets.h">
+      <Filter>Animations</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
