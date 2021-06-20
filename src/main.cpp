@@ -124,10 +124,10 @@ void LoadResources()
 	animations->Add(501, ani);
 
 	mario = new Mario();
-	Mario::AddAnimation(400);		// idle right
-	Mario::AddAnimation(401);		// idle left
-	Mario::AddAnimation(500);		// walk right
-	Mario::AddAnimation(501);		// walk left
+	mario->AddAnimation(400);		// idle right
+	mario->AddAnimation(401);		// idle left
+	mario->AddAnimation(500);		// walk right
+	mario->AddAnimation(501);		// walk left
 	mario->SetPosition(MARIO_START_X, MARIO_START_Y);
 
 }

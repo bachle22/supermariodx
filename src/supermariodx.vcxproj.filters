@@ -76,5 +76,8 @@
     <ClInclude Include="Input.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="Collision.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

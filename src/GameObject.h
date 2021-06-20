@@ -20,7 +20,9 @@ protected:
 
 	int state;
 
-	static std::vector<LPANIMATION> animations;
+	DWORD dt;
+
+	std::vector<LPANIMATION> animations;
 
 public:
 	void SetPosition(float x, float y) { this->x = x, this->y = y; }
@@ -30,7 +32,7 @@ public:
 	int GetState() { return this->state; }
 
 
-	static void AddAnimation(int aniId);
+	void AddAnimation(int aniId);
 
 	GameObject();
 

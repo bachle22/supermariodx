@@ -7,8 +7,6 @@
 #include "GameObject.h"
 #include "Sprites.h"
 
-std::vector<LPANIMATION> GameObject::animations;
-
 GameObject::GameObject()
 {
 	x = y = 0;
