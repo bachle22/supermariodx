@@ -66,7 +66,7 @@ int Game::IsKeyDown(int KeyCode)
 }
 
 
-void Game::InitKeyboard(LPKEYEVENTHANDLER handler)
+void Game::InitKeyboard()
 {
 	HRESULT
 		hr = DirectInput8Create
@@ -129,8 +129,6 @@ void Game::InitKeyboard(LPKEYEVENTHANDLER handler)
 		DebugOut(L"[ERROR] DINPUT8::Acquire failed!\n");
 		return;
 	}
-
-	this->keyHandler = handler;
 
 	DebugOut(L"[INFO] Keyboard has been initialized successfully\n");
 }
@@ -297,3 +295,4 @@ void Game::SweptAABB(
 	}
 
 }
+

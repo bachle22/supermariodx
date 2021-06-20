@@ -56,7 +56,7 @@ LPANIMATION Animations::Get(int id)
 	return ani;
 }
 
-void Animations::Clear(void)
+void Animations::Clear()
 {
 	for (auto x : animations)
 	{

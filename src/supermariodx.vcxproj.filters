@@ -11,6 +11,12 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="Animations">
+      <UniqueIdentifier>{e5fe289a-dc3c-4f59-b495-2bd13b3f076c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scenes">
+      <UniqueIdentifier>{f013c009-da9f-4251-a5f6-0a8d4364d4a0}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Objects">
       <UniqueIdentifier>{7a35efd0-af59-4037-9dba-ccd19bcb788b}</UniqueIdentifier>
     </Filter>
@@ -22,9 +28,6 @@
     </Filter>
     <Filter Include="Objects\Static">
       <UniqueIdentifier>{718e95f9-890a-40e8-84ce-fe8a45a5c22d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Animations">
-      <UniqueIdentifier>{e5fe289a-dc3c-4f59-b495-2bd13b3f076c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -61,6 +64,9 @@
     </ClCompile>
     <ClCompile Include="AnimationSets.cpp">
       <Filter>Animations</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Scenes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -102,6 +108,9 @@
     </ClInclude>
     <ClInclude Include="AnimationSets.h">
       <Filter>Animations</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Scenes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
