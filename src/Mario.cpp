@@ -5,6 +5,20 @@
 #include "Debug.h"
 #include "Definition.h"
 #include "Collision.h"
+#include "Portal.h"
+#include "Game.h"
+
+Mario::Mario(float x, float y) : GameObject()
+{
+	level = MARIO_LEVEL_BIG;
+	untouchable = 0;
+	SetState(MARIO_STATE_IDLE);
+
+	start_x = x;
+	start_y = y;
+	this->x = x;
+	this->y = y;
+}
 
 void Mario::Update(DWORD dt, std::vector<LPGAMEOBJECT>* coObjects)
 {
@@ -39,8 +53,15 @@ void Mario::Update(DWORD dt, std::vector<LPGAMEOBJECT>* coObjects)
 	else
 	{
 		float min_tx, min_ty, nx = 0, ny;
+		float rdx = 0;
+		float rdy = 0;
 
-		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
+		// TODO: Improve this function
+		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
+
+		// how to push back Mario if collides with a moving objects, what if Mario is pushed this way into another object?
+		//if (rdx != 0 && rdx!=dx)
+		//	x += nx*abs(rdx); 
 
 		// block 
 		x += min_tx * dx + nx * 0.4f;		// nx*0.4f : need to push out a bit to avoid overlapping next frame
@@ -83,6 +104,11 @@ void Mario::Update(DWORD dt, std::vector<LPGAMEOBJECT>* coObjects)
 						}
 					}
 				}
+				else if (dynamic_cast<Portal*>(e->obj))
+				{
+					Portal* p = dynamic_cast<Portal*>(e->obj);
+					Game::GetInstance()->SwitchScene(p->GetSceneId());
+				}
 			}
 		}
 	}
@@ -122,7 +148,7 @@ void Mario::Render()
 
 	int alpha = 255;
 	if (untouchable) alpha = 128;
-	animations[ani]->Render(x, y, alpha);
+	animation_set->at(ani)->Render(x, y, alpha);
 
 	RenderBoundingBox();
 }
@@ -141,11 +167,14 @@ void Mario::SetState(int state)
 		nx = -1;
 		break;
 	case MARIO_STATE_JUMP:
-		/*if (y == 100)*/
-			vy = -MARIO_JUMP_SPEED_Y;
-
+		// TODO: need to check if Mario is *current* on a platform before allowing to jump again
+		vy = -MARIO_JUMP_SPEED_Y;
+		break;
 	case MARIO_STATE_IDLE:
 		vx = 0;
+		break;
+	case MARIO_STATE_DIE:
+		vy = -MARIO_DIE_DEFLECT_SPEED;
 		break;
 	}
 }
@@ -165,5 +194,16 @@ void Mario::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 		right = x + MARIO_SMALL_BBOX_WIDTH;
 		bottom = y + MARIO_SMALL_BBOX_HEIGHT;
 	}
+}
+
+/*
+	Reset Mario status to the beginning state of a scene
+*/
+void Mario::Reset()
+{
+	SetState(MARIO_STATE_IDLE);
+	SetLevel(MARIO_LEVEL_BIG);
+	SetPosition(start_x, start_y);
+	SetSpeed(0, 0);
 }
 

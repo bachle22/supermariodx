@@ -27,9 +27,12 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Goomba.cpp" />
     <ClCompile Include="Input.cpp" />
+    <ClCompile Include="Koopa.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mario.cpp" />
+    <ClCompile Include="Portal.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="ScenePlayer.cpp" />
     <ClCompile Include="Sprites.cpp" />
     <ClCompile Include="Strings.cpp" />
     <ClCompile Include="Textures.cpp" />
@@ -45,8 +48,11 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Goomba.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="Koopa.h" />
     <ClInclude Include="Mario.h" />
+    <ClInclude Include="Portal.h" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="ScenePlayer.h" />
     <ClInclude Include="Sprites.h" />
     <ClInclude Include="Strings.h" />
     <ClInclude Include="Textures.h" />

@@ -74,6 +74,15 @@
     <ClCompile Include="Strings.cpp">
       <Filter>Utilities\Strings</Filter>
     </ClCompile>
+    <ClCompile Include="Portal.cpp">
+      <Filter>Objects\Static</Filter>
+    </ClCompile>
+    <ClCompile Include="ScenePlayer.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Koopa.cpp">
+      <Filter>Objects\NPCs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Debug.h">
@@ -120,6 +129,15 @@
     </ClInclude>
     <ClInclude Include="Strings.h">
       <Filter>Utilities\Strings</Filter>
+    </ClInclude>
+    <ClInclude Include="Portal.h">
+      <Filter>Objects\Static</Filter>
+    </ClInclude>
+    <ClInclude Include="Koopa.h">
+      <Filter>Objects\NPCs</Filter>
+    </ClInclude>
+    <ClInclude Include="ScenePlayer.h">
+      <Filter>Scenes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

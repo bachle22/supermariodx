@@ -26,11 +26,11 @@ typedef Scene* LPSCENE;
 class SceneInputHandler : public InputHandler
 {
 protected:
-	Scene* scence;
+	Scene* scene;
 
 public:
 	virtual void KeyState(BYTE* states) = 0;
 	virtual void OnKeyDown(int KeyCode) = 0;
 	virtual void OnKeyUp(int KeyCode) = 0;
-	SceneInputHandler(Scene* s) : InputHandler() { scence = s; }
+	SceneInputHandler(Scene* s) : InputHandler() { scene = s; }
 };

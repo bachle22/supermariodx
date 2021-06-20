@@ -26,7 +26,7 @@ class Animation
 	int currentFrame;
 	std::vector<LPANIMATION_FRAME> frames;
 public:
-	Animation(int defaultTime) { this->defaultTime = defaultTime; lastFrameTime = -1; currentFrame = -1; }
+	Animation(int defaultTime = 100) { this->defaultTime = defaultTime; lastFrameTime = -1; currentFrame = -1; }
 	void Add(int spriteId, DWORD time = 0);
 	void Render(float x, float y, int alpha = 255);
 };

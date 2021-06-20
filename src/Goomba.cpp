@@ -39,7 +39,7 @@ void Goomba::Render()
 		ani = GOOMBA_ANI_DIE;
 	}
 
-	animations[ani]->Render(x, y);
+	animation_set->at(ani)->Render(x, y);
 	RenderBoundingBox();
 }
 

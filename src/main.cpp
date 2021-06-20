@@ -2,23 +2,13 @@
 #include <d3d9.h>
 #include <d3dx9.h>
 
-#include "Animations.h"
 #include "Debug.h"
 #include "Definition.h"
 #include "Game.h"
-#include "Mario.h"
-#include "Textures.h"
-#include "Sprites.h"
-#include "Input.h"
-#include "Collision.h"
-
-#include "Brick.h"
-#include "Goomba.h"
 
 #define BACKGROUND_COLOR D3DCOLOR_XRGB(200, 200, 255)
 
 Game* game;
-
 
 LRESULT CALLBACK WindowProc(
 	_In_ HWND hWnd,
@@ -51,7 +41,7 @@ void Render()
 	// Render sprites & animation
 	spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
 
-	//...
+	Game::GetInstance()->GetCurrentScene()->Render();
 
 	spriteHandler->End();
 	d3ddev->EndScene();
@@ -65,7 +55,7 @@ void Render()
 */
 void Update(DWORD dt)
 {
-	// Game::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
+	Game::GetInstance()->GetCurrentScene()->Update(dt);
 }
 
 HWND CreateGameWindow(
@@ -158,28 +148,6 @@ WPARAM HandleWindowMessage()
 	return msg.wParam;
 }
 
-class SampleKeyHandler : public InputHandler
-{
-	virtual void KeyState(BYTE* states);
-	virtual void OnKeyDown(int KeyCode);
-	virtual void OnKeyUp(int KeyCode);
-};
-SampleKeyHandler* keyHandler;
-
-void SampleKeyHandler::OnKeyDown(int KeyCode)
-{
-	DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
-}
-
-void SampleKeyHandler::OnKeyUp(int KeyCode)
-{
-	DebugOut(L"[INFO] KeyUp: %d\n", KeyCode);
-}
-
-void SampleKeyHandler::KeyState(BYTE* states)
-{
-	// disable control key when Mario die 
-}
 
 int WINAPI WinMain(
 	_In_     HINSTANCE	hInstance,
@@ -192,9 +160,7 @@ int WINAPI WinMain(
 		WINDOW_CLASS_NAME, MAIN_WINDOW_TITLE,
 		SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	keyHandler = new SampleKeyHandler();
 	game = Game::GetInstance();
-	game->SetKeyHandler(keyHandler);
 	game->Init(hWnd);
 	game->InitKeyboard();
 	game->Load(L"..\\maps\\mario.map");

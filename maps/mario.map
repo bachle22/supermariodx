@@ -2,6 +2,4 @@
 start	3
 #scene list
 [SCENES]
-1	scene1.map
-2	scene2.map
-3	scene-test.map
+3	..\maps\scene-test.txt

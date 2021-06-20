@@ -3,6 +3,7 @@
 #include "Debug.h"
 #include "Game.h"
 #include "Strings.h"
+#include "ScenePlayer.h"
 
 #define MAX_GAME_LINE 1024
 
@@ -163,7 +164,7 @@ void Game::ProcessKeyboard()
 		}
 		else
 		{
-			//DebugOut(L"[ERROR] DINPUT::GetDeviceState failed. Error: %d\n", hr);
+			DebugOut(L"[ERROR] DINPUT::GetDeviceState failed. Error: %d\n", hr);
 			return;
 		}
 	}
@@ -325,11 +326,14 @@ void Game::_ParseSection_SCENES(std::string line)
 	int id = atoi(tokens[0].c_str());
 	LPCWSTR path = ToLPCWSTR(tokens[1]);
 
+	LPSCENE scene = new ScenePlayer(id, path);
+	scenes[id] = scene;
 }
 
 
 /*
 	Load game map file
+	TODOD: Fix nullptr error when invalid map file is processed
 */
 void Game::Load(LPCWSTR gameFile)
 {
@@ -364,5 +368,22 @@ void Game::Load(LPCWSTR gameFile)
 
 	DebugOut(L"[INFO] Loading game file : %s has been loaded successfully\n", gameFile);
 
-	//SwitchScene(current_scene);
+	SwitchScene(current_scene);
+}
+
+
+void Game::SwitchScene(int scene_id)
+{
+	DebugOut(L"[INFO] Switching to scene %d\n", scene_id);
+
+	scenes[current_scene]->Unload();
+
+	Textures::GetInstance()->Clear();
+	Sprites::GetInstance()->Clear();
+	Animations::GetInstance()->Clear();
+
+	current_scene = scene_id;
+	LPSCENE s = scenes[scene_id];
+	Game::GetInstance()->SetKeyHandler(s->GetKeyEventHandler());
+	s->Load();
 }

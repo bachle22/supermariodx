@@ -4,7 +4,7 @@
 #include <d3dx9.h>
 #include <vector>
 
-#include "Animations.h"
+#include "AnimationSets.h"
 #include "Collision.h"
 #include "Definition.h"
 
@@ -27,7 +27,7 @@ protected:
 
 	DWORD dt;
 
-	std::vector<LPANIMATION> animations;
+	LPANIMATION_SET animation_set;
 
 public:
 	GameObject();
@@ -41,6 +41,8 @@ public:
 
 	void RenderBoundingBox();
 
+	void SetAnimationSet(LPANIMATION_SET ani_set) { animation_set = ani_set; }
+
 	LPCOLLISIONEVENT SweptAABBEx(LPGAMEOBJECT coO);
 	void CalculatePotentialCollisions(std::vector<LPGAMEOBJECT>* coObjects, std::vector<LPCOLLISIONEVENT>& coEvents);
 	void FilterCollision(
@@ -49,10 +51,10 @@ public:
 		float& min_tx,
 		float& min_ty,
 		float& nx,
-		float& ny
-	);
+		float& ny,
+		float& rdx,
+		float& rdy);
 
-	void AddAnimation(int aniId);
 
 	virtual void Update(DWORD dt, std::vector<LPGAMEOBJECT>* coObjects = NULL);
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom) = 0;
