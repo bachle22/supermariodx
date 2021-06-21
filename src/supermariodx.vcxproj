@@ -57,6 +57,9 @@
     <ClInclude Include="Strings.h" />
     <ClInclude Include="Textures.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\docs\classes.cd" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>

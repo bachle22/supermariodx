@@ -163,7 +163,7 @@ int WINAPI WinMain(
 	game = Game::GetInstance();
 	game->Init(hWnd);
 	game->InitKeyboard();
-	game->Load(L"..\\maps\\mario.map");
+	game->Load(L"..\\maps\\main.config");
 
 	SetWindowPos(hWnd, 0, 0, 0, SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER);
 	HandleWindowMessage();

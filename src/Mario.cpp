@@ -70,7 +70,9 @@ void Mario::Update(DWORD dt, std::vector<LPGAMEOBJECT>* coObjects)
 		if (nx != 0) vx = 0;
 		if (ny != 0) vy = 0;
 
-		// Collision logic with Goombas
+		//
+		// Collision logic with other objects
+		//
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
@@ -104,11 +106,11 @@ void Mario::Update(DWORD dt, std::vector<LPGAMEOBJECT>* coObjects)
 						}
 					}
 				}
-				else if (dynamic_cast<Portal*>(e->obj))
-				{
-					Portal* p = dynamic_cast<Portal*>(e->obj);
-					Game::GetInstance()->SwitchScene(p->GetSceneId());
-				}
+			} // if Goomba
+			else if (dynamic_cast<Portal*>(e->obj))
+			{
+				Portal* p = dynamic_cast<Portal*>(e->obj);
+				Game::GetInstance()->SwitchScene(p->GetSceneId());
 			}
 		}
 	}

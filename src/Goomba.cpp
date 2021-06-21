@@ -1,5 +1,10 @@
 #include "Goomba.h"
 
+Goomba::Goomba()
+{
+	SetState(GOOMBA_STATE_WALKING);
+}
+
 void Goomba::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
 	left = x;

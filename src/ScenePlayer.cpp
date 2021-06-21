@@ -224,7 +224,7 @@ void ScenePlayer::Load()
 
 	f.close();
 
-	Textures::GetInstance()->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
+	Textures::GetInstance()->Add(ID_TEX_BBOX, L"..\\assets\\textures\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
 
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
 }

@@ -31,8 +31,8 @@ void Game::Init(HWND hWnd)
 	RECT r;
 	GetClientRect(hWnd, &r);
 
-	d3dpp.BackBufferHeight = r.bottom + 1;
-	d3dpp.BackBufferWidth = r.right + 1;
+	screen_height = r.bottom + 1;
+	screen_width = r.right + 1;
 
 	// Create a device class using this information and information from the d3dpp stuct
 	d3d->CreateDevice(
