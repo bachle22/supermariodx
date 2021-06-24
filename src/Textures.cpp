@@ -60,7 +60,7 @@ void Textures::Add(int id, LPCWSTR filePath, D3DCOLOR transparentColor)
 	DebugOut(L"[INFO] Texture loaded Ok: id=%d, %s \n", id, filePath);
 }
 
-LPDIRECT3DTEXTURE9 Textures::Get(unsigned int i)
+LPDIRECT3DTEXTURE9 Textures::Get(int i)
 {
 	return textures[i];
 }

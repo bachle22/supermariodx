@@ -53,7 +53,7 @@ void Render()
 	Update world status for this frame
 	dt: time period between beginning of last frame and beginning of this frame
 */
-void Update(DWORD dt)
+void Update(ULONGLONG dt)
 {
 	Game::GetInstance()->GetCurrentScene()->Update(dt);
 }
@@ -95,7 +95,7 @@ HWND CreateGameWindow(
 
 	if (!hWnd)
 	{
-		DWORD ErrCode = GetLastError();
+		ULONGLONG ErrCode = GetLastError();
 		DebugOut(L"[ERROR] CreateWindow failed");
 		return 0;
 	}
@@ -108,8 +108,8 @@ WPARAM HandleWindowMessage()
 {
 	bool isDone = 0;
 	MSG msg;
-	DWORD frameStart = GetTickCount64();
-	DWORD tickPerFrame = 1000 / MAX_FRAME_RATE;
+	ULONGLONG frameStart = GetTickCount64();
+	ULONGLONG tickPerFrame = 1000 / MAX_FRAME_RATE;
 
 	while (!isDone)
 	{
@@ -130,11 +130,11 @@ WPARAM HandleWindowMessage()
 			}
 		}
 
-		DWORD now = GetTickCount64();
+		ULONGLONG now = (DWORD) GetTickCount64();
 
 		// dt: the time between (beginning of last frame) and now
 		// this frame: the frame we are about to render
-		DWORD dt = now - frameStart;
+		ULONGLONG dt = now - frameStart;
 
 		if (dt >= tickPerFrame)
 		{
@@ -143,7 +143,6 @@ WPARAM HandleWindowMessage()
 			Update(dt);
 			Render();
 		}
-		else Sleep(tickPerFrame - dt);
 	}
 	return msg.wParam;
 }
@@ -165,7 +164,7 @@ int WINAPI WinMain(
 	game->InitKeyboard();
 	game->Load(L"..\\maps\\main.config");
 
-	SetWindowPos(hWnd, 0, 0, 0, SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER);
+	SetWindowPos(hWnd, 0, 0, 0, SCREEN_WIDTH * 3, SCREEN_HEIGHT * 3, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER);
 	HandleWindowMessage();
 
 }

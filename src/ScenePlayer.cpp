@@ -12,7 +12,7 @@
 
 ScenePlayer::ScenePlayer(int id, LPCWSTR filePath): Scene(id, filePath)
 {
-	key_handler = new ScenePlayerInputHandler(this);
+	keyHandler = new ScenePlayerInputHandler(this);
 }
 
 /*
@@ -85,7 +85,7 @@ void ScenePlayer::_ParseSection_ANIMATIONS(std::string line)
 	LPANIMATION ani = new Animation();
 
 	int ani_id = atoi(tokens[0].c_str());
-	for (int i = 1; i < tokens.size(); i += 2)	// why i+=2 ?  sprite_id | frame_time  
+	for (size_t i = 1; i < tokens.size(); i += 2)	// why i+=2 ?  sprite_id | frame_time  
 	{
 		int sprite_id = atoi(tokens[i].c_str());
 		int frame_time = atoi(tokens[i + 1].c_str());
@@ -107,7 +107,7 @@ void ScenePlayer::_ParseSection_ANIMATION_SETS(std::string line)
 
 	Animations* animations = Animations::GetInstance();
 
-	for (int i = 1; i < tokens.size(); i++)
+	for (size_t i = 1; i < tokens.size(); i++)
 	{
 		int ani_id = atoi(tokens[i].c_str());
 
@@ -130,8 +130,8 @@ void ScenePlayer::_ParseSection_OBJECTS(std::string line)
 	if (tokens.size() < 3) return; // skip invalid lines - an object set must have at least id, x, y
 
 	int object_type = atoi(tokens[0].c_str());
-	float x = atof(tokens[1].c_str());
-	float y = atof(tokens[2].c_str());
+	float x = strtof(tokens[1].c_str(), NULL);
+	float y = strtof(tokens[2].c_str(), NULL);
 
 	int ani_set_id = atoi(tokens[3].c_str());
 
@@ -157,8 +157,8 @@ void ScenePlayer::_ParseSection_OBJECTS(std::string line)
 	case OBJECT_TYPE_KOOPAS: obj = new Koopa(); break;
 	case OBJECT_TYPE_PORTAL:
 	{
-		float r = atof(tokens[4].c_str());
-		float b = atof(tokens[5].c_str());
+		float r = strtof(tokens[4].c_str(), NULL);
+		float b = strtof(tokens[5].c_str(), NULL);
 		int scene_id = atoi(tokens[6].c_str());
 		obj = new Portal(x, y, r, b, scene_id);
 	}
@@ -229,7 +229,7 @@ void ScenePlayer::Load()
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
 }
 
-void ScenePlayer::Update(DWORD dt)
+void ScenePlayer::Update(ULONGLONG dt)
 {
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
@@ -256,12 +256,12 @@ void ScenePlayer::Update(DWORD dt)
 	cx -= game->GetScreenWidth() / 2;
 	cy -= game->GetScreenHeight() / 2;
 
-	Game::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
+	Game::GetInstance()->SetCamPos(cx, cy);
 }
 
 void ScenePlayer::Render()
 {
-	for (int i = 0; i < objects.size(); i++)
+	for (size_t i = 0; i < objects.size(); i++)
 		objects[i]->Render();
 }
 
@@ -270,7 +270,7 @@ void ScenePlayer::Render()
 */
 void ScenePlayer::Unload()
 {
-	for (int i = 0; i < objects.size(); i++)
+	for (size_t i = 0; i < objects.size(); i++)
 		delete objects[i];
 
 	objects.clear();

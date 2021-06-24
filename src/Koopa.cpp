@@ -17,7 +17,7 @@ void Koopa::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 		bottom = y + KOOPAS_BBOX_HEIGHT;
 }
 
-void Koopa::Update(DWORD dt, std::vector<LPGAMEOBJECT>* coObjects)
+void Koopa::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 {
 	GameObject::Update(dt, coObjects);
 

@@ -3,8 +3,6 @@
 #include <dinput.h>
 #include <windows.h>
 
-#define DIRECTINPUT_VERSION 0x0800
-
 constexpr int KEYBOARD_BUFFER_SIZE = 1024;
 
 /*

@@ -25,7 +25,7 @@ protected:
 
 	int state;
 
-	DWORD dt;
+	ULONGLONG dt;
 
 	LPANIMATION_SET animation_set;
 
@@ -56,7 +56,7 @@ public:
 		float& rdy);
 
 
-	virtual void Update(DWORD dt, std::vector<LPGAMEOBJECT>* coObjects = NULL);
+	virtual void Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects = NULL);
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom) = 0;
 	virtual void Render() = 0;
 	~GameObject();

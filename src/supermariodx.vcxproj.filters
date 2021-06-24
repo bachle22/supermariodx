@@ -11,9 +11,6 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Animations">
-      <UniqueIdentifier>{e5fe289a-dc3c-4f59-b495-2bd13b3f076c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Scenes">
       <UniqueIdentifier>{f013c009-da9f-4251-a5f6-0a8d4364d4a0}</UniqueIdentifier>
     </Filter>
@@ -26,11 +23,14 @@
     <Filter Include="Objects\Player">
       <UniqueIdentifier>{46460a55-fc89-4281-a8d8-3c1f0bddd9b5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Objects\Static">
-      <UniqueIdentifier>{718e95f9-890a-40e8-84ce-fe8a45a5c22d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Utilities\Strings">
       <UniqueIdentifier>{cc6ce59c-e24b-462c-8ced-901bd1ab9c0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\Stationary">
+      <UniqueIdentifier>{718e95f9-890a-40e8-84ce-fe8a45a5c22d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics">
+      <UniqueIdentifier>{e5fe289a-dc3c-4f59-b495-2bd13b3f076c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -47,26 +47,20 @@
     <ClCompile Include="Mario.cpp">
       <Filter>Objects\Player</Filter>
     </ClCompile>
-    <ClCompile Include="Sprites.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Textures.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="Input.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="Brick.cpp">
-      <Filter>Objects\Static</Filter>
+      <Filter>Objects\Stationary</Filter>
     </ClCompile>
     <ClCompile Include="Goomba.cpp">
       <Filter>Objects\NPCs</Filter>
     </ClCompile>
     <ClCompile Include="Animations.cpp">
-      <Filter>Animations</Filter>
+      <Filter>Graphics</Filter>
     </ClCompile>
     <ClCompile Include="AnimationSets.cpp">
-      <Filter>Animations</Filter>
+      <Filter>Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Scene.cpp">
       <Filter>Scenes</Filter>
@@ -75,13 +69,22 @@
       <Filter>Utilities\Strings</Filter>
     </ClCompile>
     <ClCompile Include="Portal.cpp">
-      <Filter>Objects\Static</Filter>
+      <Filter>Objects\Stationary</Filter>
     </ClCompile>
     <ClCompile Include="ScenePlayer.cpp">
       <Filter>Scenes</Filter>
     </ClCompile>
     <ClCompile Include="Koopa.cpp">
       <Filter>Objects\NPCs</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprites.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Textures.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Map.cpp">
+      <Filter>Scenes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -100,12 +103,6 @@
     <ClInclude Include="Mario.h">
       <Filter>Objects\Player</Filter>
     </ClInclude>
-    <ClInclude Include="Sprites.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Textures.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="Input.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -113,16 +110,16 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="Brick.h">
-      <Filter>Objects\Static</Filter>
+      <Filter>Objects\Stationary</Filter>
     </ClInclude>
     <ClInclude Include="Goomba.h">
       <Filter>Objects\NPCs</Filter>
     </ClInclude>
     <ClInclude Include="Animations.h">
-      <Filter>Animations</Filter>
+      <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="AnimationSets.h">
-      <Filter>Animations</Filter>
+      <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Scene.h">
       <Filter>Scenes</Filter>
@@ -131,12 +128,21 @@
       <Filter>Utilities\Strings</Filter>
     </ClInclude>
     <ClInclude Include="Portal.h">
-      <Filter>Objects\Static</Filter>
+      <Filter>Objects\Stationary</Filter>
     </ClInclude>
     <ClInclude Include="Koopa.h">
       <Filter>Objects\NPCs</Filter>
     </ClInclude>
     <ClInclude Include="ScenePlayer.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Textures.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprites.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Map.h">
       <Filter>Scenes</Filter>
     </ClInclude>
   </ItemGroup>

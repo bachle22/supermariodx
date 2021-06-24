@@ -31,7 +31,7 @@
 #define	MARIO_LEVEL_SMALL	1
 #define	MARIO_LEVEL_BIG		2
 
-#define MARIO_BIG_BBOX_WIDTH  15
+#define MARIO_BIG_BBOX_WIDTH  14
 #define MARIO_BIG_BBOX_HEIGHT 27
 
 #define MARIO_SMALL_BBOX_WIDTH  13
@@ -43,14 +43,14 @@ class Mario : public GameObject
 {
 	int level;
 	int untouchable;
-	DWORD untouchable_start;
+	ULONGLONG untouchable_start;
 
 	float start_x;			// initial position of Mario at scene
 	float start_y;
 
 public:
 	Mario(float x = 0.0f, float y = 0.0f);
-	virtual void Update(DWORD dt, std::vector<LPGAMEOBJECT>* colliable_objects = NULL);
+	virtual void Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();
 
 	void SetState(int state);

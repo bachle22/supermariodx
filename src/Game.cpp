@@ -123,7 +123,7 @@ void Game::InitKeyboard()
 	//
 	// Set the buffer size to DINPUT_BUFFERSIZE (defined above) elements.
 	//
-	// The buffer size is a DWORD property associated with the device.
+	// The buffer size is a ULONGLONG property associated with the device.
 	DIPROPDWORD dipdw;
 
 	dipdw.diph.dwSize = sizeof(DIPROPDWORD);
@@ -264,8 +264,8 @@ void Game::SweptAABB(
 
 	if (dx == 0)
 	{
-		tx_entry = -99999999999;
-		tx_exit = 99999999999;
+		tx_entry = -INFINITY;
+		tx_exit = INFINITY;
 	}
 	else
 	{
@@ -275,8 +275,8 @@ void Game::SweptAABB(
 
 	if (dy == 0)
 	{
-		ty_entry = -99999999999;
-		ty_exit = 99999999999;
+		ty_entry = -INFINITY;
+		ty_exit = INFINITY;
 	}
 	else
 	{

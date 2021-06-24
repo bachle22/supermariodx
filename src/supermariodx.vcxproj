@@ -29,6 +29,7 @@
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Koopa.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Map.cpp" />
     <ClCompile Include="Mario.cpp" />
     <ClCompile Include="Portal.cpp" />
     <ClCompile Include="Scene.cpp" />
@@ -56,6 +57,7 @@
     <ClInclude Include="Sprites.h" />
     <ClInclude Include="Strings.h" />
     <ClInclude Include="Textures.h" />
+    <ClInclude Include="Map.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\docs\classes.cd" />
@@ -116,6 +118,7 @@
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(DXSDK_DIR)include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <LibraryPath>$(DXSDK_DIR)lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
+    <CodeAnalysisRuleSet>custom.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -124,6 +127,7 @@
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(DXSDK_DIR)include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <LibraryPath>$(DXSDK_DIR)lib\x64;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
+    <CodeAnalysisRuleSet>custom.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>

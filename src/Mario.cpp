@@ -20,7 +20,7 @@ Mario::Mario(float x, float y) : GameObject()
 	this->y = y;
 }
 
-void Mario::Update(DWORD dt, std::vector<LPGAMEOBJECT>* coObjects)
+void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 {
 	// Calculate dx, dy 
 	GameObject::Update(dt);
@@ -73,7 +73,7 @@ void Mario::Update(DWORD dt, std::vector<LPGAMEOBJECT>* coObjects)
 		//
 		// Collision logic with other objects
 		//
-		for (UINT i = 0; i < coEventsResult.size(); i++)
+		for (size_t i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
 
@@ -116,12 +116,12 @@ void Mario::Update(DWORD dt, std::vector<LPGAMEOBJECT>* coObjects)
 	}
 
 	// clean up collision events
-	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+	for (size_t i = 0; i < coEvents.size(); i++) delete coEvents[i];
 }
 
 void Mario::Render()
 {
-	int ani;
+	int ani = NULL;
 	if (state == MARIO_STATE_DIE)
 		ani = MARIO_ANI_DIE;
 	else

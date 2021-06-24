@@ -13,7 +13,7 @@
 class ScenePlayer : public Scene
 {
 protected:
-	Mario* player;					// A play scene has to have player, right? 
+	Mario* player;
 
 	std::vector<LPGAMEOBJECT> objects;
 
@@ -28,13 +28,13 @@ public:
 	ScenePlayer(int id, LPCWSTR filePath);
 
 	virtual void Load();
-	virtual void Update(DWORD dt);
+	virtual void Update(ULONGLONG dt);
 	virtual void Render();
 	virtual void Unload();
 
 	Mario* GetPlayer() { return player; }
 
-	//friend class CPlayScenceKeyHandler;
+	friend class ScenePlayerInputHandler;
 };
 
 class ScenePlayerInputHandler : public SceneInputHandler
@@ -43,6 +43,6 @@ public:
 	virtual void KeyState(BYTE* states);
 	virtual void OnKeyDown(int KeyCode);
 	virtual void OnKeyUp(int KeyCode) {};
-	ScenePlayerInputHandler(Scene* s) : SceneInputHandler(s) {};
+	ScenePlayerInputHandler(LPSCENE s): SceneInputHandler(s) {};
 };
 

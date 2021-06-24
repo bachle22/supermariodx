@@ -1,0 +1,207 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Game" Collapsed="true">
+    <Position X="26.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BOBAgAAIASAAAgAhQIBEIKACJACQAQACIIEKQACACAQ=</HashCode>
+      <FileName>Game.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InputHandler" Collapsed="true">
+    <Position X="13.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAACAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Input.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Sprite" Collapsed="true">
+    <Position X="11" Y="17" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAhAAAAAAAAgAAAAIAgAQAAAAAAAAggA=</HashCode>
+      <FileName>Sprites.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Sprites" Collapsed="true">
+    <Position X="23.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACIAAAAAAAAAAABAAAAAAAAABAAAAAAAAAAAAADAAAA=</HashCode>
+      <FileName>Sprites.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Textures" Collapsed="true">
+    <Position X="25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACIAAAAAAEAAAABAAAAAAAAABAAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>Textures.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Frame" Collapsed="true">
+    <Position X="7" Y="13" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQABAAAAAAAAEAAAAAAAAAAAABAAAAAAAAAAAAAAAAE=</HashCode>
+      <FileName>Animations.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Animation" Collapsed="true">
+    <Position X="3" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAIgAAAAAAAgAAAAAAAAAAAAAAAABAAAQAgAAA=</HashCode>
+      <FileName>Animations.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Animations" Collapsed="true">
+    <Position X="23.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACIAAAAAAAAAAABAAAAAAAAABAAAEAAAAAAAAABAAAA=</HashCode>
+      <FileName>Animations.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AnimationSets" Collapsed="true">
+    <Position X="25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACIAEAAAAAAAAABAAQAAAAAABAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AnimationSets.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Scene" Collapsed="true">
+    <Position X="5.75" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAgACAAAAAAAAAgAAAAAAAAQAAAAAAAJAAAAAIAgA=</HashCode>
+      <FileName>Scene.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SceneInputHandler" Collapsed="true">
+    <Position X="13.75" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQEAACAAAAAAAAAAIAAAAIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Scene.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ScenePlayer" Collapsed="true">
+    <Position X="5.75" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAgACAAAAIgACAAAEAgAAAgQAAAAEBABAAAAAAAAA=</HashCode>
+      <FileName>ScenePlayer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ScenePlayerInputHandler" Collapsed="true">
+    <Position X="13.75" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAQACAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ScenePlayer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GameObject" Collapsed="true">
+    <Position X="5.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>kBQABECAACIAIAAAAkAIABAgAAEAAgAEABZgAAIABBA=</HashCode>
+      <FileName>GameObject.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Goomba" Collapsed="true">
+    <Position X="8.75" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQABAAAAAAAAAAAAAAAAAAgAAAAAAAAABAAAAAAAAA=</HashCode>
+      <FileName>Goomba.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Koopa" Collapsed="true">
+    <Position X="11" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQABAAAAAAAAAAAAAAAAAAgAAAAAAAAABAAAAAIAAA=</HashCode>
+      <FileName>Koopa.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mario" Collapsed="true">
+    <Position X="16.25" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQABAAAAAAABAAACAAQEQAgYAEAAAAAABAgAAAAAAA=</HashCode>
+      <FileName>Mario.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Brick" Collapsed="true">
+    <Position X="18.5" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAABAAAAAAAAA=</HashCode>
+      <FileName>Brick.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Portal" Collapsed="true">
+    <Position X="20.75" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAQAAAAAAgAAAAAAAAABAAAAABEAI=</HashCode>
+      <FileName>Portal.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="CollisionEvent" Collapsed="true">
+    <Position X="3" Y="18" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAIAAAAAIIAAAAAAAAAAAAAAQAAAAARBA=</HashCode>
+      <FileName>Collision.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Typedef Name="LPGAMEOBJECT" Collapsed="true">
+    <Position X="5.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Definition.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="LPCOLLISIONEVENT" Collapsed="true">
+    <Position X="3" Y="16" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Definition.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="LPKEYEVENTHANDLER" Collapsed="true">
+    <Position X="13.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Input.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="LPSPRITE" Collapsed="true">
+    <Position X="11" Y="15" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Sprites.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="LPANIMATION_FRAME" Collapsed="true">
+    <Position X="7" Y="15" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Animations.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="LPANIMATION" Collapsed="true">
+    <Position X="3" Y="13" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Animations.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="AnimationSet" Collapsed="true">
+    <Position X="10" Y="12" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AnimationSets.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="LPANIMATION_SET" Collapsed="true">
+    <Position X="10" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AnimationSets.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="LPSCENE" Collapsed="true">
+    <Position X="2.75" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Scene.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -24,7 +24,7 @@ GameObject::~GameObject()
 {
 }
 
-void GameObject::Update(DWORD dt, std::vector<LPGAMEOBJECT>* coObjects)
+void GameObject::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 {
 	this->dt = dt;
 	dx = vx * dt;
@@ -59,7 +59,7 @@ void GameObject::CalculatePotentialCollisions(
 	std::vector<LPGAMEOBJECT>* coObjects,
 	std::vector<LPCOLLISIONEVENT>& coEvents)
 {
-	for (UINT i = 0; i < coObjects->size(); i++)
+	for (size_t i = 0; i < coObjects->size(); i++)
 	{
 		LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
 
@@ -88,7 +88,7 @@ void GameObject::FilterCollision(
 
 	coEventsResult.clear();
 
-	for (UINT i = 0; i < coEvents.size(); i++)
+	for (size_t i = 0; i < coEvents.size(); i++)
 	{
 		LPCOLLISIONEVENT c = coEvents[i];
 

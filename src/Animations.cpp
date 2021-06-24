@@ -1,10 +1,9 @@
 #include "Animations.h"
 #include "Debug.h"
 
-void Animation::Add(int spriteId, DWORD time)
+void Animation::Add(int spriteId, ULONGLONG time)
 {
-	int t = time;
-	if (time == 0) t = this->defaultTime;
+	ULONGLONG t = time;
 
 	LPSPRITE sprite = Sprites::GetInstance()->Get(spriteId);
 	LPANIMATION_FRAME frame = new Frame(sprite, t);
@@ -13,15 +12,19 @@ void Animation::Add(int spriteId, DWORD time)
 
 void Animation::Render(float x, float y, int alpha)
 {
-	DWORD now = GetTickCount64();
+	ULONGLONG now = GetTickCount64();
 	if (currentFrame == -1)
 	{
 		currentFrame = 0;
 		lastFrameTime = now;
 	}
+	else if (frames[currentFrame]->GetTime() == 0) {
+		frames[currentFrame]->GetSprite()->Draw(x, y, alpha);
+		return;
+	}
 	else
 	{
-		DWORD t = frames[currentFrame]->GetTime();
+		ULONGLONG t = frames[currentFrame]->GetTime();
 		if (now - lastFrameTime > t)
 		{
 			currentFrame++;
@@ -33,6 +36,7 @@ void Animation::Render(float x, float y, int alpha)
 	}
 
 	frames[currentFrame]->GetSprite()->Draw(x, y, alpha);
+
 }
 
 Animations* Animations::__instance = NULL;
