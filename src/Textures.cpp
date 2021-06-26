@@ -9,11 +9,6 @@
 
 Textures* Textures::__instance = NULL;
 
-Textures::Textures()
-{
-
-}
-
 Textures* Textures::GetInstance()
 {
 	if (__instance == NULL) __instance = new Textures();

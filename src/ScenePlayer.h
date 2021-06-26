@@ -1,19 +1,15 @@
 #pragma once
 
-#include "Game.h"
-#include "Textures.h"
-#include "Scene.h"
 #include "GameObject.h"
-#include "Brick.h"
+#include "Scene.h"
+#include "TiledMap.h"
 #include "Mario.h"
-#include "Goomba.h"
-#include "Koopa.h"
-
 
 class ScenePlayer : public Scene
 {
 protected:
 	Mario* player;
+	TiledMap* map;
 
 	std::vector<LPGAMEOBJECT> objects;
 
@@ -21,6 +17,7 @@ protected:
 	void _ParseSection_SPRITES(std::string line);
 	void _ParseSection_ANIMATIONS(std::string line);
 	void _ParseSection_ANIMATION_SETS(std::string line);
+	void _ParseSection_TILEDMAP(std::string line);
 	void _ParseSection_OBJECTS(std::string line);
 
 

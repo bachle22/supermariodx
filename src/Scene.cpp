@@ -6,3 +6,8 @@ Scene::Scene(int id, LPCWSTR filePath)
 	this->sceneFilePath = filePath;
 	this->keyHandler = NULL;
 }
+
+Scene::~Scene()
+{
+	delete sceneFilePath, keyHandler;
+}

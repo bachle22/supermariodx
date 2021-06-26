@@ -21,11 +21,11 @@ void Game::Init(HWND hWnd)
 	D3DPRESENT_PARAMETERS d3dpp;				// Struct to hold various device information
 
 	ZeroMemory(&d3dpp, sizeof(d3dpp));			// Clear out the struct for use
-	d3dpp.Windowed = TRUE;						// Program windowed, not fullscreen
+	d3dpp.Windowed = TRUE;						// Program windowed, not fullscreena
 	d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;	// Discard old frames
 	d3dpp.BackBufferFormat = D3DFMT_X8R8G8B8;	// 32-bit RGB pixel format, where 8 bits are reserved for each color.
 	d3dpp.hDeviceWindow = hWnd;					// Set the window to be used by DirectX
-	d3dpp.BackBufferCount = 1;
+	d3dpp.BackBufferCount = D3DPRESENT_BACK_BUFFERS_MAX;
 
 	// Retrieve window width & height so that we can create backbuffer height & width accordingly 
 	RECT r;
@@ -82,7 +82,7 @@ void Game::InitKeyboard()
 	HRESULT
 		hr = DirectInput8Create
 		(
-			(HINSTANCE)GetWindowLong(hWnd, GWL_HINSTANCE),
+			(HINSTANCE)GetWindowLongPtrW(hWnd, GWLP_HINSTANCE),
 			DIRECTINPUT_VERSION,
 			IID_IDirectInput8, (VOID**)&di, NULL
 		);

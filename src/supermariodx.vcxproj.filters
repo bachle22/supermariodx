@@ -83,8 +83,8 @@
     <ClCompile Include="Textures.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Map.cpp">
-      <Filter>Scenes</Filter>
+    <ClCompile Include="TiledMap.cpp">
+      <Filter>Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -142,8 +142,8 @@
     <ClInclude Include="Sprites.h">
       <Filter>Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Map.h">
-      <Filter>Scenes</Filter>
+    <ClInclude Include="TiledMap.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

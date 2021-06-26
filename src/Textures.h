@@ -11,7 +11,7 @@ class Textures
 	std::unordered_map<int, LPDIRECT3DTEXTURE9> textures;
 
 public:
-	Textures();
+	Textures() noexcept {};
 	void Add(int id, LPCWSTR filePath, D3DCOLOR transparentColor);
 	LPDIRECT3DTEXTURE9 Get(int i);
 

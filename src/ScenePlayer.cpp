@@ -1,5 +1,6 @@
 #include <fstream>
 
+#include "Game.h"
 #include "ScenePlayer.h"
 #include "Parser.h"
 #include "Textures.h"
@@ -7,7 +8,9 @@
 #include "Portal.h"
 #include "Strings.h"
 #include "Debug.h"
-#include "AnimationSets.h"
+#include "Brick.h"
+#include "Mario.h"
+#include "Goomba.h"
 #include "Koopa.h"
 
 ScenePlayer::ScenePlayer(int id, LPCWSTR filePath): Scene(id, filePath)
@@ -24,6 +27,7 @@ ScenePlayer::ScenePlayer(int id, LPCWSTR filePath): Scene(id, filePath)
 #define SCENE_SECTION_SPRITES 3
 #define SCENE_SECTION_ANIMATIONS 4
 #define SCENE_SECTION_ANIMATION_SETS	5
+#define SCENE_SECTION_TILEMAP 7
 #define SCENE_SECTION_OBJECTS	6
 
 #define OBJECT_TYPE_MARIO	0
@@ -35,20 +39,19 @@ ScenePlayer::ScenePlayer(int id, LPCWSTR filePath): Scene(id, filePath)
 
 #define MAX_SCENE_LINE 1024
 
-
 void ScenePlayer::_ParseSection_TEXTURES(std::string line)
 {
 	std::vector<std::string> tokens = split(line);
 
 	if (tokens.size() < 5) return; // skip invalid lines
 
-	int texID = atoi(tokens[0].c_str());
+	int textureId = atoi(tokens[0].c_str());
 	std::wstring path = ToWSTR(tokens[1]);
 	int R = atoi(tokens[2].c_str());
 	int G = atoi(tokens[3].c_str());
 	int B = atoi(tokens[4].c_str());
 
-	Textures::GetInstance()->Add(texID, path.c_str(), D3DCOLOR_XRGB(R, G, B));
+	Textures::GetInstance()->Add(textureId, path.c_str(), D3DCOLOR_XRGB(R, G, B));
 }
 
 void ScenePlayer::_ParseSection_SPRITES(std::string line)
@@ -62,16 +65,16 @@ void ScenePlayer::_ParseSection_SPRITES(std::string line)
 	int t = atoi(tokens[2].c_str());
 	int r = atoi(tokens[3].c_str());
 	int b = atoi(tokens[4].c_str());
-	int texID = atoi(tokens[5].c_str());
+	int textureId = atoi(tokens[5].c_str());
 
-	LPDIRECT3DTEXTURE9 tex = Textures::GetInstance()->Get(texID);
-	if (tex == NULL)
+	LPDIRECT3DTEXTURE9 texture = Textures::GetInstance()->Get(textureId);
+	if (texture == NULL)
 	{
-		DebugOut(L"[ERROR] Texture ID %d not found!\n", texID);
+		DebugOut(L"[ERROR] Texture ID %d not found!\n", textureId);
 		return;
 	}
 
-	Sprites::GetInstance()->Add(ID, l, t, r, b, tex);
+	Sprites::GetInstance()->Add(ID, l, t, r, b, texture);
 }
 
 void ScenePlayer::_ParseSection_ANIMATIONS(std::string line)
@@ -116,6 +119,30 @@ void ScenePlayer::_ParseSection_ANIMATION_SETS(std::string line)
 	}
 
 	AnimationSets::GetInstance()->Add(ani_set_id, s);
+}
+
+void ScenePlayer::_ParseSection_TILEDMAP(std::string line)
+{
+	int id, mapRows, mapColumns, tilesheetColumns, tilesheetRows, totalTiles;
+	LPCWSTR path = ToLPCWSTR(line);
+	std::ifstream f;
+	f.open(path);
+
+	f >> id >> mapRows >> mapColumns >> tilesheetRows >> tilesheetColumns >> totalTiles ;
+
+	int** tiles = new int* [mapRows];
+	for (int i = 0; i < mapRows; i++)
+	{
+		tiles[i] = new int[mapColumns];
+		for (int j = 0; j < mapColumns; j++)
+			f >> tiles[i][j];
+	}
+
+	f.close();
+	
+	map = new TiledMap(id, mapRows, mapColumns, tilesheetRows, tilesheetColumns, totalTiles);
+	map->SetTileSprites();
+	map->SetTileMapData(tiles);
 }
 
 /*
@@ -207,6 +234,9 @@ void ScenePlayer::Load()
 		if (line == "[OBJECTS]") {
 			section = SCENE_SECTION_OBJECTS; continue;
 		}
+		if (line == "[TILEDMAP]") {
+			section = SCENE_SECTION_TILEMAP; continue;
+		}
 		if (line[0] == '[') { section = SCENE_SECTION_UNKNOWN; continue; }
 
 		//
@@ -219,12 +249,13 @@ void ScenePlayer::Load()
 		case SCENE_SECTION_ANIMATIONS: _ParseSection_ANIMATIONS(line); break;
 		case SCENE_SECTION_ANIMATION_SETS: _ParseSection_ANIMATION_SETS(line); break;
 		case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
+		case SCENE_SECTION_TILEMAP: _ParseSection_TILEDMAP(line); break;
 		}
 	}
 
 	f.close();
 
-	Textures::GetInstance()->Add(ID_TEX_BBOX, L"..\\assets\\textures\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
+	Textures::GetInstance()->Add(ID_TEX_BBOX, L"..\\assets\\sprites\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
 
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
 }
@@ -261,6 +292,7 @@ void ScenePlayer::Update(ULONGLONG dt)
 
 void ScenePlayer::Render()
 {
+	map->Render();
 	for (size_t i = 0; i < objects.size(); i++)
 		objects[i]->Render();
 }

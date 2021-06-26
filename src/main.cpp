@@ -162,7 +162,7 @@ int WINAPI WinMain(
 	game = Game::GetInstance();
 	game->Init(hWnd);
 	game->InitKeyboard();
-	game->Load(L"..\\maps\\main.config");
+	game->Load(L"..\\scenes\\main.config");
 
 	SetWindowPos(hWnd, 0, 0, 0, SCREEN_WIDTH * 3, SCREEN_HEIGHT * 3, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER);
 	HandleWindowMessage();

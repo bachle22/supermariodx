@@ -12,7 +12,7 @@ protected:
 
 public:
 	Scene(int id, LPCWSTR filePath);
-
+	~Scene();
 	InputHandler* GetKeyEventHandler() { return keyHandler; }
 	virtual void Load() = 0;
 	virtual void Unload() = 0;

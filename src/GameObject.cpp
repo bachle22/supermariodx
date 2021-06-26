@@ -22,6 +22,7 @@ GameObject::GameObject()
 
 GameObject::~GameObject()
 {
+	delete animation_set;
 }
 
 void GameObject::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
