@@ -1,0 +1,16 @@
+# id	file_path	transparent_color_r	g	b
+[TEXTURES]
+0	..\assets\sprites\mario.png	255	255	255
+20	..\assets\sprites\misc.png	176	224	248
+10	..\assets\sprites\enemies.png	3	26	110
+111	..\assets\tiles\world-1-1.png	0	255	0
+[TILEDMAP]
+..\scenes\world-1-1\world-1-1.map
+[SPRITES]
+..\scenes\world-1-1\world-1-1.sprites
+[ANIMATIONS]
+..\scenes\world-1-1\world-1-1.animations
+[ANIMATION_SETS]
+..\scenes\world-1-1\world-1-1.animsets
+[OBJECTS]
+..\scenes\world-1-1\world-1-1.objects

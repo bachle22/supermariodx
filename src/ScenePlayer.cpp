@@ -13,6 +13,8 @@
 #include "Goomba.h"
 #include "Koopa.h"
 
+#include "Parser.h"
+
 ScenePlayer::ScenePlayer(int id, LPCWSTR filePath): Scene(id, filePath)
 {
 	keyHandler = new ScenePlayerInputHandler(this);
@@ -56,70 +58,165 @@ void ScenePlayer::_ParseSection_TEXTURES(std::string line)
 
 void ScenePlayer::_ParseSection_SPRITES(std::string line)
 {
-	std::vector<std::string> tokens = split(line);
+	LPCWSTR path = ToLPCWSTR(line);
+	std::ifstream f;
+	f.open(path);
 
-	if (tokens.size() < 6) return; // skip invalid lines
+	if (f.is_open()) {
+		std::string str;
+		while (std::getline(f, str)) {
 
-	int ID = atoi(tokens[0].c_str());
-	int l = atoi(tokens[1].c_str());
-	int t = atoi(tokens[2].c_str());
-	int r = atoi(tokens[3].c_str());
-	int b = atoi(tokens[4].c_str());
-	int textureId = atoi(tokens[5].c_str());
+			if (str[0] == '#' || str == "") continue;
+			std::vector<std::string> tokens = split(str);
 
-	LPDIRECT3DTEXTURE9 texture = Textures::GetInstance()->Get(textureId);
-	if (texture == NULL)
-	{
-		DebugOut(L"[ERROR] Texture ID %d not found!\n", textureId);
-		return;
+			int ID = atoi(tokens[0].c_str());
+			int l = atoi(tokens[1].c_str());
+			int t = atoi(tokens[2].c_str());
+			int r = atoi(tokens[3].c_str());
+			int b = atoi(tokens[4].c_str());
+			int textureId = atoi(tokens[5].c_str());
+
+			LPDIRECT3DTEXTURE9 texture = Textures::GetInstance()->Get(textureId);
+			if (texture == NULL)
+			{
+				DebugOut(L"[ERROR] Texture ID %d not found!\n", textureId);
+				return;
+			}
+
+			Sprites::GetInstance()->Add(ID, l, t, r, b, texture);
+		}
+		f.close();
 	}
-
-	Sprites::GetInstance()->Add(ID, l, t, r, b, texture);
 }
 
 void ScenePlayer::_ParseSection_ANIMATIONS(std::string line)
 {
-	std::vector<std::string> tokens = split(line);
+	LPCWSTR path = ToLPCWSTR(line);
+	std::ifstream f;
+	f.open(path);
 
-	if (tokens.size() < 3) return; // skip invalid lines - an animation must at least has 1 frame and 1 frame time
+	if (f.is_open()) {
+		std::string str;
+		while (std::getline(f, str)) {
+			if (str[0] == '#' || str == "") continue;
 
-	//DebugOut(L"--> %s\n",ToWSTR(line).c_str());
+			std::vector<std::string> tokens = split(str);
+			LPANIMATION ani = new Animation();
 
-	LPANIMATION ani = new Animation();
+			int ani_id = atoi(tokens[0].c_str());
+			for (size_t i = 1; i < tokens.size(); i += 2)	// why i+=2 ?  sprite_id | frame_time  
+			{
+				int sprite_id = atoi(tokens[i].c_str());
+				int frame_time = atoi(tokens[i + 1].c_str());
+				ani->Add(sprite_id, frame_time);
+			}
 
-	int ani_id = atoi(tokens[0].c_str());
-	for (size_t i = 1; i < tokens.size(); i += 2)	// why i+=2 ?  sprite_id | frame_time  
-	{
-		int sprite_id = atoi(tokens[i].c_str());
-		int frame_time = atoi(tokens[i + 1].c_str());
-		ani->Add(sprite_id, frame_time);
+			Animations::GetInstance()->Add(ani_id, ani);
+		}
+		f.close();
 	}
-
-	Animations::GetInstance()->Add(ani_id, ani);
 }
 
 void ScenePlayer::_ParseSection_ANIMATION_SETS(std::string line)
 {
-	std::vector<std::string> tokens = split(line);
+	LPCWSTR path = ToLPCWSTR(line);
+	std::ifstream f;
+	f.open(path);
 
-	if (tokens.size() < 2) return; // skip invalid lines - an animation set must at least id and one animation id
+	if (f.is_open()) {
+		std::string str;
+		while (std::getline(f, str)) {
+			if (str[0] == '#' || str == "") continue;
 
-	int ani_set_id = atoi(tokens[0].c_str());
+			std::vector<std::string> tokens = split(str);
+			if (tokens.size() < 2) return; // skip invalid lines - an animation set must at least id and one animation id
+			int ani_set_id = atoi(tokens[0].c_str());
+			LPANIMATION_SET s = new AnimationSet();
+			Animations* animations = Animations::GetInstance();
 
-	LPANIMATION_SET s = new AnimationSet();
+			for (size_t i = 1; i < tokens.size(); i++)
+			{
+				int ani_id = atoi(tokens[i].c_str());
+				LPANIMATION ani = animations->Get(ani_id);
+				s->push_back(ani);
+			}
+			AnimationSets::GetInstance()->Add(ani_set_id, s);
 
-	Animations* animations = Animations::GetInstance();
-
-	for (size_t i = 1; i < tokens.size(); i++)
-	{
-		int ani_id = atoi(tokens[i].c_str());
-
-		LPANIMATION ani = animations->Get(ani_id);
-		s->push_back(ani);
+		}
+		f.close();
 	}
-
-	AnimationSets::GetInstance()->Add(ani_set_id, s);
 }
+
+
+/*
+	Parse a line in section [OBJECTS]
+*/
+void ScenePlayer::_ParseSection_OBJECTS(std::string line)
+{
+	LPCWSTR path = ToLPCWSTR(line);
+	std::ifstream f;
+	f.open(path);
+
+	if (f.is_open()) {
+		std::string str;
+		while (std::getline(f, str)) {
+			if (str[0] == '#' || str == "") continue;
+
+			std::vector<std::string> tokens = split(str);
+			if (tokens.size() < 3) return; // skip invalid lines - an object set must have at least id, x, y
+
+			int object_type = atoi(tokens[0].c_str());
+			float x = strtof(tokens[1].c_str(), NULL);
+			float y = strtof(tokens[2].c_str(), NULL);
+
+			int ani_set_id = atoi(tokens[3].c_str());
+
+			AnimationSets* animation_sets = AnimationSets::GetInstance();
+
+			GameObject* obj = NULL;
+
+			switch (object_type)
+			{
+			case OBJECT_TYPE_MARIO:
+				if (player != NULL)
+				{
+					DebugOut(L"[ERROR] MARIO object was created before!\n");
+					return;
+				}
+				obj = new Mario(x, y);
+				player = (Mario*)obj;
+
+				DebugOut(L"[INFO] Player object created!\n");
+				break;
+			case OBJECT_TYPE_GOOMBA: obj = new Goomba(); break;
+			case OBJECT_TYPE_BRICK: obj = new Brick(); break;
+			case OBJECT_TYPE_KOOPAS: obj = new Koopa(); break;
+			case OBJECT_TYPE_PORTAL:
+			{
+				float r = strtof(tokens[4].c_str(), NULL);
+				float b = strtof(tokens[5].c_str(), NULL);
+				int scene_id = atoi(tokens[6].c_str());
+				obj = new Portal(x, y, r, b, scene_id);
+			}
+			break;
+			default:
+				DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
+				return;
+			}
+
+			// General object setup
+			obj->SetPosition(x, y);
+
+			LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+
+			obj->SetAnimationSet(ani_set);
+			objects.push_back(obj);
+
+		}
+		f.close();
+	}
+}
+
 
 void ScenePlayer::_ParseSection_TILEDMAP(std::string line)
 {
@@ -128,7 +225,7 @@ void ScenePlayer::_ParseSection_TILEDMAP(std::string line)
 	std::ifstream f;
 	f.open(path);
 
-	f >> id >> mapRows >> mapColumns >> tilesheetRows >> tilesheetColumns >> totalTiles ;
+	f >> id >> mapRows >> mapColumns >> tilesheetRows >> tilesheetColumns >> totalTiles;
 
 	int** tiles = new int* [mapRows];
 	for (int i = 0; i < mapRows; i++)
@@ -139,69 +236,10 @@ void ScenePlayer::_ParseSection_TILEDMAP(std::string line)
 	}
 
 	f.close();
-	
+
 	map = new TiledMap(id, mapRows, mapColumns, tilesheetRows, tilesheetColumns, totalTiles);
 	map->SetTileSprites();
 	map->SetTileMapData(tiles);
-}
-
-/*
-	Parse a line in section [OBJECTS]
-*/
-void ScenePlayer::_ParseSection_OBJECTS(std::string line)
-{
-	std::vector<std::string> tokens = split(line);
-
-	//DebugOut(L"--> %s\n",ToWSTR(line).c_str());
-
-	if (tokens.size() < 3) return; // skip invalid lines - an object set must have at least id, x, y
-
-	int object_type = atoi(tokens[0].c_str());
-	float x = strtof(tokens[1].c_str(), NULL);
-	float y = strtof(tokens[2].c_str(), NULL);
-
-	int ani_set_id = atoi(tokens[3].c_str());
-
-	AnimationSets* animation_sets = AnimationSets::GetInstance();
-
-	GameObject* obj = NULL;
-
-	switch (object_type)
-	{
-	case OBJECT_TYPE_MARIO:
-		if (player != NULL)
-		{
-			DebugOut(L"[ERROR] MARIO object was created before!\n");
-			return;
-		}
-		obj = new Mario(x, y);
-		player = (Mario*)obj;
-
-		DebugOut(L"[INFO] Player object created!\n");
-		break;
-	case OBJECT_TYPE_GOOMBA: obj = new Goomba(); break;
-	case OBJECT_TYPE_BRICK: obj = new Brick(); break;
-	case OBJECT_TYPE_KOOPAS: obj = new Koopa(); break;
-	case OBJECT_TYPE_PORTAL:
-	{
-		float r = strtof(tokens[4].c_str(), NULL);
-		float b = strtof(tokens[5].c_str(), NULL);
-		int scene_id = atoi(tokens[6].c_str());
-		obj = new Portal(x, y, r, b, scene_id);
-	}
-	break;
-	default:
-		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
-		return;
-	}
-
-	// General object setup
-	obj->SetPosition(x, y);
-
-	LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
-
-	obj->SetAnimationSet(ani_set);
-	objects.push_back(obj);
 }
 
 void ScenePlayer::Load()
@@ -219,8 +257,7 @@ void ScenePlayer::Load()
 	{
 		std::string line(str);
 
-		if (line[0] == '#') continue;	// skip comment lines	
-
+		if (line[0] == '#' || line == "") continue;	// skip comment lines	
 		if (line == "[TEXTURES]") { section = SCENE_SECTION_TEXTURES; continue; }
 		if (line == "[SPRITES]") {
 			section = SCENE_SECTION_SPRITES; continue;
