@@ -57,6 +57,7 @@ void Textures::Add(int id, LPCWSTR filePath, D3DCOLOR transparentColor)
 
 LPDIRECT3DTEXTURE9 Textures::Get(int i)
 {
+	if (i != -100 && textures[i] == NULL) DebugOut(L"[ERROR] Texture ID %d not found \n", i);
 	return textures[i];
 }
 

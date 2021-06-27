@@ -35,6 +35,7 @@ void Sprites::Add(int id, int left, int top, int right, int bottom, LPDIRECT3DTE
 {
 	LPSPRITE s = new Sprite(id, left, top, right, bottom, tex);
 	sprites[id] = s;
+
 }
 
 LPSPRITE Sprites::Get(int id)

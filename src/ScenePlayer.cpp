@@ -45,13 +45,17 @@ void ScenePlayer::_ParseSection_TEXTURES(std::string line)
 {
 	std::vector<std::string> tokens = split(line);
 
-	if (tokens.size() < 5) return; // skip invalid lines
+	if (tokens.size() < 5) {
+		DebugOut(L"[WARNING] Invalid texture config in line: %s\n", ToLPCWSTR(line));
+		return;
+	};
 
 	int textureId = atoi(tokens[0].c_str());
 	std::wstring path = ToWSTR(tokens[1]);
 	int R = atoi(tokens[2].c_str());
 	int G = atoi(tokens[3].c_str());
 	int B = atoi(tokens[4].c_str());
+
 
 	Textures::GetInstance()->Add(textureId, path.c_str(), D3DCOLOR_XRGB(R, G, B));
 }
@@ -64,10 +68,16 @@ void ScenePlayer::_ParseSection_SPRITES(std::string line)
 
 	if (f.is_open()) {
 		std::string str;
+		int linenum = 0;
 		while (std::getline(f, str)) {
-
+			linenum++;
 			if (str[0] == '#' || str == "") continue;
 			std::vector<std::string> tokens = split(str);
+
+			if (tokens.size() < 6) {
+				DebugOut(L"[WARNING] Invalid sprite config in line %d: %s\n", linenum, ToLPCWSTR(str));
+				return;
+			};
 
 			int ID = atoi(tokens[0].c_str());
 			int l = atoi(tokens[1].c_str());
@@ -77,11 +87,7 @@ void ScenePlayer::_ParseSection_SPRITES(std::string line)
 			int textureId = atoi(tokens[5].c_str());
 
 			LPDIRECT3DTEXTURE9 texture = Textures::GetInstance()->Get(textureId);
-			if (texture == NULL)
-			{
-				DebugOut(L"[ERROR] Texture ID %d not found!\n", textureId);
-				return;
-			}
+			if (texture == NULL) return;
 
 			Sprites::GetInstance()->Add(ID, l, t, r, b, texture);
 		}
@@ -96,15 +102,22 @@ void ScenePlayer::_ParseSection_ANIMATIONS(std::string line)
 	f.open(path);
 
 	if (f.is_open()) {
+		int linenum = 0;
 		std::string str;
 		while (std::getline(f, str)) {
+			linenum++;
 			if (str[0] == '#' || str == "") continue;
 
 			std::vector<std::string> tokens = split(str);
+			if (tokens.size() % 2 < 1) {
+				DebugOut(L"[WARNING] Invalid animation config in line %d: %s\n", linenum, ToLPCWSTR(str));
+				return;
+			};
+
 			LPANIMATION ani = new Animation();
 
 			int ani_id = atoi(tokens[0].c_str());
-			for (size_t i = 1; i < tokens.size(); i += 2)	// why i+=2 ?  sprite_id | frame_time  
+			for (size_t i = 1; i < tokens.size(); i += 2)	// sprite_id | frame_time  
 			{
 				int sprite_id = atoi(tokens[i].c_str());
 				int frame_time = atoi(tokens[i + 1].c_str());
@@ -125,11 +138,18 @@ void ScenePlayer::_ParseSection_ANIMATION_SETS(std::string line)
 
 	if (f.is_open()) {
 		std::string str;
+		int linenum = 0;
 		while (std::getline(f, str)) {
+			linenum++;
 			if (str[0] == '#' || str == "") continue;
 
 			std::vector<std::string> tokens = split(str);
-			if (tokens.size() < 2) return; // skip invalid lines - an animation set must at least id and one animation id
+			if (tokens.size() < 2) {
+				DebugOut(L"[WARNING] Invalid animation set config in line %d: %s\n", linenum, ToLPCWSTR(str));
+				return;
+				// skip invalid lines - an animation set must at least id and one animation id
+			}
+
 			int ani_set_id = atoi(tokens[0].c_str());
 			LPANIMATION_SET s = new AnimationSet();
 			Animations* animations = Animations::GetInstance();
@@ -159,11 +179,17 @@ void ScenePlayer::_ParseSection_OBJECTS(std::string line)
 
 	if (f.is_open()) {
 		std::string str;
+		int linenum = 0;
 		while (std::getline(f, str)) {
+			linenum++;
 			if (str[0] == '#' || str == "") continue;
 
 			std::vector<std::string> tokens = split(str);
-			if (tokens.size() < 3) return; // skip invalid lines - an object set must have at least id, x, y
+			if (tokens.size() < 4)
+			{
+				DebugOut(L"[WARNING] Invalid animation set config in line %d: %s\n", linenum, ToLPCWSTR(str));
+				return;
+			}
 
 			int object_type = atoi(tokens[0].c_str());
 			float x = strtof(tokens[1].c_str(), NULL);
