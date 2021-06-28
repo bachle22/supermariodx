@@ -31,8 +31,8 @@ void Game::Init(HWND hWnd)
 	RECT r;
 	GetClientRect(hWnd, &r);
 
-	screen_height = r.bottom + 1;
-	screen_width = r.right + 1;
+	screen_height = SCREEN_HEIGHT + 1;
+	screen_width = SCREEN_WIDTH + 1;
 
 	// Create a device class using this information and information from the d3dpp stuct
 	d3d->CreateDevice(

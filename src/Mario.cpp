@@ -13,20 +13,21 @@ Mario::Mario(float x, float y) : GameObject()
 	level = MARIO_LEVEL_BIG;
 	untouchable = 0;
 	SetState(MARIO_STATE_IDLE);
-
+	ax = 0; ay = 0;
 	start_x = x;
 	start_y = y;
 	this->x = x;
 	this->y = y;
+
+	jump_time_start = 0;
 }
 
 void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 {
 	// Calculate dx, dy 
 	GameObject::Update(dt);
+	Movement();
 
-	// Simple fall down
-	vy += MARIO_GRAVITY * dt;
 
 	std::vector<LPCOLLISIONEVENT> coEvents;
 	std::vector<LPCOLLISIONEVENT> coEventsResult;
@@ -49,6 +50,7 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 	{
 		x += dx;
 		y += dy;
+
 	}
 	else
 	{
@@ -69,6 +71,17 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 
 		if (nx != 0) vx = 0;
 		if (ny != 0) vy = 0;
+
+		// Reset jump when touching the ground
+		if (min_ty == 1) {
+			ax = 0;
+			UnsetMovement(MARIO_MOVEMENT_RIGHT);
+		}
+
+		// Prevent double jumping
+		if (ny == -1) IsJumping(false);
+
+		// DebugOut(L"min_tx %f min_ty %f nx %f ny %f rdx %f rdy %f\n", min_tx, min_ty, nx, ny, rdx, rdy);
 
 		//
 		// Collision logic with other objects
@@ -114,7 +127,6 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 			}
 		}
 	}
-
 	// clean up collision events
 	for (size_t i = 0; i < coEvents.size(); i++) delete coEvents[i];
 }
@@ -153,6 +165,7 @@ void Mario::Render()
 	animation_set->at(ani)->Render(x, y, alpha);
 
 	RenderBoundingBox();
+	//	DebugOut(L" state %d\n", state);
 }
 
 void Mario::SetState(int state)
@@ -160,21 +173,6 @@ void Mario::SetState(int state)
 	GameObject::SetState(state);
 	switch (state)
 	{
-	case MARIO_STATE_WALKING_RIGHT:
-		vx = MARIO_WALKING_SPEED;
-		nx = 1;
-		break;
-	case MARIO_STATE_WALKING_LEFT:
-		vx = -MARIO_WALKING_SPEED;
-		nx = -1;
-		break;
-	case MARIO_STATE_JUMP:
-		// TODO: need to check if Mario is *current* on a platform before allowing to jump again
-		vy = -MARIO_JUMP_SPEED_Y;
-		break;
-	case MARIO_STATE_IDLE:
-		vx = 0;
-		break;
 	case MARIO_STATE_DIE:
 		vy = -MARIO_DIE_DEFLECT_SPEED;
 		break;
@@ -209,3 +207,63 @@ void Mario::Reset()
 	SetSpeed(0, 0);
 }
 
+void Mario::Movement()
+{
+	// Velocity with friction
+	vx = MARIO_WALKING_SPEED * ax;
+	// Simple fall down
+	vy += MARIO_GRAVITY * dt;
+
+	if (movement[MARIO_MOVEMENT_LEFT])
+	{
+		SetState(MARIO_STATE_WALKING_LEFT);
+
+		nx = -1;
+		if (ax > -1) ax -= MARIO_ACCELERATION_X;
+		if (vx > 0) ax -= MARIO_ACCELERATION_X;
+	}
+	else if (movement[MARIO_MOVEMENT_RIGHT])
+	{
+		SetState(MARIO_STATE_WALKING_RIGHT);
+
+		nx = 1;
+		if (ax < 1) ax += MARIO_ACCELERATION_X;
+		if (vx < 0) ax += MARIO_ACCELERATION_X;
+	}
+	if (movement[MARIO_MOVEMENT_UP])
+	{
+		if (isTurbo) {
+			SetState(MARIO_STATE_JUMP_HIGH);
+			if (!IsJumping())
+			{
+				last_y = y;
+				vy = -MARIO_JUMP_SPEED_HIGH;
+			}
+			if (last_y - y < MARIO_JUMP_HEIGHT_MAX) {
+				vy -= 0.001f;
+				// Gravity compensation
+				vy -= MARIO_GRAVITY * dt;
+			}
+		}
+		else
+		{
+			SetState(MARIO_STATE_JUMP_LOW);
+			if (!IsJumping()) vy = -MARIO_JUMP_SPEED_LOW;
+		}
+		IsJumping(true);
+	}
+
+	DebugOut(L"y %f\n", y);
+
+
+	// Quickly check if UP/DOWN/LEFT/RIGHT all equal zero
+	if (!*(int*)movement) {
+		SetState(MARIO_STATE_IDLE);
+		if (ax < 0) ax += MARIO_ACCELERATION_X;
+		if (ax > 0) ax -= MARIO_ACCELERATION_X;
+	}
+
+	if (abs(ax) <= MARIO_INERTIA_X) ax = 0;
+	if (ax < 0 && state != MARIO_STATE_WALKING_LEFT) ax += MARIO_INERTIA_X;
+	if (ax > 0 && state != MARIO_STATE_WALKING_RIGHT) ax -= MARIO_INERTIA_X;
+}

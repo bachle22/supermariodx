@@ -15,7 +15,7 @@
 
 #include "Parser.h"
 
-ScenePlayer::ScenePlayer(int id, LPCWSTR filePath): Scene(id, filePath)
+ScenePlayer::ScenePlayer(int id, LPCWSTR filePath) : Scene(id, filePath)
 {
 	keyHandler = new ScenePlayerInputHandler(this);
 }
@@ -350,7 +350,7 @@ void ScenePlayer::Update(ULONGLONG dt)
 	cx -= game->GetScreenWidth() / 2;
 	cy -= game->GetScreenHeight() / 2;
 
-	Game::GetInstance()->SetCamPos(cx, cy);
+	Game::GetInstance()->SetCamPos(cx, 250.1f);
 }
 
 void ScenePlayer::Render()
@@ -378,14 +378,57 @@ void ScenePlayerInputHandler::OnKeyDown(int KeyCode)
 {
 	DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 
+	Game* game = Game::GetInstance();
 	Mario* mario = ((ScenePlayer*)scene)->GetPlayer();
 	switch (KeyCode)
 	{
 	case DIK_SPACE:
 		mario->SetState(MARIO_STATE_JUMP);
 		break;
-	case DIK_A:
+	case DIK_LEFT:
+		mario->UnsetMovement(MARIO_MOVEMENT_RIGHT);
+		mario->SetMovement(MARIO_MOVEMENT_LEFT);
+		break;
+	case DIK_RIGHT:
+		mario->UnsetMovement(MARIO_MOVEMENT_LEFT);
+		mario->SetMovement(MARIO_MOVEMENT_RIGHT);
+		break;
+	case DIK_S:
+		if (!game->IsKeyDown(DIK_X)) mario->SetTurbo(true);
+		mario->SetMovement(MARIO_MOVEMENT_UP);
+		break;
+	case DIK_X:
+		if (!game->IsKeyDown(DIK_S)) mario->SetTurbo(false);
+		mario->SetMovement(MARIO_MOVEMENT_UP);
+		break;
+	case DIK_R:
 		mario->Reset();
+		break;
+	}
+}
+
+void ScenePlayerInputHandler::OnKeyUp(int KeyCode)
+{
+	DebugOut(L"[INFO] KeyUp: %d\n", KeyCode);
+
+	Game* game = Game::GetInstance();
+	Mario* mario = ((ScenePlayer*)scene)->GetPlayer();
+	switch (KeyCode)
+	{
+	case DIK_LEFT:
+		if (game->IsKeyDown(DIK_RIGHT)) mario->SetMovement(MARIO_MOVEMENT_RIGHT);
+		mario->UnsetMovement(MARIO_MOVEMENT_LEFT);
+		break;
+	case DIK_RIGHT:
+		if (game->IsKeyDown(DIK_LEFT)) mario->SetMovement(MARIO_MOVEMENT_LEFT);
+		mario->UnsetMovement(MARIO_MOVEMENT_RIGHT);
+		break;
+	case DIK_S:
+		mario->SetTurbo(false);
+		mario->UnsetMovement(MARIO_MOVEMENT_UP);
+		break;
+	case DIK_X:
+		mario->UnsetMovement(MARIO_MOVEMENT_UP);
 		break;
 	}
 }
@@ -396,11 +439,22 @@ void ScenePlayerInputHandler::KeyState(BYTE* states)
 	Mario* mario = ((ScenePlayer*)scene)->GetPlayer();
 
 	// disable control key when Mario die 
+	bool isKeyDown = false;
 	if (mario->GetState() == MARIO_STATE_DIE) return;
-	if (game->IsKeyDown(DIK_RIGHT))
-		mario->SetState(MARIO_STATE_WALKING_RIGHT);
-	else if (game->IsKeyDown(DIK_LEFT))
-		mario->SetState(MARIO_STATE_WALKING_LEFT);
-	else
-		mario->SetState(MARIO_STATE_IDLE);
+	//if (game->IsKeyDown(DIK_RIGHT))
+	//{
+	//	//mario->SetState(MARIO_STATE_WALKING_RIGHT);
+	//	isKeyDown = true;
+	//}
+	//if (game->IsKeyDown(DIK_LEFT)) {
+	//	//mario->SetState(MARIO_STATE_WALKING_LEFT);
+	//	isKeyDown = true;
+	//}
+	//if (game->IsKeyDown(DIK_S))
+	//{
+	//	//mario->SetState(MARIO_STATE_JUMP_HIGH);
+	//	//mario->IsJumping(true);
+	//	isKeyDown = true;
+	//}
+	//if (!isKeyDown) mario->SetState(MARIO_STATE_IDLE);
 }

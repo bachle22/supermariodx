@@ -130,7 +130,7 @@ WPARAM HandleWindowMessage()
 			}
 		}
 
-		ULONGLONG now = (DWORD) GetTickCount64();
+		ULONGLONG now = GetTickCount64();
 
 		// dt: the time between (beginning of last frame) and now
 		// this frame: the frame we are about to render
