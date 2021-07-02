@@ -1,21 +1,140 @@
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
+#=================ANIMATION==================#
 # ==== MARIO =========
-#idle BIG right
-400	10001	100
-#idle BIG left
-401	10011	100
-#idle small right
-402	10021	100
-#idle small left
-403	10031	100
-#walk right big
-500	10001	100	10002	100	10003	100
-#walk left big  
-501	10011	100	10012	100	10013	100
-#walk right small
-502	10021	100	10022	100	10023	100
-#walk left small
-503	10031	100	10032	100	10033	100
+#idle small 
+400	10000	0
+#idle BIG 
+401	10020	0
+#idle fire
+402	10040	0
+#idle raccoon
+403	10060	0
+
+#walk small
+404	10000	100	10001	100
+#walk  big
+405	10020	100	10021	100	10022	100
+#walk fire 
+406	10040	100	10041	100	10042	100
+#walk raccoon
+407	10060	100	10061	100	10062	100
+
+#jump small
+408	10003	0
+#jump big
+409	10023	0
+#jump fire
+410	10043	0
+#jump raccoon
+411	10063	0
+#jumped big
+460	10022	0
+
+#run small
+412	10000	100	10001	100	10002	100
+#run big
+413	10020	50	10021	50	10022	50
+#run fire
+414	10040	50	10041	50	10042	50
+#run raccoon
+415	10060	50	10061	50	10062	50
+#run full small
+416	 10002	50	10004	50
+#run full big
+417	10024	10	10025	10	10026	10
+#run full fire
+418	10044	10	10045	10	10046	10
+#run full raccoon
+419	10064	10	10065	10	10066	10
+
+#long jump small
+420	10005	100
+#long jump big
+421	10027	100
+#long jump fire
+422	10047	100
+#long jump raccoon
+423	10067	100
+
+#brake small 
+424	10006	100
+#brake big
+425	10028	100
+#brake fire
+426	10048	100
+#brake raccoon
+427	10068	100
+
+#kick shell small
+428	10007	100
+#kick shell big
+429	10029	100
+#kick shell fire
+430	10049	100
+#kick shell raccoon
+431	10069	100
+#hold shell small
+432	10008	100
+
+#hold shell big 
+433	10030	100
+#hold shell fire
+434	10050	100
+#hold shell raccoon
+435	10070	100
+#hold shell run small
+436	10008	100	10009	100
+#hold shell run big 
+437	10030	100	10031	100
+#hold shell run fire
+438	10050	100	10051	100
+#hold shell run raccoon
+439	10070	100	10071	100
+
+#dodge big
+440	10033	100
+#dodge fire
+441	10053	100
+#dodge raccoon
+442	10073	100
+
+#fire shoot
+443	10054	100	10055	100
+#raccoon tail attack
+444	10075	100	10076	100	10077	100	10074	100
+#raccoon float
+445	10077	100	10078	100
+#racoon fly
+446	10079	100	10080	100	10081	100
+
+#Turn to big form 
+447	10035	100	10034	100	10035	100	10034	100	10035	100	10020	150	10035	100	10020	100
+#turn to small form
+448	10020	100	10035	100	10034	100	10035	100	10034	100	10035	100
+#turn to raccoon form or lose raccoon form 602
+# Go to teleport
+449	10075	100
+#  == Hitted====
+450	10036	100
+#  ==LookUp====
+451	10037	100
+#Hold Shell Jumping Small
+452	10009	100
+#hold shell Jumping big
+453	10032	100
+#hold shell jumping fire
+454	10052	100
+#hold shell jumping raccoon
+455	10072	100
+# INPIPE small
+456	10010	100
+#in Pipe BIG
+457	10038	100
+#in Pipe Fire
+458	10056	100
+#Jump tail attack
+459	10075	100	10082	100	10077	100	10062	100
+
 #die
 599	10099	100
 

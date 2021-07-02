@@ -2,7 +2,7 @@
 
 void Brick::Render()
 {
-	animation_set->at(0)->Render(x, y);
+	animation_set->at(0)->Render(-1, x, y);
 	RenderBoundingBox();
 }
 

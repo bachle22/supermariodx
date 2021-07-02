@@ -386,20 +386,23 @@ void ScenePlayerInputHandler::OnKeyDown(int KeyCode)
 		mario->SetState(MARIO_STATE_JUMP);
 		break;
 	case DIK_LEFT:
-		mario->UnsetMovement(MARIO_MOVEMENT_RIGHT);
-		mario->SetMovement(MARIO_MOVEMENT_LEFT);
+		mario->UnsetMovement(RIGHT);
+		mario->SetMovement(LEFT);
 		break;
 	case DIK_RIGHT:
-		mario->UnsetMovement(MARIO_MOVEMENT_LEFT);
-		mario->SetMovement(MARIO_MOVEMENT_RIGHT);
+		mario->UnsetMovement(LEFT);
+		mario->SetMovement(RIGHT);
+		break;
+	case DIK_DOWN:
+		mario->SetMovement(DOWN);
 		break;
 	case DIK_S:
 		if (!game->IsKeyDown(DIK_X)) mario->SetTurbo(true);
-		mario->SetMovement(MARIO_MOVEMENT_UP);
+		if (!mario->IsJumping()) mario->SetMovement(UP);
 		break;
 	case DIK_X:
 		if (!game->IsKeyDown(DIK_S)) mario->SetTurbo(false);
-		mario->SetMovement(MARIO_MOVEMENT_UP);
+		if (!mario->IsJumping()) mario->SetMovement(UP);
 		break;
 	case DIK_R:
 		mario->Reset();
@@ -416,19 +419,23 @@ void ScenePlayerInputHandler::OnKeyUp(int KeyCode)
 	switch (KeyCode)
 	{
 	case DIK_LEFT:
-		if (game->IsKeyDown(DIK_RIGHT)) mario->SetMovement(MARIO_MOVEMENT_RIGHT);
-		mario->UnsetMovement(MARIO_MOVEMENT_LEFT);
+		if (game->IsKeyDown(DIK_RIGHT)) mario->SetMovement(RIGHT);
+		mario->UnsetMovement(LEFT);
 		break;
 	case DIK_RIGHT:
-		if (game->IsKeyDown(DIK_LEFT)) mario->SetMovement(MARIO_MOVEMENT_LEFT);
-		mario->UnsetMovement(MARIO_MOVEMENT_RIGHT);
+		if (game->IsKeyDown(DIK_LEFT)) mario->SetMovement(LEFT);
+		mario->UnsetMovement(RIGHT);
+		break;
+	case DIK_DOWN:
+		mario->UnsetMovement(DOWN);
 		break;
 	case DIK_S:
+		mario->CanJumpAgain(true);
 		mario->SetTurbo(false);
-		mario->UnsetMovement(MARIO_MOVEMENT_UP);
+		mario->UnsetMovement(UP);
 		break;
 	case DIK_X:
-		mario->UnsetMovement(MARIO_MOVEMENT_UP);
+		mario->UnsetMovement(UP);
 		break;
 	}
 }
@@ -439,22 +446,14 @@ void ScenePlayerInputHandler::KeyState(BYTE* states)
 	Mario* mario = ((ScenePlayer*)scene)->GetPlayer();
 
 	// disable control key when Mario die 
-	bool isKeyDown = false;
 	if (mario->GetState() == MARIO_STATE_DIE) return;
 	//if (game->IsKeyDown(DIK_RIGHT))
 	//{
 	//	//mario->SetState(MARIO_STATE_WALKING_RIGHT);
 	//	isKeyDown = true;
 	//}
-	//if (game->IsKeyDown(DIK_LEFT)) {
-	//	//mario->SetState(MARIO_STATE_WALKING_LEFT);
-	//	isKeyDown = true;
-	//}
-	//if (game->IsKeyDown(DIK_S))
-	//{
-	//	//mario->SetState(MARIO_STATE_JUMP_HIGH);
-	//	//mario->IsJumping(true);
-	//	isKeyDown = true;
+	//if (game->IsKeyDown(DIK_X)) {
+	//	if (!mario->IsJumping()) mario->SetMovement(UP);
 	//}
 	//if (!isKeyDown) mario->SetState(MARIO_STATE_IDLE);
 }

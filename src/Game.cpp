@@ -60,7 +60,7 @@ void Game::Init(HWND hWnd)
 /*
 	Utility function to wrap LPD3DXSPRITE::Draw
 */
-void Game::Draw(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom, int alpha)
+void Game::Draw(int nx, float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom, int alpha)
 {
 	D3DXVECTOR3 p(floor(x - cam_x), floor(y - cam_y), 0);
 	RECT r;
@@ -68,7 +68,21 @@ void Game::Draw(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top,
 	r.top = top;
 	r.right = right;
 	r.bottom = bottom;
+
+	// Flip sprite
+	D3DXMATRIX oldTransform;
+	D3DXMATRIX newTransform;
+
+	spriteHandler->GetTransform(&oldTransform);
+	D3DXVECTOR2 center = D3DXVECTOR2(p.x + (right - left) / 2, p.y + (bottom - top) / 2);
+	D3DXVECTOR2 flip = D3DXVECTOR2(nx > 0 ? -1.0f : 1.0f, 1.0f);
+
+	D3DXMatrixTransformation2D(&newTransform, &center, 0.0f, &flip, NULL, 0.0f, NULL);
+
+	D3DXMATRIX finalTransform = oldTransform * newTransform;
+	spriteHandler->SetTransform(&finalTransform);
 	spriteHandler->Draw(texture, &r, NULL, &p, D3DCOLOR_ARGB(alpha, 255, 255, 255));
+	spriteHandler->SetTransform(&oldTransform);
 }
 
 int Game::IsKeyDown(int KeyCode)

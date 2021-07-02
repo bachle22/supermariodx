@@ -10,7 +10,7 @@ void Animation::Add(int spriteId, ULONGLONG time)
 	frames.push_back(frame);
 }
 
-void Animation::Render(float x, float y, int alpha)
+void Animation::Render(int nx, float x, float y, int alpha)
 {
 	ULONGLONG now = GetTickCount64();
 	if (currentFrame == -1)
@@ -19,7 +19,7 @@ void Animation::Render(float x, float y, int alpha)
 		lastFrameTime = now;
 	}
 	else if (frames[currentFrame]->GetTime() == 0) {
-		frames[currentFrame]->GetSprite()->Draw(x, y, alpha);
+		frames[currentFrame]->GetSprite()->Draw(nx, x, y, alpha);
 		return;
 	}
 	else
@@ -35,7 +35,7 @@ void Animation::Render(float x, float y, int alpha)
 
 	}
 
-	frames[currentFrame]->GetSprite()->Draw(x, y, alpha);
+	frames[currentFrame]->GetSprite()->Draw(nx, x, y, alpha);
 
 }
 
