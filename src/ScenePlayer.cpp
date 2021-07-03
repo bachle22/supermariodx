@@ -12,8 +12,9 @@
 #include "Mario.h"
 #include "Goomba.h"
 #include "Koopa.h"
-
 #include "Parser.h"
+
+#include "Font.h"
 
 ScenePlayer::ScenePlayer(int id, LPCWSTR filePath) : Scene(id, filePath)
 {
@@ -444,6 +445,8 @@ void ScenePlayerInputHandler::KeyState(BYTE* states)
 {
 	Game* game = Game::GetInstance();
 	Mario* mario = ((ScenePlayer*)scene)->GetPlayer();
+
+
 
 	// disable control key when Mario die 
 	if (mario->GetState() == MARIO_STATE_DIE) return;

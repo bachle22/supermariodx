@@ -35,6 +35,9 @@
     <Filter Include="Utilities\Types">
       <UniqueIdentifier>{826b2ff7-e0b4-4852-828f-32952d91604d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Objects\UI">
+      <UniqueIdentifier>{c185cf63-5a8d-40df-991f-de632b0dbcbf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Debug.cpp">
@@ -88,6 +91,9 @@
     </ClCompile>
     <ClCompile Include="TiledMap.cpp">
       <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Font.cpp">
+      <Filter>Objects\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -150,6 +156,12 @@
     </ClInclude>
     <ClInclude Include="Types.h">
       <Filter>Utilities\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="HUD.h">
+      <Filter>Objects\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Font.h">
+      <Filter>Objects\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

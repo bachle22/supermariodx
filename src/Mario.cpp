@@ -20,7 +20,6 @@ Mario::Mario(float x, float y) : GameObject()
 	this->x = x;
 	this->y = y;
 
-	jump_time_start = 0;
 	canJumpAgain = true;
 }
 
@@ -83,7 +82,7 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 		// Reset jump when touching the ground
 		if (ny == -1) IsJumping(false);
 
-		DebugOut(L"min_tx %f min_ty %f nx %f ny %f rdx %f rdy %f\n", min_tx, min_ty, nx, ny, rdx, rdy);
+		// DebugOut(L"min_tx %f min_ty %f nx %f ny %f rdx %f rdy %f\n", min_tx, min_ty, nx, ny, rdx, rdy);
 
 		//
 		// Collision logic with other objects
@@ -175,8 +174,14 @@ void Mario::Render()
 
 	animation_set->at(ani)->Render(nx, x, y, alpha);
 
+	font = new Font();
+	testSprites = font->StringToSprites("MARIO");
+	for (int i = 0; i < testSprites.size(); i++) {
+		testSprites[i]->Draw(-1, x + (8 * i), y - 10.0f, 255);
+	}
+
 	RenderBoundingBox();
-	DebugOut(L" ani %d\n", ani);
+	DebugOut(L" char %d\n", '0');
 }
 
 void Mario::SetState(int state)
@@ -266,6 +271,7 @@ void Mario::Movement()
 			if (!isJumping) vy = -MARIO_JUMP_SPEED_LOW;
 		}
 		IsJumping(true);
+		edges[RIGHT] = false;
 	}
 
 	if (movement[DOWN])

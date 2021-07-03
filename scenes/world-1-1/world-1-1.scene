@@ -4,6 +4,7 @@
 10	..\assets\sprites\enemies.png	3	26	110
 20	..\assets\sprites\misc.png	176	224	248
 30	..\assets\sprites\world-1-1.png	0	255	0
+40	..\assets\sprites\UI.png	0	224	142
 [TILEDMAP]
 ..\scenes\world-1-1\world-1-1.map
 [SPRITES]

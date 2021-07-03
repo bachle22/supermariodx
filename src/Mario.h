@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GameObject.h"
+#include "Font.h"
 
 
 constexpr float MARIO_WALKING_SPEED = 0.12f;
@@ -84,7 +85,8 @@ class Mario : public GameObject
 	bool edges[4] = { 0, 0, 0, 0 };
 	bool movement[4] = { 0, 0, 0, 0 };
 
-	ULONGLONG jump_time_start, jump_time_end;
+	Font* font;
+	std::vector<LPSPRITE> testSprites;
 
 
 
