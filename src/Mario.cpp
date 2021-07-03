@@ -7,6 +7,7 @@
 #include "Collision.h"
 #include "Portal.h"
 #include "Game.h"
+#include "Types.h"
 
 Mario::Mario(float x, float y) : GameObject()
 {
@@ -137,30 +138,36 @@ void Mario::Render()
 {
 	int ani = NULL;
 	if (state == MARIO_STATE_DIE)
-		ani = MARIO_ANI_DIE;
+		ani = DIE;
 	else
-		if (level == MARIO_LEVEL_BIG)
-		{
+		switch (level) {
+		case MARIO_LEVEL_BIG:
 			if (vx != 0 && ax != 0)
 			{
-				if (!edges[RIGHT]) ani = MARIO_ANI_BIG_WALKING;
-				else ani = MARIO_ANI_BIG_IDLE;
+				// Stop animating when hit an edge
+				if (!edges[RIGHT]) ani = BIG_WALKING;
+				else ani = BIG_IDLE;
+
+				// Efficently check if ax * nx < 0
+				if ((AS_INT(ax) ^ nx) < 0) ani = BIG_BRAKING;
 			}
-			else ani = MARIO_ANI_BIG_IDLE;
+			else ani = BIG_IDLE;
 			if (isJumping) {
-				if (vy < 0) ani = MARIO_ANI_BIG_JUMPING;
-				else ani = MARIO_ANI_BIG_JUMPED;
+				if (vy < 0) ani = BIG_JUMPING;
+				else ani = BIG_JUMPED;
 			}
-			if (!movement[LEFT] && !movement[RIGHT] && movement[DOWN]) ani = MARIO_ANI_BIG_DUCKING;
-		}
-		else if (level == MARIO_LEVEL_SMALL)
-		{
-			if (vx == 0)
+			if (!movement[LEFT] && !movement[RIGHT] && movement[DOWN]) ani = BIG_DUCKING;
+			break;
+		case MARIO_LEVEL_SMALL:
+			if (AS_INT(vx) != 0 && AS_INT(ax) != 0)
 			{
-				ani = MARIO_ANI_SMALL_IDLE;
+				if (!edges[RIGHT]) ani = SMALL_WALKING;
+				else ani = SMALL_IDLE;
+				if ((AS_INT(ax) ^ nx) < 0) ani = SMALL_BRAKING;
 			}
-			else ani = MARIO_ANI_SMALL_WALKING;
-			if (isJumping) ani = MARIO_ANI_SMALL_JUMPING;
+			else ani = SMALL_IDLE;
+			if (isJumping) ani = SMALL_JUMPING;
+			break;
 		}
 
 	int alpha = 255;
@@ -279,8 +286,8 @@ void Mario::Movement()
 
 	if (abs(ax) <= MARIO_INERTIA) ax = 0;
 	if (ax < 0 && !movement[LEFT])
-		ax += level == MARIO_LEVEL_SMALL ? MARIO_INERTIA_SMALL / 1.5f : MARIO_INERTIA;
+		ax += level == MARIO_LEVEL_SMALL ? MARIO_INERTIA_SMALL : MARIO_INERTIA;
 	if (ax > 0 && !movement[RIGHT])
-		ax -= level == MARIO_LEVEL_SMALL ? MARIO_INERTIA_SMALL / 1.5f : MARIO_INERTIA;
+		ax -= level == MARIO_LEVEL_SMALL ? MARIO_INERTIA_SMALL : MARIO_INERTIA;
 
 }

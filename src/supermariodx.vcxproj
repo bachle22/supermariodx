@@ -58,6 +58,7 @@
     <ClInclude Include="Strings.h" />
     <ClInclude Include="Textures.h" />
     <ClInclude Include="TiledMap.h" />
+    <ClInclude Include="Types.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\docs\classes.cd" />

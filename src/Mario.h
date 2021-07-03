@@ -20,21 +20,6 @@ constexpr int MARIO_STATE_JUMP_LOW = 301;
 constexpr int MARIO_STATE_JUMP_HIGH = 302;
 constexpr int MARIO_STATE_DIE = 400;
 
-constexpr int MARIO_ANI_SMALL_IDLE = 0;
-constexpr int MARIO_ANI_BIG_IDLE = 1;
-
-constexpr int MARIO_ANI_SMALL_WALKING = 4;
-constexpr int MARIO_ANI_BIG_WALKING = 5;
-
-
-constexpr int MARIO_ANI_SMALL_JUMPING = 8;
-constexpr int MARIO_ANI_BIG_JUMPING = 9;
-constexpr int MARIO_ANI_BIG_JUMPED = 62;
-
-constexpr int MARIO_ANI_DIE = 8;
-
-constexpr int MARIO_ANI_BIG_DUCKING = 40;
-
 constexpr int MARIO_LEVEL_SMALL = 1;
 constexpr int MARIO_LEVEL_BIG = 2;
 
@@ -49,7 +34,26 @@ constexpr int MARIO_UNTOUCHABLE_TIME = 5000;
 constexpr float MARIO_ACCELERATION_X = 0.03f;
 constexpr float MARIO_ACCELERATION_Y = 0.0262f;
 constexpr float MARIO_INERTIA = 0.028f;
-constexpr float MARIO_INERTIA_SMALL = 0.028f;
+constexpr float MARIO_INERTIA_SMALL = 0.0185f;
+
+enum MarioAnimation {
+	SMALL_IDLE = 0,
+	BIG_IDLE = 1,
+
+	SMALL_WALKING = 4,
+	BIG_WALKING = 5,
+
+	SMALL_JUMPING = 8,
+	BIG_JUMPING = 9,
+
+	SMALL_BRAKING = 24,
+	BIG_BRAKING = 25,
+	BIG_JUMPED = 62,
+
+	DIE = 8,
+
+	BIG_DUCKING = 40,
+};
 
 //constexpr int LEFT = 0;
 //constexpr int RIGHT = 1;
