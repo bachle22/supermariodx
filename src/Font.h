@@ -40,6 +40,7 @@ enum FontSprite {
 	FONT_X = 50046,
 	FONT_Y = 50047,
 	FONT_Z = 50048,
+	FONT_SIZE = 8,
 };
 
 class Font

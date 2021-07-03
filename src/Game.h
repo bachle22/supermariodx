@@ -36,6 +36,8 @@ class Game
 	int current_scene;
 
 public:
+	int DEBUG_X = 0, DEBUG_Y = 0;
+
 	void Init(HWND hWnd);
 	void InitKeyboard();
 	void SetKeyHandler(LPKEYEVENTHANDLER handler) { keyHandler = handler; }

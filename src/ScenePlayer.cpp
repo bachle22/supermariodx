@@ -17,7 +17,6 @@
 ScenePlayer::ScenePlayer(int id, LPCWSTR filePath) : Scene(id, filePath)
 {
 	keyHandler = new ScenePlayerInputHandler(this);
-	hud = new HUD();
 }
 
 /*
@@ -353,6 +352,7 @@ void ScenePlayer::Update(ULONGLONG dt)
 
 void ScenePlayer::Render()
 {
+	if (!hud) hud = new HUD();
 	map->Render();
 	for (size_t i = 0; i < objects.size(); i++) objects[i]->Render();
 	hud->Render();
@@ -374,7 +374,7 @@ void ScenePlayer::Unload()
 
 void ScenePlayerInputHandler::OnKeyDown(int KeyCode)
 {
-	DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
+	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 
 	Game* game = Game::GetInstance();
 	Mario* mario = ((ScenePlayer*)scene)->GetPlayer();
@@ -410,7 +410,7 @@ void ScenePlayerInputHandler::OnKeyDown(int KeyCode)
 
 void ScenePlayerInputHandler::OnKeyUp(int KeyCode)
 {
-	DebugOut(L"[INFO] KeyUp: %d\n", KeyCode);
+	//DebugOut(L"[INFO] KeyUp: %d\n", KeyCode);
 
 	Game* game = Game::GetInstance();
 	Mario* mario = ((ScenePlayer*)scene)->GetPlayer();
@@ -447,13 +447,24 @@ void ScenePlayerInputHandler::KeyState(BYTE* states)
 
 	// disable control key when Mario die 
 	if (mario->GetState() == MARIO_STATE_DIE) return;
-	//if (game->IsKeyDown(DIK_RIGHT))
-	//{
-	//	//mario->SetState(MARIO_STATE_WALKING_RIGHT);
-	//	isKeyDown = true;
-	//}
-	//if (game->IsKeyDown(DIK_X)) {
-	//	if (!mario->IsJumping()) mario->SetMovement(UP);
-	//}
-	//if (!isKeyDown) mario->SetState(MARIO_STATE_IDLE);
+	if (game->IsKeyDown(DIK_L))
+	{
+		game->DEBUG_X++;
+		DebugOut(L"X %d\n", game->DEBUG_X);
+	}
+	if (game->IsKeyDown(DIK_J))
+	{
+		game->DEBUG_X--;
+		DebugOut(L"X %d\n", game->DEBUG_X);
+	}
+	if (game->IsKeyDown(DIK_I))
+	{
+		game->DEBUG_Y--;
+		DebugOut(L"Y %d\n", game->DEBUG_Y);
+	}
+	if (game->IsKeyDown(DIK_K))
+	{
+		game->DEBUG_Y++;
+		DebugOut(L"Y %d\n", game->DEBUG_Y);
+	}
 }

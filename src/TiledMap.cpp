@@ -20,7 +20,7 @@ void TiledMap::Render()
 {
 	for (int i = 0; i < mapRows; i++)
 		for (int j = 0; j < mapColumns; j++)
-			tileSprites[tiles[i][j] - 1]->Draw(-1, j * TILE_WIDTH, i * TILE_HEIGHT, 255);
+			tileSprites[tiles[i][j] - 1]->Draw(-1, j * (float)TILE_WIDTH, i * (float)TILE_HEIGHT, 255);
 }
 
 void TiledMap::SetTileMapData(int** tiles)
