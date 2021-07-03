@@ -95,6 +95,9 @@
     <ClCompile Include="Font.cpp">
       <Filter>Objects\UI</Filter>
     </ClCompile>
+    <ClCompile Include="HUD.cpp">
+      <Filter>Objects\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Debug.h">
@@ -157,10 +160,10 @@
     <ClInclude Include="Types.h">
       <Filter>Utilities\Types</Filter>
     </ClInclude>
-    <ClInclude Include="HUD.h">
+    <ClInclude Include="Font.h">
       <Filter>Objects\UI</Filter>
     </ClInclude>
-    <ClInclude Include="Font.h">
+    <ClInclude Include="HUD.h">
       <Filter>Objects\UI</Filter>
     </ClInclude>
   </ItemGroup>

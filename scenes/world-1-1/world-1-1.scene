@@ -1,5 +1,7 @@
 # id	file_path	transparent_color_r	g	b
 [TEXTURES]
+-100	..\assets\sprites\bbox.png	255	255	255
+-1	..\assets\sprites\background.png	255	255	255
 0	..\assets\sprites\mario.png	68	145	190
 10	..\assets\sprites\enemies.png	3	26	110
 20	..\assets\sprites\misc.png	176	224	248

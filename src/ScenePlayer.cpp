@@ -14,11 +14,10 @@
 #include "Koopa.h"
 #include "Parser.h"
 
-#include "Font.h"
-
 ScenePlayer::ScenePlayer(int id, LPCWSTR filePath) : Scene(id, filePath)
 {
 	keyHandler = new ScenePlayerInputHandler(this);
+	hud = new HUD();
 }
 
 /*
@@ -319,8 +318,6 @@ void ScenePlayer::Load()
 
 	f.close();
 
-	Textures::GetInstance()->Add(ID_TEX_BBOX, L"..\\assets\\sprites\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
-
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
 }
 
@@ -351,14 +348,14 @@ void ScenePlayer::Update(ULONGLONG dt)
 	cx -= game->GetScreenWidth() / 2;
 	cy -= game->GetScreenHeight() / 2;
 
-	Game::GetInstance()->SetCamPos(cx, 250.1f);
+	Game::GetInstance()->SetCamPos(cx, 240.1f);
 }
 
 void ScenePlayer::Render()
 {
 	map->Render();
-	for (size_t i = 0; i < objects.size(); i++)
-		objects[i]->Render();
+	for (size_t i = 0; i < objects.size(); i++) objects[i]->Render();
+	hud->Render();
 }
 
 /*

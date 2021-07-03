@@ -164,7 +164,9 @@ int WINAPI WinMain(
 	game->InitKeyboard();
 	game->Load(L"..\\scenes\\main.config");
 
-	SetWindowPos(hWnd, 0, 0, 0, SCREEN_WIDTH * 3, SCREEN_HEIGHT * 3, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER);
+	SetWindowPos(hWnd, 0, 0, 0, 
+		SCREEN_WIDTH * SIZE_MULTIPLIER, SCREEN_HEIGHT * SIZE_MULTIPLIER, 
+		SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER);
 	HandleWindowMessage();
 
 }

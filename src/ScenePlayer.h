@@ -4,12 +4,14 @@
 #include "Scene.h"
 #include "TiledMap.h"
 #include "Mario.h"
+#include "HUD.h"
 
 class ScenePlayer : public Scene
 {
 protected:
 	Mario* player;
 	TiledMap* map;
+	HUD* hud;
 
 	std::vector<LPGAMEOBJECT> objects;
 

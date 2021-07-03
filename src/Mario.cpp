@@ -174,14 +174,7 @@ void Mario::Render()
 
 	animation_set->at(ani)->Render(nx, x, y, alpha);
 
-	font = new Font();
-	testSprites = font->StringToSprites("MARIO");
-	for (int i = 0; i < testSprites.size(); i++) {
-		testSprites[i]->Draw(-1, x + (8 * i), y - 10.0f, 255);
-	}
-
 	RenderBoundingBox();
-	DebugOut(L" char %d\n", '0');
 }
 
 void Mario::SetState(int state)

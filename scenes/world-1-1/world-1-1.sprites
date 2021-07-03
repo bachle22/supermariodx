@@ -1,4 +1,4 @@
-#id	left	top	right	bottom	texture_id  
+#id	left	top	right	bottom	texture_id
 
 # ================SMALL MARIO============
 # idle small left
@@ -145,7 +145,7 @@
 50004	15	170	33	179	40
 #PowerMelter filled arrow
 50005	63	161	72	170	40
-#powerMelter filled iconP
+#powerMelter filled icon
 50006	72	161	88	170	40
 #powerMelter empty arrow
 50007	90	161	99	170	40

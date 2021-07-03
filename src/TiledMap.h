@@ -4,7 +4,6 @@
 
 #include "Sprites.h"
 #include "Textures.h"
-#include "Matrix.h"
 
 constexpr int TILE_WIDTH = 16;
 constexpr int TILE_HEIGHT = 16;

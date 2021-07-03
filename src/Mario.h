@@ -85,11 +85,6 @@ class Mario : public GameObject
 	bool edges[4] = { 0, 0, 0, 0 };
 	bool movement[4] = { 0, 0, 0, 0 };
 
-	Font* font;
-	std::vector<LPSPRITE> testSprites;
-
-
-
 public:
 	Mario(float x = 0.0f, float y = 0.0f);
 	virtual void Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* colliable_objects = NULL);
