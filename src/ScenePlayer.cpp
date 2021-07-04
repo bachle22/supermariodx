@@ -361,6 +361,7 @@ void ScenePlayer::Update(ULONGLONG dt)
 		if (DEFAULT_MAX_TIME - timer > 0) hud->SetTime(DEFAULT_MAX_TIME - timer++);
 		else player->SetState(MARIO_STATE_DIE);
 	}
+	hud->SetPowerMeter((GetPlayer()->GetPowerMeter()));
 }
 
 void ScenePlayer::Render()
@@ -390,7 +391,6 @@ void ScenePlayerInputHandler::OnKeyDown(int KeyCode)
 
 	Game* game = Game::GetInstance();
 	Mario* mario = ((ScenePlayer*)scene)->GetPlayer();
-	HUD* hud = ((ScenePlayer*)scene)->GetHUD();
 	switch (KeyCode)
 	{
 	case DIK_SPACE:
@@ -415,13 +415,24 @@ void ScenePlayerInputHandler::OnKeyDown(int KeyCode)
 		if (!game->IsKeyDown(DIK_S)) mario->SetSuperJump(false);
 		if (!mario->IsJumping()) mario->SetMovement(UP);
 		break;
+	case DIK_A:
+		//mario->SetPowerMeter(mario->GetPowerMeter() + 1);
+		//if (mario->GetPowerMeter() > MAX_POWER_METER) mario->SetPowerMeter(0);
+		mario->SetPowerIncreament(true);
+		break;
+
+	// Cheat keys
+	case DIK_1:
+		mario->SetMovement(UP);
+		mario->SetLevel(MARIO_LEVEL_SMALL);
+		break;
+	case DIK_2:
+		mario->SetMovement(UP);
+		mario->SetLevel(MARIO_LEVEL_BIG);
+		break;
 	case DIK_R:
 		mario->Reset();
 		break;
-	case DIK_A:
-		mario->SetPowerMeter(mario->GetPowerMeter() + 1);
-		if (mario->GetPowerMeter() > MAX_POWER_METER) mario->SetPowerMeter(0);
-		hud->SetPowerMeter(mario->GetPowerMeter());
 	}
 }
 
@@ -450,6 +461,17 @@ void ScenePlayerInputHandler::OnKeyUp(int KeyCode)
 		mario->UnsetMovement(UP);
 		break;
 	case DIK_X:
+		mario->UnsetMovement(UP);
+		break;
+	case DIK_A:
+		mario->SetPowerIncreament(false);
+		break;
+
+	// Cheat keys
+	case DIK_1:
+		mario->UnsetMovement(UP);
+		break;
+	case DIK_2:
 		mario->UnsetMovement(UP);
 		break;
 	}

@@ -20,3 +20,6 @@ typedef GameObject* LPGAMEOBJECT;
 
 struct CollisionEvent;
 typedef CollisionEvent* LPCOLLISIONEVENT;
+
+constexpr int MAX_POWER_METER = 7;
+

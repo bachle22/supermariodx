@@ -22,6 +22,8 @@ Mario::Mario(float x, float y) : GameObject()
 
 	canJumpAgain = true;
 	powerMeter = 0;
+	isPowerIncreasing = false;
+	powerTimer = 0;
 }
 
 void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
@@ -29,6 +31,8 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 	// Calculate dx, dy 
 	GameObject::Update(dt);
 	Movement();
+
+	ManagePowerDuration(dt);
 
 
 	std::vector<LPCOLLISIONEVENT> coEvents;
@@ -145,7 +149,12 @@ void Mario::Render()
 			if (vx != 0 && ax != 0)
 			{
 				// Stop animating when hit an edge
-				if (!edges[RIGHT]) ani = BIG_WALKING;
+				if (!edges[RIGHT])
+				{
+					ani = BIG_WALKING;
+					if (powerMeter > 2) ani = BIG_RUNNING;
+					if (powerMeter == MAX_POWER_METER) ani = BIG_RUNNING_MAX;
+				}
 				else ani = BIG_IDLE;
 
 				// Efficently check if ax * nx < 0
@@ -155,18 +164,36 @@ void Mario::Render()
 			if (isJumping) {
 				if (vy < 0) ani = BIG_JUMPING;
 				else ani = BIG_JUMPED;
+				if (powerMeter == MAX_POWER_METER) ani = BIG_JUMPING_MAX;
 			}
-			if (!movement[LEFT] && !movement[RIGHT] && movement[DOWN]) ani = BIG_DUCKING;
+
+			/*
+			Optimize old code: if (!movement[LEFT] && !movement[RIGHT] && movement[DOWN]) ani = BIG_DUCKING;
+			Movement is an array of 4 elements: L R U D; only care about L R and D
+			So values will be: 0 0 0 1 or 0 0 1 1
+			Using AS_INT treat these 4 boolean bytes and an 4 bytes of an integer
+			Values to execute ani = BIG_DUCKING: 0x01000000 or 0x01010000 (little endian)
+			These two value AND 0x01000101 always equal 0x01000000
+			*/
+			if ((AS_INT(movement) & 0x01000101) == 0x01000000) ani = BIG_DUCKING;
 			break;
 		case MARIO_LEVEL_SMALL:
 			if (AS_INT(vx) != 0 && AS_INT(ax) != 0)
 			{
-				if (!edges[RIGHT]) ani = SMALL_WALKING;
+				if (!edges[RIGHT]) {
+					ani = SMALL_WALKING;
+					if (powerMeter > 2) ani = SMALL_RUNNING;
+					if (powerMeter == MAX_POWER_METER) ani = SMALL_RUNNING_MAX;
+				}
 				else ani = SMALL_IDLE;
 				if ((AS_INT(ax) ^ nx) < 0) ani = SMALL_BRAKING;
 			}
 			else ani = SMALL_IDLE;
-			if (isJumping) ani = SMALL_JUMPING;
+			if (isJumping)
+			{
+				ani = SMALL_JUMPING;
+				if (powerMeter == MAX_POWER_METER) ani = SMALL_JUMPING_MAX;
+			}
 			break;
 		}
 
@@ -220,7 +247,9 @@ void Mario::Reset()
 void Mario::Movement()
 {
 	// Velocity with friction
-	vx = level == MARIO_LEVEL_SMALL ? MARIO_WALKING_SPEED_SMALL * ax : MARIO_WALKING_SPEED * ax;
+	vx = level == MARIO_LEVEL_SMALL ?
+		(MARIO_WALKING_SPEED_SMALL + powerMeter * MARIO_POWER_ACCELERATION) * ax :
+		(MARIO_WALKING_SPEED + powerMeter * MARIO_POWER_ACCELERATION) * ax;
 	// Simple fall down
 	vy += MARIO_GRAVITY * dt;
 
@@ -235,7 +264,6 @@ void Mario::Movement()
 	}
 	else if (movement[RIGHT])
 	{
-		//SetState(MARIO_STATE_WALKING_RIGHT);
 		nx = 1;
 		if (ax < 1) ax += MARIO_ACCELERATION_X;
 		if (vx <= 0) ax += MARIO_ACCELERATION_X;
@@ -245,11 +273,11 @@ void Mario::Movement()
 	if (movement[UP] && canJumpAgain)
 	{
 		if (isSuperJump) {
-			//SetState(MARIO_STATE_JUMP_HIGH);
 			if (!isJumping)
 			{
 				last_y = y;
 				vy = -MARIO_JUMP_SPEED_HIGH;
+				vy -= powerMeter == MAX_POWER_METER ? MARIO_POWER_JUMP : 0;
 			}
 			if (last_y - y < MARIO_JUMP_HEIGHT_MAX) {
 				vy -= 0.001f;
@@ -257,29 +285,50 @@ void Mario::Movement()
 				vy -= MARIO_GRAVITY * dt;
 			}
 			else canJumpAgain = false;
-
 		}
+
 		else
 		{
-			//SetState(MARIO_STATE_JUMP_LOW);
-			if (!isJumping) vy = -MARIO_JUMP_SPEED_LOW;
+			if (!isJumping) {
+				vy = -MARIO_JUMP_SPEED_LOW;
+				vy -= powerMeter == MAX_POWER_METER ? MARIO_POWER_JUMP : 0;
+			}
 		}
+
 		IsJumping(true);
 		edges[RIGHT] = false;
 	}
 
 	if (movement[DOWN])
 	{
-		if (level != MARIO_LEVEL_SMALL && !movement[LEFT] && !movement[RIGHT]) {
+		// Check if both movement[LEFT] and movement[LEFT] equal 0
+		if (level != MARIO_LEVEL_SMALL && !AS_SHORT(movement)) {
 			if (ax != 0) ax += ax > 0 ? -MARIO_ACCELERATION_X : MARIO_ACCELERATION_X;
 		}
 	}
 
-
 	if (abs(ax) <= MARIO_INERTIA) ax = 0;
 	if (ax < 0 && !movement[LEFT])
-		ax += level == MARIO_LEVEL_SMALL ? MARIO_INERTIA_SMALL : MARIO_INERTIA;
+		ax += (level == MARIO_LEVEL_SMALL ? MARIO_INERTIA_SMALL : MARIO_INERTIA);
 	if (ax > 0 && !movement[RIGHT])
-		ax -= level == MARIO_LEVEL_SMALL ? MARIO_INERTIA_SMALL : MARIO_INERTIA;
+		ax -= (level == MARIO_LEVEL_SMALL ? MARIO_INERTIA_SMALL : MARIO_INERTIA);
+}
 
+void Mario::ManagePowerDuration(ULONGLONG dt)
+{
+	powerTimer += dt;
+	if (powerTimer >= MARIO_POWER_UP_DURATION_STEP)
+	{
+		// Only increase power when moving
+		if (powerMeter < 7 && isPowerIncreasing && AS_SHORT(movement)) {
+			powerMeter++;
+			powerTimer -= MARIO_POWER_UP_DURATION_STEP;
+		}
+	}
+	if (powerTimer >= MARIO_POWER_DOWN_DURATION_STEP)
+	{
+		// Power decrease slower
+		if (powerMeter > 0 && (!isPowerIncreasing)) powerMeter--;
+		powerTimer -= MARIO_POWER_DOWN_DURATION_STEP;
+	}
 }

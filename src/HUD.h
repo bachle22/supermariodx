@@ -22,8 +22,6 @@ constexpr float POWER_X = 111;
 constexpr float TIME_X = 134.01f;
 constexpr float TIME_Y = 17;
 
-constexpr int MAX_POWER_METER = 7;
-
 enum HUDTextures
 {
 	STATS = 50001,
