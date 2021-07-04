@@ -6,12 +6,16 @@
 #include "Mario.h"
 #include "HUD.h"
 
+constexpr int DEFAULT_MAX_TIME = 300;
+
 class ScenePlayer : public Scene
 {
 protected:
 	Mario* player;
 	TiledMap* map;
 	HUD* hud;
+	ULONGLONG interval;
+	int timer;
 
 	std::vector<LPGAMEOBJECT> objects;
 
@@ -25,13 +29,14 @@ protected:
 
 public:
 	ScenePlayer(int id, LPCWSTR filePath);
-
+	void Init();
 	virtual void Load();
 	virtual void Update(ULONGLONG dt);
 	virtual void Render();
 	virtual void Unload();
 
 	Mario* GetPlayer() { return player; }
+	HUD* GetHUD() { return hud; }
 
 	friend class ScenePlayerInputHandler;
 };

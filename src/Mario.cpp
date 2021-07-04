@@ -21,6 +21,7 @@ Mario::Mario(float x, float y) : GameObject()
 	this->y = y;
 
 	canJumpAgain = true;
+	powerMeter = 0;
 }
 
 void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
@@ -243,7 +244,7 @@ void Mario::Movement()
 
 	if (movement[UP] && canJumpAgain)
 	{
-		if (isTurbo) {
+		if (isSuperJump) {
 			//SetState(MARIO_STATE_JUMP_HIGH);
 			if (!isJumping)
 			{
@@ -274,14 +275,6 @@ void Mario::Movement()
 		}
 	}
 
-
-
-	// Quickly check if UP/DOWN/LEFT/RIGHT all equal zero
-	//if (!*(int*)movement) {
-	//	SetState(MARIO_STATE_IDLE);
-	//	if (ax < 0) ax += MARIO_ACCELERATION_X;
-	//	if (ax > 0) ax -= MARIO_ACCELERATION_X;
-	//}
 
 	if (abs(ax) <= MARIO_INERTIA) ax = 0;
 	if (ax < 0 && !movement[LEFT])

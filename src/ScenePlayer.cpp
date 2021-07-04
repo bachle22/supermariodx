@@ -166,7 +166,6 @@ void ScenePlayer::_ParseSection_ANIMATION_SETS(std::string line)
 	}
 }
 
-
 /*
 	Parse a line in section [OBJECTS]
 */
@@ -242,7 +241,6 @@ void ScenePlayer::_ParseSection_OBJECTS(std::string line)
 	}
 }
 
-
 void ScenePlayer::_ParseSection_TILEDMAP(std::string line)
 {
 	int id, mapRows, mapColumns, tilesheetColumns, tilesheetRows, totalTiles;
@@ -316,8 +314,16 @@ void ScenePlayer::Load()
 	}
 
 	f.close();
-
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
+
+	Init();
+}
+
+void ScenePlayer::Init()
+{
+	interval = 0;
+	timer = 0;
+	hud = new HUD();
 }
 
 void ScenePlayer::Update(ULONGLONG dt)
@@ -348,11 +354,17 @@ void ScenePlayer::Update(ULONGLONG dt)
 	cy -= game->GetScreenHeight() / 2;
 
 	Game::GetInstance()->SetCamPos(cx, 240.1f);
+
+	// Timer
+	interval += dt;
+	if (interval / 1000 >= timer && timer < TIME_MAX) {
+		if (DEFAULT_MAX_TIME - timer > 0) hud->SetTime(DEFAULT_MAX_TIME - timer++);
+		else player->SetState(MARIO_STATE_DIE);
+	}
 }
 
 void ScenePlayer::Render()
 {
-	if (!hud) hud = new HUD();
 	map->Render();
 	for (size_t i = 0; i < objects.size(); i++) objects[i]->Render();
 	hud->Render();
@@ -378,6 +390,7 @@ void ScenePlayerInputHandler::OnKeyDown(int KeyCode)
 
 	Game* game = Game::GetInstance();
 	Mario* mario = ((ScenePlayer*)scene)->GetPlayer();
+	HUD* hud = ((ScenePlayer*)scene)->GetHUD();
 	switch (KeyCode)
 	{
 	case DIK_SPACE:
@@ -395,16 +408,20 @@ void ScenePlayerInputHandler::OnKeyDown(int KeyCode)
 		mario->SetMovement(DOWN);
 		break;
 	case DIK_S:
-		if (!game->IsKeyDown(DIK_X)) mario->SetTurbo(true);
+		if (!game->IsKeyDown(DIK_X)) mario->SetSuperJump(true);
 		if (!mario->IsJumping()) mario->SetMovement(UP);
 		break;
 	case DIK_X:
-		if (!game->IsKeyDown(DIK_S)) mario->SetTurbo(false);
+		if (!game->IsKeyDown(DIK_S)) mario->SetSuperJump(false);
 		if (!mario->IsJumping()) mario->SetMovement(UP);
 		break;
 	case DIK_R:
 		mario->Reset();
 		break;
+	case DIK_A:
+		mario->SetPowerMeter(mario->GetPowerMeter() + 1);
+		if (mario->GetPowerMeter() > MAX_POWER_METER) mario->SetPowerMeter(0);
+		hud->SetPowerMeter(mario->GetPowerMeter());
 	}
 }
 
@@ -429,7 +446,7 @@ void ScenePlayerInputHandler::OnKeyUp(int KeyCode)
 		break;
 	case DIK_S:
 		mario->CanJumpAgain(true);
-		mario->SetTurbo(false);
+		mario->SetSuperJump(false);
 		mario->UnsetMovement(UP);
 		break;
 	case DIK_X:

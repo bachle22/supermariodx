@@ -3,7 +3,6 @@
 #include "GameObject.h"
 #include "Font.h"
 
-
 constexpr float MARIO_WALKING_SPEED = 0.12f;
 constexpr float MARIO_WALKING_SPEED_SMALL = 0.095f;
 constexpr float MARIO_JUMP_SPEED_LOW = 0.225f;
@@ -79,11 +78,13 @@ class Mario : public GameObject
 
 	float ax, ay;
 
-	bool isTurbo;
+	bool isSuperJump;
 	bool isJumping, canJumpAgain;
 	float last_y;
 	bool edges[4] = { 0, 0, 0, 0 };
 	bool movement[4] = { 0, 0, 0, 0 };
+
+	int powerMeter;
 
 public:
 	Mario(float x = 0.0f, float y = 0.0f);
@@ -92,16 +93,15 @@ public:
 
 	void IsJumping(bool value) { isJumping = value; }
 	bool IsJumping() { return isJumping; }
-
 	void CanJumpAgain(bool value) { canJumpAgain = value; }
 	bool CanJumpAgain() { return canJumpAgain; }
-
-	void SetTurbo(bool value) { isTurbo = value; }
-
+	void SetSuperJump(bool value) { isSuperJump = value; }
 	void Movement();
-
 	void SetMovement(int direction) { movement[direction] = true; };
 	void UnsetMovement(int direction) { movement[direction] = false; };
+
+	void SetPowerMeter(int value) { powerMeter = value; }
+	int GetPowerMeter() { return powerMeter; }
 
 	void SetState(int state);
 	void SetLevel(int l) { level = l; }
