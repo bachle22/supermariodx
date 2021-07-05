@@ -353,12 +353,13 @@ void ScenePlayer::Update(ULONGLONG dt)
 	cx -= game->GetScreenWidth() / 2;
 	cy -= game->GetScreenHeight() / 2;
 
-	Game::GetInstance()->SetCamPos(cx, 240.1f);
+	Game::GetInstance()->SetCamPos(cx, cy < 180 ? 240.1f - 180 + cy : 240.1f);
+	DebugOut(L"cx: %f, cy %f\n", cx, cy);
 
 	// Timer
 	interval += dt;
 	if (interval / 1000 >= timer && timer < TIME_MAX) {
-		if (DEFAULT_MAX_TIME - timer > 0) hud->SetTime(DEFAULT_MAX_TIME - timer++);
+		if (DEFAULT_MAX_TIME - timer >= 0) hud->SetTime(DEFAULT_MAX_TIME - timer++);
 		else player->SetState(MARIO_STATE_DIE);
 	}
 	hud->SetPowerMeter((GetPlayer()->GetPowerMeter()));
@@ -414,10 +415,9 @@ void ScenePlayerInputHandler::OnKeyDown(int KeyCode)
 	case DIK_X:
 		if (!game->IsKeyDown(DIK_S)) mario->SetSuperJump(false);
 		if (!mario->IsJumping()) mario->SetMovement(UP);
+		if (mario->GetPowerMeter() == MAX_POWER_METER) mario->SetFlying(true);
 		break;
 	case DIK_A:
-		//mario->SetPowerMeter(mario->GetPowerMeter() + 1);
-		//if (mario->GetPowerMeter() > MAX_POWER_METER) mario->SetPowerMeter(0);
 		mario->SetPowerIncreament(true);
 		break;
 
@@ -429,6 +429,10 @@ void ScenePlayerInputHandler::OnKeyDown(int KeyCode)
 	case DIK_2:
 		mario->SetMovement(UP);
 		mario->SetLevel(MARIO_LEVEL_BIG);
+		break;
+	case DIK_3:
+		mario->SetMovement(UP);
+		mario->SetLevel(MARIO_LEVEL_RACOON);
 		break;
 	case DIK_R:
 		mario->Reset();
@@ -462,6 +466,7 @@ void ScenePlayerInputHandler::OnKeyUp(int KeyCode)
 		break;
 	case DIK_X:
 		mario->UnsetMovement(UP);
+		mario->SetFlying(false);
 		break;
 	case DIK_A:
 		mario->SetPowerIncreament(false);
@@ -474,15 +479,20 @@ void ScenePlayerInputHandler::OnKeyUp(int KeyCode)
 	case DIK_2:
 		mario->UnsetMovement(UP);
 		break;
+	case DIK_3:
+		mario->UnsetMovement(UP);
+		break;
+	case DIK_C:
+		isCameraFollowing = isCameraFollowing ? false : true;
+		break;
 	}
+
 }
 
 void ScenePlayerInputHandler::KeyState(BYTE* states)
 {
 	Game* game = Game::GetInstance();
 	Mario* mario = ((ScenePlayer*)scene)->GetPlayer();
-
-
 
 	// disable control key when Mario die 
 	if (mario->GetState() == MARIO_STATE_DIE) return;

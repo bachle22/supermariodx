@@ -26,6 +26,7 @@ protected:
 	void _ParseSection_TILEDMAP(std::string line);
 	void _ParseSection_OBJECTS(std::string line);
 
+	// Cheats
 
 public:
 	ScenePlayer(int id, LPCWSTR filePath);
@@ -48,5 +49,7 @@ public:
 	virtual void OnKeyDown(int KeyCode);
 	virtual void OnKeyUp(int KeyCode);
 	ScenePlayerInputHandler(LPSCENE s): SceneInputHandler(s) {};
+	bool isCameraFollowing = false;
+
 };
 
