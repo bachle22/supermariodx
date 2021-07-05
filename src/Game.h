@@ -35,6 +35,7 @@ class Game
 	std::unordered_map<int, LPSCENE> scenes;
 	int current_scene;
 
+
 public:
 	int DEBUG_X = 0, DEBUG_Y = 0;
 
@@ -56,21 +57,6 @@ public:
 
 	int GetScreenWidth() { return screen_width; }
 	int GetScreenHeight() { return screen_height; }
-
-	static void SweptAABB(
-		float ml,			// move left 
-		float mt,			// move top
-		float mr,			// move right 
-		float mb,			// move bottom
-		float dx,			// 
-		float dy,			// 
-		float sl,			// static left
-		float st,
-		float sr,
-		float sb,
-		float& t,
-		float& nx,
-		float& ny);
 
 	LPDIRECT3DDEVICE9 GetDirect3DDevice() { return this->d3ddev; }
 	LPDIRECT3DSURFACE9 GetBackBuffer() { return backBuffer; }

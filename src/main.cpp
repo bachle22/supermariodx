@@ -127,10 +127,14 @@ WPARAM HandleWindowMessage()
 			case WM_SIZING:
 				// TODO: Handle window resizing
 				break;
+			case WM_ENTERSIZEMOVE:
+				DebugOut(L"PAUSED\n");
+				break;
 			}
 		}
 
 		ULONGLONG now = GetTickCount64();
+		//DebugOut(L"%llu\n", now);
 
 		// dt: the time between (beginning of last frame) and now
 		// this frame: the frame we are about to render

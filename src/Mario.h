@@ -18,28 +18,38 @@ constexpr int MARIO_LEVEL_RACOON = 3;
 
 constexpr int MARIO_UNTOUCHABLE_TIME = 5000;
 
-constexpr float MARIO_WALKING_SPEED = 0.1f;
+constexpr float MARIO_WALKING_SPEED = 0.11f;
 constexpr float MARIO_WALKING_SPEED_SMALL = 0.09f;
 constexpr float MARIO_JUMP_SPEED_LOW = 0.25f;
 constexpr float MARIO_JUMP_SPEED_HIGH = 0.15f;
 constexpr float MARIO_JUMP_HEIGHT_MAX = 50.0f;
+constexpr float MARIO_JUMP_HEIGHT_POWER = 2.0f;
 constexpr float MARIO_JUMP_DEFLECT_SPEED = 0.2f;
 constexpr float MARIO_GRAVITY = 0.001f;
 constexpr float MARIO_DIE_DEFLECT_SPEED = 0.5f;
+constexpr float MARIO_DESCENDING_SPEED = 0.06f;
 
 constexpr float MARIO_ACCELERATION_X = 0.03f;
 constexpr float MARIO_ACCELERATION_Y = 0.001f;
 constexpr float MARIO_INERTIA = 0.028f;
-constexpr float MARIO_INERTIA_SMALL = 0.0185f;
-constexpr float MARIO_POWER_ACCELERATION = .018f;
+constexpr float MARIO_INERTIA_SMALL = 0.018f;
+constexpr float MARIO_POWER_ACCELERATION = .015f;
 constexpr float MARIO_POWER_JUMP = 0.1f;
-constexpr float MARIO_POWER_INERTIA = 0.0018f;
+constexpr float MARIO_POWER_INERTIA = 0.0028f;
 constexpr float MARIO_FLY_ACCELERATION_X = 0.96f;
+constexpr float MARIO_ACCELERATION_X_PERCENTAGE = 0.965f;
+constexpr float MARIO_SPEED_EASING = 0.01f;
+constexpr float MARIO_FLY_SPEED = 1;
+constexpr float MARIO_BRAKE_INERTIA = .01f;
+constexpr float MARIO_BRAKE_IDLE_INERTIA = .08f;
 
-constexpr int MARIO_POWER_MAX_FLY_TIME = 3000;
-constexpr int MARIO_POWER_UP_DURATION_STEP = 300;
-constexpr int MARIO_POWER_DOWN_DURATION_STEP = 450;
-constexpr int MARIO_POWER_CHANGING_NX_DURATION_STEP = 100;
+constexpr int POWER_MAX_FLY_TIME = 3000;
+constexpr int POWER_UP_DURATION_STEP = 300;
+constexpr int POWER_DOWN_DURATION_STEP = 450;
+constexpr int POWER_CHANGING_NX_DURATION_STEP = 100;
+constexpr int POWER_PEAKED_DECREASE_TIME = 80;
+constexpr int POWER_DIRECTION_UNCHANGED_STEP = 300;
+constexpr int POWER_DIRECTION_CHANGED_STEP = 50;
 
 enum MarioBoundingBox
 {
@@ -47,8 +57,8 @@ enum MarioBoundingBox
 	SMALL_BBOX_HEIGHT = 16,
 	BIG_BBOX_WIDTH = 16,
 	BIG_BBOX_HEIGHT = 27,
-	RACOON_BBOX_WIDTH = 24,
-	RACOON_BBOX_HEIGHT = 27
+	RACOON_BBOX_WIDTH = 23,
+	RACOON_BBOX_HEIGHT = 28
 };
 
 enum MarioAnimation
@@ -80,6 +90,7 @@ enum MarioAnimation
 	BIG_BRAKING = 25,
 	RACOON_BRAKING = 27,
 
+	RACOON_DESCENDING = 45,
 	RACOON_FLYING = 46,
 
 	BIG_JUMPED = 62,
@@ -94,10 +105,11 @@ enum MarioAction
 {
 	JUMPING = 0,
 	SUPER_JUMPING = 1,
-	GAINING_POWER = 2,
-	FLYING = 3,
-	DONE_FLYING = 4,
-	DESCENDING = 5
+	DONE_JUMPING = 2,
+	GAINING_POWER = 3,
+	FLYING = 4,
+	PEAKING = 5,
+	DESCENDING = 6
 };
 
 enum Direction
@@ -114,41 +126,41 @@ class Mario : public GameObject
 	int untouchable;
 	ULONGLONG untouchable_start;
 	ULONGLONG powerTimer, flyTimer;
+	ULONGLONG lastTimeGainPower, lastTimeDecreasePowerMaxHeight;
+	ULONGLONG lastTimeDecreasePowerFlying, lastTimeDecreasePowerIdle;
+
 
 	float start_x;
 	float start_y;
 
 	float ax, ay;
 
-	bool isSuperJump, isJumping, isPowerIncreasing;
-	bool isFlying, isDescending, isMaxHeightReached;
-	bool canJumpAgain;
 	int powerMeter;
 
 	float last_y;
-	bool edges[4] = { 0, 0, 0, 0 };
-	bool movement[4] = { 0, 0, 0, 0 };
+
+	bool edge[4] = { 0 };
+	bool movement[4] = { 0 };
+	bool action[7] = { 0 };
 
 public:
 	Mario(float x = 0.0f, float y = 0.0f);
 	virtual void Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();
 
-	void IsJumping(bool value) { isJumping = value; }
-	bool IsJumping() { return isJumping; }
-	void CanJumpAgain(bool value) { canJumpAgain = value; }
-	bool CanJumpAgain() { return canJumpAgain; }
-	void SetFlying(bool value) { isFlying = value; }
-
-	void SetPowerIncreament(bool value) { isPowerIncreasing = value; }
-	void ManagePowerDuration();
-	void SetSuperJump(bool value) { isSuperJump = value; }
 	void Movement();
 	void SetMovement(int direction) { movement[direction] = true; };
 	void UnsetMovement(int direction) { movement[direction] = false; };
+	bool GetMovement(int direction) { return movement[direction]; }
+
+	void Action();
+	void SetAction(int action) { this->action[action] = true; }
+	void UnsetAction(int action) { this->action[action] = false; }
+	bool GetAction(int action) { return this->action[action]; }
 
 	void SetPowerMeter(int value) { powerMeter = value; }
 	int GetPowerMeter() { return powerMeter; }
+	void ManagePowerDuration();
 
 	void SetState(int state);
 	int GetLevel() { return level; }

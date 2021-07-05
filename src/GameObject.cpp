@@ -106,6 +106,7 @@ void GameObject::FilterCollision(
 	if (min_iy >= 0) coEventsResult.push_back(coEvents[min_iy]);
 }
 
+
 /*
 	Extension of original SweptAABB to deal with two moving objects
 */
@@ -130,7 +131,7 @@ LPCOLLISIONEVENT GameObject::SweptAABBEx(LPGAMEOBJECT coO)
 
 	GetBoundingBox(ml, mt, mr, mb);
 
-	Game::SweptAABB(
+	Collision::SweptAABB(
 		ml, mt, mr, mb,
 		rdx, rdy,
 		sl, st, sr, sb,
