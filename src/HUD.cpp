@@ -34,7 +34,7 @@ void HUD::Render()
 {
 	Game* game = Game::GetInstance();
 	Game::GetInstance()->GetCamPos(x, y);
-
+	x = floor(x); y = floor(y);
 	// Render HUD containers textures
 	Game::GetInstance()->Draw(1, x, y + offset_y, background, 0, 0, SCREEN_WIDTH, HUD_BAR_HEIGHT, 255);
 	statsHUD->Draw(-1, x + STATS_OFFSET_X, y + offset_y + MARGIN, 255);

@@ -7,6 +7,7 @@
 #include "HUD.h"
 
 constexpr int DEFAULT_MAX_TIME = 300;
+constexpr float CAMERA_FLOOR_Y = 241.1f;
 
 class ScenePlayer : public Scene
 {

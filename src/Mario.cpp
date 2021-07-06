@@ -85,7 +85,8 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 		// Stop when touching edge
 		if (min_ty == 1 && !GetAction(JUMPING)) {
 			ax = 0;
-			edge[RIGHT] = true;
+			vx = 0;
+			//AS_SHORT(collision) = 257;		//0x0101 - collision[LEFT] = collision[RIGHT] = true
 		}
 
 		// Reset when touching the ground
@@ -95,7 +96,7 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 			UnsetAction(DESCENDING);
 		}
 
-		// DebugOut(L"min_tx %f min_ty %f nx %f ny %f rdx %f rdy %f\n", min_tx, min_ty, nx, ny, rdx, rdy);
+		//DebugOut(L"min_tx %f min_ty %f nx %f ny %f rdx %f rdy %f\n", min_tx, min_ty, nx, ny, rdx, rdy);
 
 		//
 		// Collision logic with other objects
@@ -143,7 +144,7 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 	}
 	// clean up collision events
 	for (size_t i = 0; i < coEvents.size(); i++) delete coEvents[i];
-	// DebugOut(L"x %f y %f vx %f vy %f dx %f dy %f\n", x, y, vx, vy, dx, dy);
+	 //if (nx * ax < 0) DebugOut(L"x %f y %f vx %f vy %f dx %f dy %f\n", x, y, vx, vy, dx, dy);
 }
 
 void Mario::Render()
@@ -155,14 +156,12 @@ void Mario::Render()
 		switch (state) {
 
 		case MARIO_SMALL:
-			if (AS_INT(vx) != 0 && AS_INT(ax) != 0)
+			if (ax != 0 || AS_SHORT(movement))
 			{
-				if (!edge[RIGHT]) {
-					ani = SMALL_WALKING;
-					if (powerMeter > 2) ani = SMALL_RUNNING;
-					if (powerMeter == MAX_POWER_METER) ani = SMALL_RUNNING_MAX;
-				}
-				else ani = SMALL_IDLE;
+				ani = SMALL_WALKING;
+				if (powerMeter > 2) ani = SMALL_RUNNING;
+				if (powerMeter == MAX_POWER_METER) ani = SMALL_RUNNING_MAX;
+
 				if ((AS_INT(ax) ^ nx) < 0) ani = SMALL_BRAKING;
 			}
 			else ani = SMALL_IDLE;
@@ -173,23 +172,18 @@ void Mario::Render()
 			}
 			break;
 
-
 		case MARIO_BIG:
-			if (vx != 0 && ax != 0)
+			if (ax != 0 || AS_SHORT(movement))
 			{
-				// Stop animating when hit an edge
-				if (!edge[RIGHT])
-				{
-					ani = BIG_WALKING;
-					if (powerMeter > 2) ani = BIG_RUNNING;
-					if (powerMeter == MAX_POWER_METER) ani = BIG_RUNNING_MAX;
-				}
-				else ani = BIG_IDLE;
+				ani = BIG_WALKING;
+				if (powerMeter > 2) ani = BIG_RUNNING;
+				if (powerMeter == MAX_POWER_METER) ani = BIG_RUNNING_MAX;
 
 				// Efficently check if ax * nx < 0
 				if ((AS_INT(ax) ^ nx) < 0) ani = BIG_BRAKING;
 			}
 			else ani = BIG_IDLE;
+
 			if (GetAction(JUMPING)) {
 				if (vy < 0) ani = BIG_JUMPING;
 				else ani = BIG_JUMPED;
@@ -209,18 +203,16 @@ void Mario::Render()
 
 
 		case MARIO_RACOON:
-			if (vx != 0 && ax != 0)
+			if (ax != 0 || AS_SHORT(movement))
 			{
-				if (!edge[RIGHT])
-				{
-					ani = RACOON_WALKING;
-					if (powerMeter > 2) ani = RACOON_RUNNING;
-					if (powerMeter == MAX_POWER_METER) ani = RACOON_RUNNING_MAX;
-				}
-				else ani = RACOON_IDLE;
+				ani = RACOON_WALKING;
+				if (powerMeter > 2) ani = RACOON_RUNNING;
+				if (powerMeter == MAX_POWER_METER) ani = RACOON_RUNNING_MAX;
+
 				if ((AS_INT(ax) ^ nx) < 0) ani = RACOON_BRAKING;
 			}
 			else ani = RACOON_IDLE;
+
 			if (GetAction(JUMPING)) {
 				if (vy < 0) ani = RACOON_JUMPING;
 				// else ani = RACOON_JUMPED;
@@ -239,7 +231,7 @@ void Mario::Render()
 	int alpha = 255;
 	if (untouchable) alpha = 128;
 
-	animation_set->at(ani)->Render(nx, x, y, alpha);
+	animation_set->at(ani)->Render(nx, floor(x), y, alpha);
 
 	RenderBoundingBox();
 }
@@ -300,17 +292,14 @@ void Mario::Movement()
 	if (GetMovement(LEFT))
 	{
 		nx = -1;
-		if (ax > -1) ax -= MARIO_ACCELERATION_X;
-		if (vx > 0) ax -= MARIO_ACCELERATION_X;
-
-		edge[RIGHT] = false;
+		ax -= MARIO_ACCELERATION_X;
+		//if (vx > 0) ax -= MARIO_ACCELERATION_X;
 	}
 	else if (GetMovement(RIGHT))
 	{
 		nx = 1;
-		if (ax < 1) ax += MARIO_ACCELERATION_X;
-		if (vx <= 0) ax += MARIO_ACCELERATION_X;
-
+		ax += MARIO_ACCELERATION_X;
+		//if (vx <= 0) ax += MARIO_ACCELERATION_X;
 	}
 
 	if (GetMovement(UP))
@@ -365,8 +354,6 @@ void Mario::Movement()
 		}
 
 		SetAction(JUMPING);
-		edge[RIGHT] = false;
-
 	}
 
 	if (GetMovement(DOWN))
@@ -386,9 +373,7 @@ void Mario::Movement()
 		};
 	}
 
-
 	// Mario Inertia
-	if (abs(ax) <= MARIO_INERTIA) ax = 0;
 	// Disabled when moving left to prevent it slow down left movement
 	if (ax < 0 && !GetMovement(LEFT))
 	{
@@ -401,23 +386,13 @@ void Mario::Movement()
 		ax += powerMeter * MARIO_POWER_INERTIA;
 	}
 
-	// Add inertia when changing direct suddenly (braking)
-	if (!GetAction(FLYING) && abs(ax) <= 1)
-	{
-		if (nx * ax < 0)
-		{
-			if (ax < 0) ax -= powerMeter * MARIO_BRAKE_INERTIA;
-			else ax += powerMeter * MARIO_BRAKE_INERTIA;
 
-			// Stop Mario when releasing key after braking
-			if (!AS_SHORT(movement))
-			{
-				if (ax < 0) ax += MARIO_BRAKE_IDLE_INERTIA;
-				else ax -= MARIO_BRAKE_IDLE_INERTIA;
-			}
-		}
+	// ax = 1 or ax = -1 are max acceleration allowed
+	if (abs(ax) <= MARIO_INERTIA) ax = 0;
+	else if (ax > 1) ax = 1;
+	else if (ax < -1) ax = -1;
 
-	}
+	DebugOut(L"nx %d ax %f vx %f power %d gaining %d \n", nx, ax, vx, powerMeter, GetAction(GAINING_POWER));
 }
 
 void Mario::ManagePowerDuration()
@@ -427,10 +402,10 @@ void Mario::ManagePowerDuration()
 	if (!GetAction(FLYING))
 	{
 		// Power decrease slower
-		if (!GetAction(PEAKING)) {
+		if (!GetAction(PEAKING) && abs(ax) < 1) {
 			if (powerTimer - lastTimeDecreasePowerIdle >= POWER_DOWN_DURATION_STEP)
 			{
-				if (powerMeter > 0 && (!GetAction(GAINING_POWER) || !AS_SHORT(movement))) {
+				if (powerMeter > 0) {
 					powerMeter--;
 					lastTimeDecreasePowerIdle = powerTimer;
 				}
@@ -444,11 +419,10 @@ void Mario::ManagePowerDuration()
 		if (powerTimer - lastTimeGainPower >= duration)
 		{
 			// Only increase power when moving left or right
-			if (powerMeter < MAX_POWER_METER && powerMeter >= 0 &&
-				GetAction(GAINING_POWER) && AS_SHORT(movement))
+			if (abs(ax) >= POWER_ALLOW_GAINING_THRESHOLD && powerMeter >= 0)
 			{
-				if (nx * ax > 0) powerMeter++;
-				else if (powerMeter > 0) powerMeter--;
+				if (GetAction(GAINING_POWER) && nx * ax > 0 && powerMeter < MAX_POWER_METER) powerMeter++;
+				else if (powerMeter > 0 && nx * ax < 0) powerMeter--;
 				lastTimeGainPower = powerTimer;
 			}
 		}

@@ -30,21 +30,23 @@ constexpr float MARIO_INERTIA = 0.028f;
 constexpr float MARIO_INERTIA_SMALL = 0.018f;
 constexpr float MARIO_POWER_ACCELERATION = .015f;
 constexpr float MARIO_POWER_JUMP = 0.1f;
-constexpr float MARIO_POWER_INERTIA = 0.0028f;
+constexpr float MARIO_POWER_INERTIA = 0.01f;
 constexpr float MARIO_FLY_ACCELERATION_X = 0.96f;
 constexpr float MARIO_ACCELERATION_X_PERCENTAGE = 0.965f;
 constexpr float MARIO_SPEED_EASING = 0.01f;
 constexpr float MARIO_FLY_SPEED = 1;
-constexpr float MARIO_BRAKE_INERTIA = .01f;
+constexpr float MARIO_BRAKE_INERTIA = .01f;;
 constexpr float MARIO_BRAKE_IDLE_INERTIA = .08f;
+
+constexpr float POWER_ALLOW_GAINING_THRESHOLD = .3f;
 
 constexpr int POWER_MAX_FLY_TIME = 3000;
 constexpr int POWER_UP_DURATION_STEP = 300;
 constexpr int POWER_DOWN_DURATION_STEP = 450;
 constexpr int POWER_CHANGING_NX_DURATION_STEP = 100;
 constexpr int POWER_PEAKED_DECREASE_TIME = 80;
-constexpr int POWER_DIRECTION_UNCHANGED_STEP = 300;
-constexpr int POWER_DIRECTION_CHANGED_STEP = 50;
+constexpr int POWER_DIRECTION_UNCHANGED_STEP = 350;
+constexpr int POWER_DIRECTION_CHANGED_STEP = 100;
 
 enum Direction
 {
@@ -143,6 +145,7 @@ class Mario : public GameObject
 
 	float last_y;
 
+	bool collision[4] = { 0 };
 	bool edge[4] = { 0 };
 	bool movement[4] = { 0 };
 	bool action[7] = { 0 };
@@ -152,12 +155,15 @@ public:
 	virtual void Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();
 
+	void SetCollision(int direction) { collision[direction] = true; };
+	void UnsetCollision(int direction) { collision[direction] = false; };
+	bool GetCollision(int direction) { return collision[direction]; }
+
 	void Movement();
 	void SetMovement(int direction) { movement[direction] = true; };
 	void UnsetMovement(int direction) { movement[direction] = false; };
 	bool GetMovement(int direction) { return movement[direction]; }
 
-	void Action();
 	void SetAction(int action) { this->action[action] = true; }
 	void UnsetAction(int action) { this->action[action] = false; }
 	bool GetAction(int action) { return this->action[action]; }

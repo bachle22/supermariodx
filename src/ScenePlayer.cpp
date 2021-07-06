@@ -353,7 +353,8 @@ void ScenePlayer::Update(ULONGLONG dt)
 	cx -= game->GetScreenWidth() / 2;
 	cy -= game->GetScreenHeight() / 2;
 
-	Game::GetInstance()->SetCamPos(cx, cy < 150 ? 240.1f - 150.1f + cy : 240.1f);
+	Game::GetInstance()->
+		SetCamPos(floor(cx), cy < 150 ? CAMERA_FLOOR_Y - 150 + cy : CAMERA_FLOOR_Y);
 	//DebugOut(L"cx: %f, cy %f\n", cx, cy);
 
 	// Timer
@@ -474,7 +475,7 @@ void ScenePlayerInputHandler::OnKeyUp(int KeyCode)
 		mario->UnsetAction(GAINING_POWER);
 		break;
 
-	// Cheat keys
+		// Cheat keys
 	case DIK_1:
 		mario->UnsetMovement(UP);
 		break;

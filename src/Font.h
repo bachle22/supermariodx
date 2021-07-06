@@ -3,7 +3,7 @@
 #include <unordered_map>
 #include "Sprites.h"
 
-constexpr float FONT_SIZE = 8.01f;
+constexpr float FONT_SIZE = 8;
 
 enum FontSprite {
 	FONT_0 = 50013,
