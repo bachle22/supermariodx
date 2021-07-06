@@ -11,9 +11,8 @@
 
 Mario::Mario(float x, float y) : GameObject()
 {
-	level = MARIO_LEVEL_SMALL;
+	state = MARIO_SMALL;
 	untouchable = 0;
-	SetState(MARIO_STATE_IDLE);
 	ax = 0; ay = 0;
 	start_x = x;
 	start_y = y;
@@ -124,9 +123,9 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 					{
 						if (goomba->GetState() != GOOMBA_STATE_DIE)
 						{
-							if (level > MARIO_LEVEL_SMALL)
+							if (state > MARIO_SMALL)
 							{
-								level = MARIO_LEVEL_SMALL;
+								state = MARIO_SMALL;
 								StartUntouchable();
 							}
 							else
@@ -153,9 +152,9 @@ void Mario::Render()
 	if (state == MARIO_STATE_DIE)
 		ani = DIE;
 	else
-		switch (level) {
+		switch (state) {
 
-		case MARIO_LEVEL_SMALL:
+		case MARIO_SMALL:
 			if (AS_INT(vx) != 0 && AS_INT(ax) != 0)
 			{
 				if (!edge[RIGHT]) {
@@ -175,7 +174,7 @@ void Mario::Render()
 			break;
 
 
-		case MARIO_LEVEL_BIG:
+		case MARIO_BIG:
 			if (vx != 0 && ax != 0)
 			{
 				// Stop animating when hit an edge
@@ -209,7 +208,7 @@ void Mario::Render()
 			break;
 
 
-		case MARIO_LEVEL_RACOON:
+		case MARIO_RACOON:
 			if (vx != 0 && ax != 0)
 			{
 				if (!edge[RIGHT])
@@ -261,17 +260,17 @@ void Mario::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 	left = x;
 	top = y;
 
-	switch (level)
+	switch (state)
 	{
-	case MARIO_LEVEL_SMALL:
+	case MARIO_SMALL:
 		right = x + SMALL_BBOX_WIDTH;
 		bottom = y + SMALL_BBOX_HEIGHT;
 		break;
-	case MARIO_LEVEL_BIG:
+	case MARIO_BIG:
 		right = x + BIG_BBOX_WIDTH;
 		bottom = y + BIG_BBOX_HEIGHT;
 		break;
-	case MARIO_LEVEL_RACOON:
+	case MARIO_RACOON:
 		right = x + RACOON_BBOX_WIDTH;
 		bottom = y + RACOON_BBOX_HEIGHT;
 		break;
@@ -283,8 +282,7 @@ void Mario::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 */
 void Mario::Reset()
 {
-	SetState(MARIO_STATE_IDLE);
-	SetLevel(MARIO_LEVEL_BIG);
+	SetState(MARIO_BIG);
 	SetPosition(start_x, start_y);
 	SetSpeed(0, 0);
 }
@@ -292,7 +290,7 @@ void Mario::Reset()
 void Mario::Movement()
 {
 	// Velocity with friction + power meter
-	vx = level == MARIO_LEVEL_SMALL ?
+	vx = state == MARIO_SMALL ?
 		(MARIO_WALKING_SPEED_SMALL + powerMeter * MARIO_POWER_ACCELERATION) * ax :
 		(MARIO_WALKING_SPEED + powerMeter * MARIO_POWER_ACCELERATION) * ax;
 	// Simple fall down
@@ -340,7 +338,7 @@ void Mario::Movement()
 				flyTimer = 0;
 			}
 
-			if (level == MARIO_LEVEL_RACOON)
+			if (state == MARIO_RACOON)
 			{
 				if (GetAction(FLYING) && powerMeter == MAX_POWER_METER)
 				{
@@ -374,12 +372,12 @@ void Mario::Movement()
 	if (GetMovement(DOWN))
 	{
 		// Check if both movement[LEFT] and movement[LEFT] equal 0
-		if (level != MARIO_LEVEL_SMALL && !AS_SHORT(movement)) {
+		if (state != MARIO_SMALL && !AS_SHORT(movement)) {
 			if (ax != 0) ax += (ax > 0) ? -MARIO_ACCELERATION_X : MARIO_ACCELERATION_X;
 		}
 	}
 
-	if (level == MARIO_LEVEL_RACOON)
+	if (state == MARIO_RACOON)
 	{
 		if (GetAction(DESCENDING))
 		{
@@ -394,12 +392,12 @@ void Mario::Movement()
 	// Disabled when moving left to prevent it slow down left movement
 	if (ax < 0 && !GetMovement(LEFT))
 	{
-		ax += (level == MARIO_LEVEL_SMALL ? MARIO_INERTIA_SMALL : MARIO_INERTIA);
+		ax += (state == MARIO_SMALL ? MARIO_INERTIA_SMALL : MARIO_INERTIA);
 		ax -= powerMeter * MARIO_POWER_INERTIA;
 	}
 	if (ax > 0 && !GetMovement(RIGHT))
 	{
-		ax -= (level == MARIO_LEVEL_SMALL ? MARIO_INERTIA_SMALL : MARIO_INERTIA);
+		ax -= (state == MARIO_SMALL ? MARIO_INERTIA_SMALL : MARIO_INERTIA);
 		ax += powerMeter * MARIO_POWER_INERTIA;
 	}
 

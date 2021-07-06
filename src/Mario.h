@@ -11,12 +11,7 @@ constexpr int MARIO_STATE_JUMP_LOW = 301;
 constexpr int MARIO_STATE_JUMP_HIGH = 302;
 constexpr int MARIO_STATE_DIE = 400;
 
-constexpr int MARIO_LEVEL_SMALL = 1;
-constexpr int MARIO_LEVEL_BIG = 2;
-constexpr int MARIO_LEVEL_RACOON = 3;
-
-
-constexpr int MARIO_UNTOUCHABLE_TIME = 5000;
+constexpr int MARIO_UNTOUCHABLE_TIME = 3000;
 
 constexpr float MARIO_WALKING_SPEED = 0.11f;
 constexpr float MARIO_WALKING_SPEED_SMALL = 0.09f;
@@ -51,11 +46,19 @@ constexpr int POWER_PEAKED_DECREASE_TIME = 80;
 constexpr int POWER_DIRECTION_UNCHANGED_STEP = 300;
 constexpr int POWER_DIRECTION_CHANGED_STEP = 50;
 
+enum Direction
+{
+	LEFT = 0,
+	RIGHT = 1,
+	UP = 2,
+	DOWN = 3,
+};
+
 enum MarioBoundingBox
 {
 	SMALL_BBOX_WIDTH = 14,
 	SMALL_BBOX_HEIGHT = 16,
-	BIG_BBOX_WIDTH = 16,
+	BIG_BBOX_WIDTH = 15,
 	BIG_BBOX_HEIGHT = 27,
 	RACOON_BBOX_WIDTH = 23,
 	RACOON_BBOX_HEIGHT = 28
@@ -112,13 +115,14 @@ enum MarioAction
 	DESCENDING = 6
 };
 
-enum Direction
+enum MarioState
 {
-	LEFT = 0,
-	RIGHT = 1,
-	UP = 2,
-	DOWN = 3,
+	MARIO_DEAD = 0,
+	MARIO_SMALL = 1,
+	MARIO_BIG = 2,
+	MARIO_RACOON = 3,
 };
+
 
 class Mario : public GameObject
 {
@@ -163,8 +167,6 @@ public:
 	void ManagePowerDuration();
 
 	void SetState(int state);
-	int GetLevel() { return level; }
-	void SetLevel(int l) { level = l; }
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
 	void Reset();
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
