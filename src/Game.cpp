@@ -1,9 +1,10 @@
 #include <fstream>
 
-#include "Debug.h"
 #include "Game.h"
-#include "Strings.h"
+#include "Camera.h"
 #include "ScenePlayer.h"
+#include "Debug.h"
+#include "Strings.h"
 
 #define MAX_GAME_LINE 1024
 
@@ -62,7 +63,8 @@ void Game::Init(HWND hWnd)
 */
 void Game::Draw(int nx, float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom, int alpha)
 {
-	D3DXVECTOR3 p(floor(x - cam_x), floor(y - cam_y), 0);
+	D3DXVECTOR3 p(floor(x - Camera::GetInstance()->GetPosition().x), 
+		floor(y - Camera::GetInstance()->GetPosition().y), 0);
 	RECT r;
 	r.left = left;
 	r.top = top;

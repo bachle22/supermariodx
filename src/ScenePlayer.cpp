@@ -1,6 +1,7 @@
 #include <fstream>
 
 #include "Game.h"
+#include "Camera.h"
 #include "ScenePlayer.h"
 #include "Parser.h"
 #include "Textures.h"
@@ -249,6 +250,7 @@ void ScenePlayer::_ParseSection_TILEDMAP(std::string line)
 	f.open(path);
 
 	f >> id >> mapRows >> mapColumns >> tilesheetRows >> tilesheetColumns >> totalTiles;
+	Camera::GetInstance()->SetMapSize(0, 0, 2560, 240.1f);
 
 	int** tiles = new int* [mapRows];
 	for (int i = 0; i < mapRows; i++)
@@ -345,17 +347,7 @@ void ScenePlayer::Update(ULONGLONG dt)
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return;
 
-	// Update camera to follow mario
-	float cx, cy;
-	player->GetPosition(cx, cy);
-
-	Game* game = Game::GetInstance();
-	cx -= game->GetScreenWidth() / 2;
-	cy -= game->GetScreenHeight() / 2;
-
-	Game::GetInstance()->
-		SetCamPos(floor(cx), cy < 150 ? CAMERA_FLOOR_Y - 150 + cy : CAMERA_FLOOR_Y);
-	//DebugOut(L"cx: %f, cy %f\n", cx, cy);
+	Camera::GetInstance()->Update();
 
 	// Timer
 	interval += dt;

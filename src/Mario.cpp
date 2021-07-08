@@ -375,12 +375,12 @@ void Mario::Movement()
 
 	// Mario Inertia
 	// Disabled when moving left to prevent it slow down left movement
-	if (ax < 0 && !GetMovement(LEFT))
+	if (!GetAction(FLYING) && ax < 0 && !GetMovement(LEFT))
 	{
 		ax += (state == MARIO_SMALL ? MARIO_INERTIA_SMALL : MARIO_INERTIA);
 		ax -= powerMeter * MARIO_POWER_INERTIA;
 	}
-	if (ax > 0 && !GetMovement(RIGHT))
+	if (!GetAction(FLYING) && ax > 0 && !GetMovement(RIGHT))
 	{
 		ax -= (state == MARIO_SMALL ? MARIO_INERTIA_SMALL : MARIO_INERTIA);
 		ax += powerMeter * MARIO_POWER_INERTIA;
@@ -402,7 +402,7 @@ void Mario::ManagePowerDuration()
 	if (!GetAction(FLYING))
 	{
 		// Power decrease slower
-		if (!GetAction(PEAKING) && abs(ax) < 1) {
+		if ( !AS_SHORT(movement) || (!GetAction(PEAKING) && nx * ax < 1)) {
 			if (powerTimer - lastTimeDecreasePowerIdle >= POWER_DOWN_DURATION_STEP)
 			{
 				if (powerMeter > 0) {

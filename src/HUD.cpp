@@ -1,10 +1,12 @@
 #include <string>
 
 #include "Game.h"
+#include "Camera.h"
 #include "HUD.h"
 #include "Definition.h"
 #include "Debug.h"
 #include "Mario.h"
+#include "ScenePlayer.h"
 #include "ScenePlayer.h"
 
 HUD::HUD()
@@ -33,7 +35,8 @@ HUD::HUD()
 void HUD::Render()
 {
 	Game* game = Game::GetInstance();
-	Game::GetInstance()->GetCamPos(x, y);
+	x = Camera::GetInstance()->GetPosition().x;
+	y = Camera::GetInstance()->GetPosition().y;
 	x = floor(x); y = floor(y);
 	// Render HUD containers textures
 	Game::GetInstance()->Draw(1, x, y + offset_y, background, 0, 0, SCREEN_WIDTH, HUD_BAR_HEIGHT, 255);
