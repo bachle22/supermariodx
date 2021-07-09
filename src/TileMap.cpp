@@ -1,7 +1,7 @@
 #include "Game.h"
-#include "TiledMap.h"
+#include "TileMap.h"
 
-TiledMap::TiledMap(int textureId, int mapRows, int mapColumns, int tilesheetRows, int  tilesheetColumns, int totalTiles)
+TileMap::TileMap(int textureId, int mapRows, int mapColumns, int tilesheetRows, int  tilesheetColumns, int totalTiles)
 {
 	tileTexture = Textures::GetInstance()->Get(textureId);
 	this->mapRows = mapRows;
@@ -11,25 +11,25 @@ TiledMap::TiledMap(int textureId, int mapRows, int mapColumns, int tilesheetRows
 	this->totalTiles = totalTiles;
 }
 
-TiledMap::~TiledMap()
+TileMap::~TileMap()
 {
 	delete tileTexture, tileSprites, tiles;
 }
 
-void TiledMap::Render()
+void TileMap::Render()
 {
 	for (int i = 0; i < mapRows; i++)
 		for (int j = 0; j < mapColumns; j++)
 			tileSprites[tiles[i][j] - 1]->Draw(-1, j * (float)TILE_WIDTH, i * (float)TILE_HEIGHT, 255);
 }
 
-void TiledMap::SetTileMapData(int** tiles)
+void TileMap::SetTileMapData(int** tiles)
 {
 	this->tiles = tiles;
 }
 
 
-void TiledMap::SetTileSprites()
+void TileMap::SetTileSprites()
 {
 	for (int i = 0; i < totalTiles; i++)
 	{

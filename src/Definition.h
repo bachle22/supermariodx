@@ -15,12 +15,6 @@ constexpr D3DCOLOR D3DCOLOR_WHITE = D3DCOLOR_XRGB(255, 255, 255);
 constexpr int ID_TEX_BBOX = -100;		// special texture to draw object bounding box
 constexpr int ID_TEX_BACKGROUND = -1;
 
-class GameObject;
-typedef GameObject* LPGAMEOBJECT;
-
-struct CollisionEvent;
-typedef CollisionEvent* LPCOLLISIONEVENT;
-
 constexpr int MAX_POWER_METER = 7;
 
 enum Direction
@@ -30,3 +24,9 @@ enum Direction
 	UP = 2,
 	DOWN = 3,
 };
+
+class GameObject;
+typedef GameObject* LPGAMEOBJECT;
+
+struct CollisionEvent;
+typedef CollisionEvent* LPCOLLISIONEVENT;

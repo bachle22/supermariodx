@@ -14,6 +14,7 @@
 #include "Goomba.h"
 #include "Koopa.h"
 #include "Parser.h"
+#include "Grid.h"
 
 ScenePlayer::ScenePlayer(int id, LPCWSTR filePath) : Scene(id, filePath)
 {
@@ -24,13 +25,7 @@ ScenePlayer::ScenePlayer(int id, LPCWSTR filePath) : Scene(id, filePath)
 	Load scene resources from scene file (textures, sprites, animations and objects)
 */
 
-#define SCENE_SECTION_UNKNOWN -1
-#define SCENE_SECTION_TEXTURES 2
-#define SCENE_SECTION_SPRITES 3
-#define SCENE_SECTION_ANIMATIONS 4
-#define SCENE_SECTION_ANIMATION_SETS	5
-#define SCENE_SECTION_TILEMAP 7
-#define SCENE_SECTION_OBJECTS	6
+
 
 #define OBJECT_TYPE_MARIO	0
 #define OBJECT_TYPE_BRICK	1
@@ -242,7 +237,7 @@ void ScenePlayer::_ParseSection_OBJECTS(std::string line)
 	}
 }
 
-void ScenePlayer::_ParseSection_TILEDMAP(std::string line)
+void ScenePlayer::_ParseSection_TILEMAP(std::string line)
 {
 	int id, mapRows, mapColumns, tilesheetColumns, tilesheetRows, totalTiles;
 	LPCWSTR path = ToLPCWSTR(line);
@@ -250,7 +245,7 @@ void ScenePlayer::_ParseSection_TILEDMAP(std::string line)
 	f.open(path);
 
 	f >> id >> mapRows >> mapColumns >> tilesheetRows >> tilesheetColumns >> totalTiles;
-	Camera::GetInstance()->SetMapSize(0, 0, 2560, 240.1f);
+	Camera::GetInstance()->SetViewSize(0, 0, 2560, 241.1f);
 
 	int** tiles = new int* [mapRows];
 	for (int i = 0; i < mapRows; i++)
@@ -262,9 +257,13 @@ void ScenePlayer::_ParseSection_TILEDMAP(std::string line)
 
 	f.close();
 
-	map = new TiledMap(id, mapRows, mapColumns, tilesheetRows, tilesheetColumns, totalTiles);
+	map = new TileMap(id, mapRows, mapColumns, tilesheetRows, tilesheetColumns, totalTiles);
 	map->SetTileSprites();
 	map->SetTileMapData(tiles);
+}
+
+void ScenePlayer::_ParseSection_GRID(std::string line)
+{
 }
 
 void ScenePlayer::Load()
@@ -283,7 +282,10 @@ void ScenePlayer::Load()
 		std::string line(str);
 
 		if (line[0] == '#' || line == "") continue;	// skip comment lines	
-		if (line == "[TEXTURES]") { section = SCENE_SECTION_TEXTURES; continue; }
+
+		if (line == "[TEXTURES]") { 
+			section = SCENE_SECTION_TEXTURES; continue; 
+		}
 		if (line == "[SPRITES]") {
 			section = SCENE_SECTION_SPRITES; continue;
 		}
@@ -296,14 +298,15 @@ void ScenePlayer::Load()
 		if (line == "[OBJECTS]") {
 			section = SCENE_SECTION_OBJECTS; continue;
 		}
-		if (line == "[TILEDMAP]") {
+		if (line == "[TILEMAP]") {
 			section = SCENE_SECTION_TILEMAP; continue;
+		}
+		if (line == "[GRID]") {
+			section = SCENE_SECTION_GRID; continue;
 		}
 		if (line[0] == '[') { section = SCENE_SECTION_UNKNOWN; continue; }
 
-		//
-		// data section
-		//
+
 		switch (section)
 		{
 		case SCENE_SECTION_TEXTURES: _ParseSection_TEXTURES(line); break;
@@ -311,7 +314,8 @@ void ScenePlayer::Load()
 		case SCENE_SECTION_ANIMATIONS: _ParseSection_ANIMATIONS(line); break;
 		case SCENE_SECTION_ANIMATION_SETS: _ParseSection_ANIMATION_SETS(line); break;
 		case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
-		case SCENE_SECTION_TILEMAP: _ParseSection_TILEDMAP(line); break;
+		case SCENE_SECTION_TILEMAP: _ParseSection_TILEMAP(line); break;
+		case SCENE_SECTION_GRID: _ParseSection_GRID(line); break;
 		}
 	}
 
@@ -415,7 +419,7 @@ void ScenePlayerInputHandler::OnKeyDown(int KeyCode)
 		mario->SetAction(GAINING_POWER);
 		break;
 
-	// Cheat keys
+		// Cheat keys
 	case DIK_1:
 		mario->SetMovement(UP);
 		mario->SetState(MARIO_SMALL);

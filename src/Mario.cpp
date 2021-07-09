@@ -35,7 +35,6 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 	// Calculate dx, dy 
 	GameObject::Update(dt);
 	Movement();
-
 	ManagePowerDuration();
 
 
@@ -144,7 +143,7 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 	}
 	// clean up collision events
 	for (size_t i = 0; i < coEvents.size(); i++) delete coEvents[i];
-	 //if (nx * ax < 0) DebugOut(L"x %f y %f vx %f vy %f dx %f dy %f\n", x, y, vx, vy, dx, dy);
+	//if (nx * ax < 0) DebugOut(L"x %f y %f vx %f vy %f dx %f dy %f\n", x, y, vx, vy, dx, dy);
 }
 
 void Mario::Render()
@@ -402,7 +401,7 @@ void Mario::ManagePowerDuration()
 	if (!GetAction(FLYING))
 	{
 		// Power decrease slower
-		if ( !AS_SHORT(movement) || (!GetAction(PEAKING) && nx * ax < 1)) {
+		if (!AS_SHORT(movement) || (!GetAction(PEAKING) && nx * ax < 1)) {
 			if (powerTimer - lastTimeDecreasePowerIdle >= POWER_DOWN_DURATION_STEP)
 			{
 				if (powerMeter > 0) {
@@ -421,7 +420,9 @@ void Mario::ManagePowerDuration()
 			// Only increase power when moving left or right
 			if (abs(ax) >= POWER_ALLOW_GAINING_THRESHOLD && powerMeter >= 0)
 			{
-				if (GetAction(GAINING_POWER) && nx * ax > 0 && powerMeter < MAX_POWER_METER) powerMeter++;
+				if (GetAction(GAINING_POWER) && AS_SHORT(movement) &&
+					nx * ax > 0 && powerMeter < MAX_POWER_METER) powerMeter++;
+
 				else if (powerMeter > 0 && nx * ax < 0) powerMeter--;
 				lastTimeGainPower = powerTimer;
 			}

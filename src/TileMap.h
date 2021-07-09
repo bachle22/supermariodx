@@ -8,7 +8,7 @@
 constexpr int TILE_WIDTH = 16;
 constexpr int TILE_HEIGHT = 16;
 
-class TiledMap
+class TileMap
 {
 	int mapRows, mapColumns;
 	int tilesheetRows, tilesheetColumns;
@@ -19,11 +19,11 @@ class TiledMap
 	int** tiles;
 
 public:
-	TiledMap(int textureId,
+	TileMap(int textureId,
 		int mapRows, int mapColumns,
 		int tilesheetRows, int tilesheetColumns,
 		int totalTiles);
-	~TiledMap();
+	~TileMap();
 	void Render();
 	void SetTileMapData(int** tiles);
 	void SetTileSprites();

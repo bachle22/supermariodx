@@ -33,7 +33,7 @@
     <ClCompile Include="Koopa.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="TiledMap.cpp" />
+    <ClCompile Include="TileMap.cpp" />
     <ClCompile Include="Mario.cpp" />
     <ClCompile Include="Portal.cpp" />
     <ClCompile Include="Scene.cpp" />
@@ -64,7 +64,7 @@
     <ClInclude Include="Sprites.h" />
     <ClInclude Include="Strings.h" />
     <ClInclude Include="Textures.h" />
-    <ClInclude Include="TiledMap.h" />
+    <ClInclude Include="TileMap.h" />
     <ClInclude Include="Types.h" />
   </ItemGroup>
   <ItemGroup>

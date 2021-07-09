@@ -3,6 +3,18 @@
 #include <d3dx9.h>
 #include "Input.h"
 
+enum SceneSection
+{
+	SCENE_SECTION_UNKNOWN = -1,
+	SCENE_SECTION_TEXTURES = 2,
+	SCENE_SECTION_SPRITES = 3,
+	SCENE_SECTION_ANIMATIONS = 4,
+	SCENE_SECTION_ANIMATION_SETS = 5,
+	SCENE_SECTION_OBJECTS = 6,
+	SCENE_SECTION_TILEMAP = 7,
+	SCENE_SECTION_GRID = 8,
+};
+
 class Scene
 {
 protected:

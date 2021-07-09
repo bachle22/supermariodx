@@ -89,7 +89,7 @@
     <ClCompile Include="Textures.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="TiledMap.cpp">
+    <ClCompile Include="TileMap.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Font.cpp">
@@ -103,6 +103,9 @@
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Grid.cpp">
+      <Filter>Scenes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -160,7 +163,7 @@
     <ClInclude Include="Sprites.h">
       <Filter>Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="TiledMap.h">
+    <ClInclude Include="TileMap.h">
       <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Types.h">
@@ -174,6 +177,9 @@
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Grid.h">
+      <Filter>Scenes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

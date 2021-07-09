@@ -48,13 +48,6 @@ constexpr int POWER_PEAKED_DECREASE_TIME = 80;
 constexpr int POWER_DIRECTION_UNCHANGED_STEP = 350;
 constexpr int POWER_DIRECTION_CHANGED_STEP = 100;
 
-enum Direction
-{
-	LEFT = 0,
-	RIGHT = 1,
-	UP = 2,
-	DOWN = 3,
-};
 
 enum MarioBoundingBox
 {
