@@ -28,8 +28,6 @@ protected:
 	void _ParseSection_TILEMAP(std::string line);
 	void _ParseSection_GRID(std::string line);
 
-	// Cheats
-
 public:
 	ScenePlayer(int id, LPCWSTR filePath);
 	void Init();

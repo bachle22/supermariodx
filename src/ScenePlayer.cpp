@@ -14,7 +14,6 @@
 #include "Goomba.h"
 #include "Koopa.h"
 #include "Parser.h"
-#include "Grid.h"
 
 ScenePlayer::ScenePlayer(int id, LPCWSTR filePath) : Scene(id, filePath)
 {

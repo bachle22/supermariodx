@@ -7,7 +7,7 @@ constexpr int SCREEN_WIDTH = 272;
 constexpr int SCREEN_HEIGHT = 272;
 constexpr int SIZE_MULTIPLIER = 3;
 
-constexpr int MAX_FRAME_RATE = 120;
+constexpr int MAX_FRAME_RATE = 75;
 
 constexpr D3DCOLOR D3DCOLOR_BLACK = D3DCOLOR_XRGB(0, 0, 0);
 constexpr D3DCOLOR D3DCOLOR_WHITE = D3DCOLOR_XRGB(255, 255, 255);

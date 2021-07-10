@@ -26,7 +26,8 @@ void Game::Init(HWND hWnd)
 	d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;	// Discard old frames
 	d3dpp.BackBufferFormat = D3DFMT_X8R8G8B8;	// 32-bit RGB pixel format, where 8 bits are reserved for each color.
 	d3dpp.hDeviceWindow = hWnd;					// Set the window to be used by DirectX
-	d3dpp.BackBufferCount = D3DPRESENT_BACK_BUFFERS_MAX;
+	d3dpp.BackBufferCount = 0;
+	d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_ONE;
 
 	// Retrieve window width & height so that we can create backbuffer height & width accordingly 
 	RECT r;
@@ -63,7 +64,7 @@ void Game::Init(HWND hWnd)
 */
 void Game::Draw(int nx, float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom, int alpha)
 {
-	D3DXVECTOR3 p(floor(x - Camera::GetInstance()->GetPosition().x), 
+	D3DXVECTOR3 p(floor(x - Camera::GetInstance()->GetPosition().x),
 		floor(y - Camera::GetInstance()->GetPosition().y), 0);
 	RECT r;
 	r.left = left;
@@ -305,3 +306,4 @@ void Game::SwitchScene(int scene_id)
 	Game::GetInstance()->SetKeyHandler(s->GetKeyEventHandler());
 	s->Load();
 }
+

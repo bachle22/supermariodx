@@ -390,8 +390,6 @@ void Mario::Movement()
 	if (abs(ax) <= MARIO_INERTIA) ax = 0;
 	else if (ax > 1) ax = 1;
 	else if (ax < -1) ax = -1;
-
-	DebugOut(L"nx %d ax %f vx %f power %d gaining %d \n", nx, ax, vx, powerMeter, GetAction(GAINING_POWER));
 }
 
 void Mario::ManagePowerDuration()
