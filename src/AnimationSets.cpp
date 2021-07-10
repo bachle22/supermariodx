@@ -18,7 +18,6 @@ LPANIMATION_SET AnimationSets::Get(int id)
 {
 	LPANIMATION_SET ani_set = animation_sets[id];
 	if (ani_set == NULL) DebugOut(L"[ERROR] Failed to find animation set id: %d\n", id);
-
 	return ani_set;
 }
 

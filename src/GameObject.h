@@ -8,10 +8,17 @@
 #include "Collision.h"
 #include "Definition.h"
 
+constexpr int OBJECT_TYPE_MARIO = 0;
+constexpr int OBJECT_TYPE_BRICK = 1;
+constexpr int OBJECT_TYPE_GOOMBA = 2;
+constexpr int OBJECT_TYPE_KOOPAS = 3;
+constexpr int OBJECT_TYPE_PLATFORM = 4;
+constexpr int OBJECT_TYPE_PORTAL = 50;
+
+
 class GameObject
 {
 protected:
-
 	float x;
 	float y;
 

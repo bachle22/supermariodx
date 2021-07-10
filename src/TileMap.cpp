@@ -2,6 +2,7 @@
 #include "TileMap.h"
 #include "Camera.h"
 #include "Debug.h"
+#include "Definition.h"
 
 TileMap::TileMap(int textureId, int mapRows, int mapColumns, int tilesheetRows, int  tilesheetColumns, int totalTiles)
 {
@@ -20,6 +21,7 @@ TileMap::~TileMap()
 
 void TileMap::Render()
 {
+	if (Game::GetInstance()->IsKeyDown(DIK_M)) return;
 	int cameraLeft = (int)(Camera::GetInstance()->GetPosition().x) / TILE_WIDTH;
 	int cameraTop = (int)(Camera::GetInstance()->GetPosition().y) / TILE_HEIGHT;
 	int cameraRight = cameraLeft + SCREEN_HORIZONTAL_MAX_TILES;

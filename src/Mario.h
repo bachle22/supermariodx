@@ -48,6 +48,7 @@ constexpr int POWER_PEAKED_DECREASE_TIME = 80;
 constexpr int POWER_DIRECTION_UNCHANGED_STEP = 350;
 constexpr int POWER_DIRECTION_CHANGED_STEP = 100;
 
+constexpr int MAX_POWER_METER = 7;
 
 enum MarioBoundingBox
 {

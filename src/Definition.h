@@ -5,6 +5,7 @@ constexpr auto MAIN_WINDOW_TITLE = L"Super Mario Bros 3";
 
 constexpr int SCREEN_WIDTH = 272;
 constexpr int SCREEN_HEIGHT = 272;
+
 constexpr int SIZE_MULTIPLIER = 3;
 
 constexpr int MAX_FRAME_RATE = 75;
@@ -15,7 +16,10 @@ constexpr D3DCOLOR D3DCOLOR_WHITE = D3DCOLOR_XRGB(255, 255, 255);
 constexpr int ID_TEX_BBOX = -100;		// special texture to draw object bounding box
 constexpr int ID_TEX_BACKGROUND = -1;
 
-constexpr int MAX_POWER_METER = 7;
+
+
+constexpr int TILE_WIDTH = 16;
+constexpr int TILE_HEIGHT = 16;
 
 enum Direction
 {

@@ -27,6 +27,7 @@ Sprites* Sprites::GetInstance()
 
 void Sprite::Draw(int nx, float x, float y, int alpha)
 {
+	// if (id == DISABLED_SPRITE_ID) return;
 	Game* game = Game::GetInstance();
 	game->Draw(nx, x, y, texture, left, top, right, bottom, alpha);
 }

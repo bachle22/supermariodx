@@ -5,9 +5,6 @@
 #include "Sprites.h"
 #include "Textures.h"
 
-constexpr int TILE_WIDTH = 16;
-constexpr int TILE_HEIGHT = 16;
-
 class TileMap
 {
 	int mapRows, mapColumns;

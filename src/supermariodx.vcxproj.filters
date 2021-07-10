@@ -105,7 +105,10 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="Grid.cpp">
-      <Filter>Scenes</Filter>
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform.cpp">
+      <Filter>Objects\Stationary</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -129,9 +132,6 @@
     </ClInclude>
     <ClInclude Include="Collision.h">
       <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Brick.h">
-      <Filter>Objects\Stationary</Filter>
     </ClInclude>
     <ClInclude Include="Goomba.h">
       <Filter>Objects\NPCs</Filter>
@@ -179,7 +179,13 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="Grid.h">
-      <Filter>Scenes</Filter>
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Brick.h">
+      <Filter>Objects\Stationary</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform.h">
+      <Filter>Objects\Stationary</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

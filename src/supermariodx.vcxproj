@@ -33,6 +33,7 @@
     <ClCompile Include="Koopa.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Platform.cpp" />
     <ClCompile Include="TileMap.cpp" />
     <ClCompile Include="Mario.cpp" />
     <ClCompile Include="Portal.cpp" />
@@ -58,6 +59,7 @@
     <ClInclude Include="Input.h" />
     <ClInclude Include="Koopa.h" />
     <ClInclude Include="Mario.h" />
+    <ClInclude Include="Platform.h" />
     <ClInclude Include="Portal.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="ScenePlayer.h" />

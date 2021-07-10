@@ -5,8 +5,9 @@
 #include "Debug.h"
 #include "Definition.h"
 #include "Game.h"
+#include "Camera.h"
 
-#define BACKGROUND_COLOR D3DCOLOR_XRGB(200, 200, 255)
+constexpr D3DCOLOR BACKGROUND_COLOR = D3DCOLOR_XRGB(0, 0, 0);
 
 Game* game;
 
@@ -56,6 +57,7 @@ void Render()
 void Update(ULONGLONG dt)
 {
 	Game::GetInstance()->GetCurrentScene()->Update(dt);
+
 }
 
 HWND CreateGameWindow(

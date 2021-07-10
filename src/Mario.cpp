@@ -8,6 +8,7 @@
 #include "Portal.h"
 #include "Game.h"
 #include "Types.h"
+#include "Platform.h"
 
 Mario::Mario(float x, float y) : GameObject()
 {
@@ -71,8 +72,8 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
 		// how to push back Mario if collides with a moving objects, what if Mario is pushed this way into another object?
-		//if (rdx != 0 && rdx!=dx)
-		//	x += nx*abs(rdx); 
+		/*if (rdx != 0 && rdx!=dx)
+			x += nx*abs(rdx); */
 
 		// block 
 		x += min_tx * dx + nx * 0.4f;		// nx*0.4f : need to push out a bit to avoid overlapping next frame
@@ -82,7 +83,7 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 		if (ny != 0) vy = 0;
 
 		// Stop when touching edge
-		if (min_ty == 1 && !GetAction(JUMPING)) {
+		if (min_ty == 1) {
 			ax = 0;
 			vx = 0;
 			//AS_SHORT(collision) = 257;		//0x0101 - collision[LEFT] = collision[RIGHT] = true
@@ -91,11 +92,12 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 		// Reset when touching the ground
 		if (ny == -1) {
 			UnsetAction(JUMPING);
+			UnsetAction(DONE_JUMPING);
 			UnsetAction(PEAKING);
 			UnsetAction(DESCENDING);
 		}
 
-		//DebugOut(L"min_tx %f min_ty %f nx %f ny %f rdx %f rdy %f\n", min_tx, min_ty, nx, ny, rdx, rdy);
+		DebugOut(L"min_tx %f min_ty %f nx %f ny %f rdx %f rdy %f\n", min_tx, min_ty, nx, ny, rdx, rdy);
 
 		//
 		// Collision logic with other objects
@@ -133,7 +135,15 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 						}
 					}
 				}
-			} // if Goomba
+			} 
+
+			if (dynamic_cast<Platform*>(e->obj))
+			{
+				Platform* p = dynamic_cast<Platform*>(e->obj);
+
+				if (e->ny == 1) SetAction(DONE_JUMPING);
+			} 
+
 			else if (dynamic_cast<Portal*>(e->obj))
 			{
 				Portal* p = dynamic_cast<Portal*>(e->obj);
@@ -143,7 +153,7 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 	}
 	// clean up collision events
 	for (size_t i = 0; i < coEvents.size(); i++) delete coEvents[i];
-	//if (nx * ax < 0) DebugOut(L"x %f y %f vx %f vy %f dx %f dy %f\n", x, y, vx, vy, dx, dy);
+	//DebugOut(L"x %f nx %d ax %f vx %f \n", x, nx, ax, vx);
 }
 
 void Mario::Render()
@@ -161,7 +171,7 @@ void Mario::Render()
 				if (powerMeter > 2) ani = SMALL_RUNNING;
 				if (powerMeter == MAX_POWER_METER) ani = SMALL_RUNNING_MAX;
 
-				if ((AS_INT(ax) ^ nx) < 0) ani = SMALL_BRAKING;
+				if (ax * nx < 0) ani = SMALL_BRAKING;
 			}
 			else ani = SMALL_IDLE;
 			if (GetAction(JUMPING))
@@ -178,8 +188,7 @@ void Mario::Render()
 				if (powerMeter > 2) ani = BIG_RUNNING;
 				if (powerMeter == MAX_POWER_METER) ani = BIG_RUNNING_MAX;
 
-				// Efficently check if ax * nx < 0
-				if ((AS_INT(ax) ^ nx) < 0) ani = BIG_BRAKING;
+				if (ax * nx < 0) ani = BIG_BRAKING;
 			}
 			else ani = BIG_IDLE;
 
@@ -208,7 +217,7 @@ void Mario::Render()
 				if (powerMeter > 2) ani = RACOON_RUNNING;
 				if (powerMeter == MAX_POWER_METER) ani = RACOON_RUNNING_MAX;
 
-				if ((AS_INT(ax) ^ nx) < 0) ani = RACOON_BRAKING;
+				if (ax * nx < 0) ani = RACOON_BRAKING;
 			}
 			else ani = RACOON_IDLE;
 
@@ -292,13 +301,11 @@ void Mario::Movement()
 	{
 		nx = -1;
 		ax -= MARIO_ACCELERATION_X;
-		//if (vx > 0) ax -= MARIO_ACCELERATION_X;
 	}
 	else if (GetMovement(RIGHT))
 	{
 		nx = 1;
 		ax += MARIO_ACCELERATION_X;
-		//if (vx <= 0) ax += MARIO_ACCELERATION_X;
 	}
 
 	if (GetMovement(UP))
@@ -309,7 +316,7 @@ void Mario::Movement()
 				last_y = y;
 				vy = -MARIO_JUMP_SPEED_HIGH;
 			}
-			if (last_y - y < MARIO_JUMP_HEIGHT_MAX + powerMeter * MARIO_JUMP_HEIGHT_POWER) {
+			if (!GetAction(DONE_JUMPING) && last_y - y < MARIO_JUMP_HEIGHT_MAX + powerMeter * MARIO_JUMP_HEIGHT_POWER) {
 				vy -= MARIO_ACCELERATION_Y;
 				// Gravity compensation
 				vy -= MARIO_GRAVITY * dt;
@@ -385,11 +392,13 @@ void Mario::Movement()
 		ax += powerMeter * MARIO_POWER_INERTIA;
 	}
 
-
-	// ax = 1 or ax = -1 are max acceleration allowed
+	// Equalize acceleration to 0 if there's little acceleration
 	if (abs(ax) <= MARIO_INERTIA) ax = 0;
+	// ax = 1 or ax = -1 are max acceleration allowed
 	else if (ax > 1) ax = 1;
 	else if (ax < -1) ax = -1;
+
+	if (ax == 0) AS_SHORT(collision) = 0;
 }
 
 void Mario::ManagePowerDuration()

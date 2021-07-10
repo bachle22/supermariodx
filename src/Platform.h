@@ -2,7 +2,7 @@
 
 #include "GameObject.h"
 
-class Brick : public GameObject
+class Platform : public GameObject
 {
 public:
 	virtual void Render();

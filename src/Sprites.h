@@ -3,6 +3,8 @@
 #include <windows.h>
 #include <unordered_map>
 
+constexpr int DISABLED_SPRITE_ID = 0;
+
 class Sprite
 {
 	int id;				// Sprite ID in the sprite database

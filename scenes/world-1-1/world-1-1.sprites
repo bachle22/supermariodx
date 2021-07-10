@@ -1,4 +1,6 @@
 #id	left	top	right	bottom	texture_id
+# invisible
+0	0	0	0	0	0
 # =========================== MARIO ===========================
 # ================ SMALL MARIO ================
 # idle small left

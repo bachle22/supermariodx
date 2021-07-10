@@ -3,7 +3,6 @@
 #include "Game.h"
 #include "Camera.h"
 #include "ScenePlayer.h"
-#include "Parser.h"
 #include "Textures.h"
 #include "Sprites.h"
 #include "Portal.h"
@@ -13,7 +12,7 @@
 #include "Mario.h"
 #include "Goomba.h"
 #include "Koopa.h"
-#include "Parser.h"
+#include "Platform.h"
 
 ScenePlayer::ScenePlayer(int id, LPCWSTR filePath) : Scene(id, filePath)
 {
@@ -25,14 +24,6 @@ ScenePlayer::ScenePlayer(int id, LPCWSTR filePath) : Scene(id, filePath)
 */
 
 
-
-#define OBJECT_TYPE_MARIO	0
-#define OBJECT_TYPE_BRICK	1
-#define OBJECT_TYPE_GOOMBA	2
-#define OBJECT_TYPE_KOOPAS	3
-
-#define OBJECT_TYPE_PORTAL	50
-
 #define MAX_SCENE_LINE 1024
 
 void ScenePlayer::_ParseSection_TEXTURES(std::string line)
@@ -40,7 +31,7 @@ void ScenePlayer::_ParseSection_TEXTURES(std::string line)
 	std::vector<std::string> tokens = split(line);
 
 	if (tokens.size() < 5) {
-		DebugOut(L"[WARNING] Invalid texture config in line: %s\n", ToLPCWSTR(line));
+		DebugOut(L"[WARNING] Invalid texture config at line: %s\n", ToLPCWSTR(line));
 		return;
 	};
 
@@ -54,11 +45,12 @@ void ScenePlayer::_ParseSection_TEXTURES(std::string line)
 	Textures::GetInstance()->Add(textureId, path.c_str(), D3DCOLOR_XRGB(R, G, B));
 }
 
-void ScenePlayer::_ParseSection_SPRITES(std::string line)
+void ScenePlayer::_ParseSection_SPRITES(std::string pathString)
 {
-	LPCWSTR path = ToLPCWSTR(line);
+	LPCWSTR path = ToLPCWSTR(pathString);
 	std::ifstream f;
 	f.open(path);
+	if (!f) DebugOut(L"[ERROR] Unable to open sprite config!\n");
 
 	if (f.is_open()) {
 		std::string str;
@@ -69,7 +61,7 @@ void ScenePlayer::_ParseSection_SPRITES(std::string line)
 			std::vector<std::string> tokens = split(str);
 
 			if (tokens.size() < 6) {
-				DebugOut(L"[WARNING] Invalid sprite config in line %d: %s\n", linenum, ToLPCWSTR(str));
+				DebugOut(L"[WARNING] Invalid sprite config at line %d: %s\n", linenum, ToLPCWSTR(str));
 				return;
 			};
 
@@ -89,11 +81,12 @@ void ScenePlayer::_ParseSection_SPRITES(std::string line)
 	}
 }
 
-void ScenePlayer::_ParseSection_ANIMATIONS(std::string line)
+void ScenePlayer::_ParseSection_ANIMATIONS(std::string pathString)
 {
-	LPCWSTR path = ToLPCWSTR(line);
+	LPCWSTR path = ToLPCWSTR(pathString);
 	std::ifstream f;
 	f.open(path);
+	if (!f) DebugOut(L"[ERROR] Unable to open animation config!\n");
 
 	if (f.is_open()) {
 		int linenum = 0;
@@ -104,7 +97,7 @@ void ScenePlayer::_ParseSection_ANIMATIONS(std::string line)
 
 			std::vector<std::string> tokens = split(str);
 			if (tokens.size() % 2 < 1) {
-				DebugOut(L"[WARNING] Invalid animation config in line %d: %s\n", linenum, ToLPCWSTR(str));
+				DebugOut(L"[WARNING] Invalid animation config at line %d: %s\n", linenum, ToLPCWSTR(str));
 				return;
 			};
 
@@ -124,11 +117,12 @@ void ScenePlayer::_ParseSection_ANIMATIONS(std::string line)
 	}
 }
 
-void ScenePlayer::_ParseSection_ANIMATION_SETS(std::string line)
+void ScenePlayer::_ParseSection_ANIMATION_SETS(std::string pathString)
 {
-	LPCWSTR path = ToLPCWSTR(line);
+	LPCWSTR path = ToLPCWSTR(pathString);
 	std::ifstream f;
 	f.open(path);
+	if (!f) DebugOut(L"[ERROR] Unable to open animation set config!\n");
 
 	if (f.is_open()) {
 		std::string str;
@@ -139,7 +133,7 @@ void ScenePlayer::_ParseSection_ANIMATION_SETS(std::string line)
 
 			std::vector<std::string> tokens = split(str);
 			if (tokens.size() < 2) {
-				DebugOut(L"[WARNING] Invalid animation set config in line %d: %s\n", linenum, ToLPCWSTR(str));
+				DebugOut(L"[WARNING] Invalid animation set config at line %d: %s\n", linenum, ToLPCWSTR(str));
 				return;
 				// skip invalid lines - an animation set must at least id and one animation id
 			}
@@ -164,11 +158,12 @@ void ScenePlayer::_ParseSection_ANIMATION_SETS(std::string line)
 /*
 	Parse a line in section [OBJECTS]
 */
-void ScenePlayer::_ParseSection_OBJECTS(std::string line)
+void ScenePlayer::_ParseSection_OBJECTS(std::string pathString)
 {
-	LPCWSTR path = ToLPCWSTR(line);
+	LPCWSTR path = ToLPCWSTR(pathString);
 	std::ifstream f;
 	f.open(path);
+	if (!f) DebugOut(L"[ERROR] Unable to open game object config!\n");
 
 	if (f.is_open()) {
 		std::string str;
@@ -178,9 +173,9 @@ void ScenePlayer::_ParseSection_OBJECTS(std::string line)
 			if (str[0] == '#' || str == "") continue;
 
 			std::vector<std::string> tokens = split(str);
-			if (tokens.size() < 4)
+			if (tokens.size() < 3)
 			{
-				DebugOut(L"[WARNING] Invalid animation set config in line %d: %s\n", linenum, ToLPCWSTR(str));
+				DebugOut(L"[WARNING] Invalid animation set config at line %d: %s\n", linenum, ToLPCWSTR(str));
 				return;
 			}
 
@@ -188,7 +183,7 @@ void ScenePlayer::_ParseSection_OBJECTS(std::string line)
 			float x = strtof(tokens[1].c_str(), NULL);
 			float y = strtof(tokens[2].c_str(), NULL);
 
-			int ani_set_id = atoi(tokens[3].c_str());
+
 
 			AnimationSets* animation_sets = AnimationSets::GetInstance();
 
@@ -209,6 +204,7 @@ void ScenePlayer::_ParseSection_OBJECTS(std::string line)
 				break;
 			case OBJECT_TYPE_GOOMBA: obj = new Goomba(); break;
 			case OBJECT_TYPE_BRICK: obj = new Brick(); break;
+			case OBJECT_TYPE_PLATFORM: obj = new Platform(); break;
 			case OBJECT_TYPE_KOOPAS: obj = new Koopa(); break;
 			case OBJECT_TYPE_PORTAL:
 			{
@@ -226,9 +222,13 @@ void ScenePlayer::_ParseSection_OBJECTS(std::string line)
 			// General object setup
 			obj->SetPosition(x, y);
 
-			LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+			if (object_type != OBJECT_TYPE_PLATFORM)
+			{
+				int ani_set_id = atoi(tokens[3].c_str());
+				LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 
-			obj->SetAnimationSet(ani_set);
+				obj->SetAnimationSet(ani_set);
+			}
 			objects.push_back(obj);
 
 		}
@@ -236,12 +236,13 @@ void ScenePlayer::_ParseSection_OBJECTS(std::string line)
 	}
 }
 
-void ScenePlayer::_ParseSection_TILEMAP(std::string line)
+void ScenePlayer::_ParseSection_TILEMAP(std::string pathString)
 {
 	int id, mapRows, mapColumns, tilesheetColumns, tilesheetRows, totalTiles;
-	LPCWSTR path = ToLPCWSTR(line);
+	LPCWSTR path = ToLPCWSTR(pathString);
 	std::ifstream f;
 	f.open(path);
+	if (!f) DebugOut(L"[ERROR] Unable to open map config!\n");
 
 	f >> id >> mapRows >> mapColumns >> tilesheetRows >> tilesheetColumns >> totalTiles;
 	Camera::GetInstance()->SetViewSize(0, 0, 2560, 241.1f);
@@ -261,9 +262,6 @@ void ScenePlayer::_ParseSection_TILEMAP(std::string line)
 	map->SetTileMapData(tiles);
 }
 
-void ScenePlayer::_ParseSection_GRID(std::string line)
-{
-}
 
 void ScenePlayer::Load()
 {
@@ -271,6 +269,7 @@ void ScenePlayer::Load()
 
 	std::ifstream f;
 	f.open(sceneFilePath);
+	if (!f) DebugOut(L"[ERROR] Unable to open scene config!\n");
 
 	// current resource section flag
 	int section = SCENE_SECTION_UNKNOWN;
@@ -282,8 +281,8 @@ void ScenePlayer::Load()
 
 		if (line[0] == '#' || line == "") continue;	// skip comment lines	
 
-		if (line == "[TEXTURES]") { 
-			section = SCENE_SECTION_TEXTURES; continue; 
+		if (line == "[TEXTURES]") {
+			section = SCENE_SECTION_TEXTURES; continue;
 		}
 		if (line == "[SPRITES]") {
 			section = SCENE_SECTION_SPRITES; continue;
@@ -314,7 +313,6 @@ void ScenePlayer::Load()
 		case SCENE_SECTION_ANIMATION_SETS: _ParseSection_ANIMATION_SETS(line); break;
 		case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
 		case SCENE_SECTION_TILEMAP: _ParseSection_TILEMAP(line); break;
-		case SCENE_SECTION_GRID: _ParseSection_GRID(line); break;
 		}
 	}
 
@@ -335,7 +333,6 @@ void ScenePlayer::Update(ULONGLONG dt)
 {
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
-
 	std::vector<LPGAMEOBJECT> coObjects;
 	for (size_t i = 1; i < objects.size(); i++)
 	{
@@ -434,6 +431,9 @@ void ScenePlayerInputHandler::OnKeyDown(int KeyCode)
 	case DIK_R:
 		mario->Reset();
 		break;
+	case DIK_F6:
+		mario->SetPosition(2500, 300);
+		break;
 	}
 }
 
@@ -493,7 +493,7 @@ void ScenePlayerInputHandler::KeyState(BYTE* states)
 	Mario* mario = ((ScenePlayer*)scene)->GetPlayer();
 
 	// disable control key when Mario die 
-	if (mario->GetState() == MARIO_STATE_DIE) return;
+	//if (mario->GetState() == MARIO_STATE_DIE) return;
 	if (game->IsKeyDown(DIK_L))
 	{
 		game->DEBUG_X++;
