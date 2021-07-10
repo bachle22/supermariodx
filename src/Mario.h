@@ -30,7 +30,7 @@ constexpr float MARIO_INERTIA = 0.028f;
 constexpr float MARIO_INERTIA_SMALL = 0.018f;
 constexpr float MARIO_POWER_ACCELERATION = .015f;
 constexpr float MARIO_POWER_JUMP = 0.1f;
-constexpr float MARIO_POWER_INERTIA = 0.01f;
+constexpr float MARIO_POWER_INERTIA = 0.003f;
 constexpr float MARIO_FLY_ACCELERATION_X = 0.96f;
 constexpr float MARIO_ACCELERATION_X_PERCENTAGE = 0.965f;
 constexpr float MARIO_SPEED_EASING = 0.01f;
@@ -40,13 +40,10 @@ constexpr float MARIO_BRAKE_IDLE_INERTIA = .08f;
 
 constexpr float POWER_ALLOW_GAINING_THRESHOLD = .3f;
 
-constexpr int POWER_MAX_FLY_TIME = 3000;
+constexpr int POWER_MAX_FLY_TIME = 5000;
 constexpr int POWER_UP_DURATION_STEP = 300;
 constexpr int POWER_DOWN_DURATION_STEP = 450;
-constexpr int POWER_CHANGING_NX_DURATION_STEP = 100;
 constexpr int POWER_PEAKED_DECREASE_TIME = 80;
-constexpr int POWER_DIRECTION_UNCHANGED_STEP = 350;
-constexpr int POWER_DIRECTION_CHANGED_STEP = 100;
 
 constexpr int MAX_POWER_METER = 7;
 

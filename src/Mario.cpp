@@ -75,7 +75,7 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 		/*if (rdx != 0 && rdx!=dx)
 			x += nx*abs(rdx); */
 
-		// block 
+			// block 
 		x += min_tx * dx + nx * 0.4f;		// nx*0.4f : need to push out a bit to avoid overlapping next frame
 		y += min_ty * dy + ny * 0.4f;
 
@@ -135,14 +135,15 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 						}
 					}
 				}
-			} 
+			}
 
 			if (dynamic_cast<Platform*>(e->obj))
 			{
 				Platform* p = dynamic_cast<Platform*>(e->obj);
 
+				// Stop jumping when hit an object above Mario
 				if (e->ny == 1) SetAction(DONE_JUMPING);
-			} 
+			}
 
 			else if (dynamic_cast<Portal*>(e->obj))
 			{
@@ -171,7 +172,7 @@ void Mario::Render()
 				if (powerMeter > 2) ani = SMALL_RUNNING;
 				if (powerMeter == MAX_POWER_METER) ani = SMALL_RUNNING_MAX;
 
-				if (ax * nx < 0) ani = SMALL_BRAKING;
+				if (ax * nx < 0 && AS_SHORT(movement)) ani = SMALL_BRAKING;
 			}
 			else ani = SMALL_IDLE;
 			if (GetAction(JUMPING))
@@ -188,7 +189,7 @@ void Mario::Render()
 				if (powerMeter > 2) ani = BIG_RUNNING;
 				if (powerMeter == MAX_POWER_METER) ani = BIG_RUNNING_MAX;
 
-				if (ax * nx < 0) ani = BIG_BRAKING;
+				if (ax * nx < 0 && AS_SHORT(movement)) ani = BIG_BRAKING;
 			}
 			else ani = BIG_IDLE;
 
@@ -217,7 +218,7 @@ void Mario::Render()
 				if (powerMeter > 2) ani = RACOON_RUNNING;
 				if (powerMeter == MAX_POWER_METER) ani = RACOON_RUNNING_MAX;
 
-				if (ax * nx < 0) ani = RACOON_BRAKING;
+				if (ax * nx < 0 && AS_SHORT(movement)) ani = RACOON_BRAKING;
 			}
 			else ani = RACOON_IDLE;
 
@@ -321,7 +322,14 @@ void Mario::Movement()
 				// Gravity compensation
 				vy -= MARIO_GRAVITY * dt;
 			}
-			else SetAction(DONE_JUMPING);
+			else
+			{
+				SetAction(DONE_JUMPING);
+
+				// Prevent super jumping repeatedly, 
+				// just like the original game
+				UnsetMovement(UP);
+			}
 		}
 		else
 		{
@@ -408,7 +416,7 @@ void Mario::ManagePowerDuration()
 	if (!GetAction(FLYING))
 	{
 		// Power decrease slower
-		if (!AS_SHORT(movement) || (!GetAction(PEAKING) && nx * ax < 1)) {
+		if (!AS_SHORT(movement) || (nx * ax < 1)) {
 			if (powerTimer - lastTimeDecreasePowerIdle >= POWER_DOWN_DURATION_STEP)
 			{
 				if (powerMeter > 0) {
@@ -418,28 +426,23 @@ void Mario::ManagePowerDuration()
 			}
 		}
 
-		int duration;
-		// If Mario is moving in an unchaged direction
-		if (nx * ax > 0) duration = POWER_DIRECTION_UNCHANGED_STEP;
-		else duration = POWER_DIRECTION_CHANGED_STEP;
-		if (powerTimer - lastTimeGainPower >= duration)
+		if (powerTimer - lastTimeGainPower >= POWER_UP_DURATION_STEP)
 		{
 			// Only increase power when moving left or right
-			if (abs(ax) >= POWER_ALLOW_GAINING_THRESHOLD && powerMeter >= 0)
+			if (abs(ax) >= 0 && powerMeter >= 0)
 			{
 				if (GetAction(GAINING_POWER) && AS_SHORT(movement) &&
-					nx * ax > 0 && powerMeter < MAX_POWER_METER) powerMeter++;
-
-				else if (powerMeter > 0 && nx * ax < 0) powerMeter--;
+					nx * ax > 0 && powerMeter < MAX_POWER_METER)
+					powerMeter++;
 				lastTimeGainPower = powerTimer;
 			}
 		}
 	}
 
 	// Decrease power quickly when maximum flying height reached
-	if (powerTimer - lastTimeDecreasePowerMaxHeight >= POWER_PEAKED_DECREASE_TIME)
+	if (GetAction(PEAKING) && powerMeter > 0)
 	{
-		if (GetAction(PEAKING) && powerMeter > 0)
+		if (powerTimer - lastTimeDecreasePowerMaxHeight >= POWER_PEAKED_DECREASE_TIME)
 		{
 			powerMeter--;
 			lastTimeDecreasePowerMaxHeight = powerTimer;
