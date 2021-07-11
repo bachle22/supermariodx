@@ -4,7 +4,7 @@
 -1	..\assets\sprites\background.png	255	255	255
 0	..\assets\sprites\mario.png	68	145	190
 10	..\assets\sprites\enemies.png	0	255	255
-20	..\assets\sprites\misc.png	176	224	248
+20	..\assets\sprites\misc.png	166	185	255
 30	..\assets\sprites\world-1-1.png	255	0	0
 40	..\assets\sprites\UI.png	0	224	142
 [TILEMAP]

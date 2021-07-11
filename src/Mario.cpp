@@ -9,6 +9,7 @@
 #include "Game.h"
 #include "Types.h"
 #include "Platform.h"
+#include "Brick.h"
 
 Mario::Mario(float x, float y) : GameObject()
 {
@@ -26,9 +27,7 @@ Mario::Mario(float x, float y) : GameObject()
 
 	lastTimeGainPower = 0;
 	lastTimeDecreasePowerMaxHeight = 0;
-	lastTimeDecreasePowerFlying = 0;
 	lastTimeDecreasePowerIdle = 0;
-
 }
 
 void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
@@ -97,7 +96,7 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 			UnsetAction(DESCENDING);
 		}
 
-		DebugOut(L"min_tx %f min_ty %f nx %f ny %f rdx %f rdy %f\n", min_tx, min_ty, nx, ny, rdx, rdy);
+		//DebugOut(L"min_tx %f min_ty %f nx %f ny %f rdx %f rdy %f\n", min_tx, min_ty, nx, ny, rdx, rdy);
 
 		//
 		// Collision logic with other objects
@@ -137,12 +136,22 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 				}
 			}
 
-			if (dynamic_cast<Platform*>(e->obj))
+			else if (dynamic_cast<Platform*>(e->obj))
 			{
 				Platform* p = dynamic_cast<Platform*>(e->obj);
 
 				// Stop jumping when hit an object above Mario
 				if (e->ny == 1) SetAction(DONE_JUMPING);
+			}
+
+			else if (dynamic_cast<Brick*>(e->obj))
+			{
+				Brick* b = dynamic_cast<Brick*>(e->obj);
+
+				if (e->ny == 1) {
+					SetAction(DONE_JUMPING);
+					b->Hit();
+				}
 			}
 
 			else if (dynamic_cast<Portal*>(e->obj))
@@ -199,15 +208,7 @@ void Mario::Render()
 				if (powerMeter == MAX_POWER_METER) ani = BIG_JUMPING_MAX;
 			}
 
-			/*
-			Optimize old code: if (!movement[LEFT] && !movement[RIGHT] && movement[DOWN]) ani = BIG_DUCKING;
-			Movement is an array of 4 elements: L R U D; only care about L R and D
-			So values will be: 0 0 0 1 or 0 0 1 1
-			Using AS_INT treat these 4 boolean bytes and an 4 bytes of an integer
-			Values to execute ani = BIG_DUCKING: 0x01000000 or 0x01010000 (little endian)
-			These two value AND 0x01000101 always equal 0x01000000
-			*/
-			if ((AS_INT(movement) & 0x01000101) == 0x01000000) ani = BIG_DUCKING;
+			if (GetAction(DUCKING)) ani = BIG_DUCKING;
 			break;
 
 
@@ -233,14 +234,15 @@ void Mario::Render()
 			}
 			if (GetAction(DESCENDING) && vy > 0) ani = RACOON_DESCENDING;
 
-			if ((AS_INT(movement) & 0x01000101) == 0x01000000) ani = RACOON_DUCKING;
+			if (GetAction(DUCKING)) ani = RACOON_DUCKING;
 			break;
 		}
 
 	int alpha = 255;
 	if (untouchable) alpha = 128;
 
-	animation_set->at(ani)->Render(nx, floor(x), y, alpha);
+	
+	animation_set->at(ani)->Render(nx, (x), (y), alpha);
 
 	RenderBoundingBox();
 }
@@ -264,16 +266,16 @@ void Mario::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 	switch (state)
 	{
 	case MARIO_SMALL:
-		right = x + SMALL_BBOX_WIDTH;
-		bottom = y + SMALL_BBOX_HEIGHT;
+		right = x + MarioBBox::SMALL_WIDTH;
+		bottom = y + MarioBBox::SMALL_HEIGHT;
 		break;
 	case MARIO_BIG:
-		right = x + BIG_BBOX_WIDTH;
-		bottom = y + BIG_BBOX_HEIGHT;
+		right = x + MarioBBox::BIG_WIDTH;
+		bottom = y + ((GetAction(DUCKING) ? MarioBBox::DUCKING_HEIGHT : MarioBBox::BIG_HEIGHT));
 		break;
 	case MARIO_RACOON:
-		right = x + RACOON_BBOX_WIDTH;
-		bottom = y + RACOON_BBOX_HEIGHT;
+		right = x + MarioBBox::RACOON_WIDTH;
+		bottom = y + ((GetAction(DUCKING) ? MarioBBox::DUCKING_HEIGHT : MarioBBox::RACOON_HEIGHT));
 		break;
 	}
 }
@@ -346,15 +348,15 @@ void Mario::Movement()
 				if (GetAction(FLYING) && powerMeter == MAX_POWER_METER)
 				{
 					// Move left/right slower 
-					ax *= MARIO_ACCELERATION_X_PERCENTAGE;
+					ax *= MARIO_FLY_ACCELERATION_X;
 
 					flyTimer += dt;
 					if (flyTimer < POWER_MAX_FLY_TIME)
 					{
 						// Jump before taking off 
 						// with a little jump speed easing
-						if (vy < 0) vy += MARIO_SPEED_EASING;
-						y -= MARIO_FLY_SPEED;
+						if (vy < MARIO_VELOCITY_Y_THRESHOLD) vy += MARIO_FLYING_GRAVITY;
+						vy -= MARIO_FLY_SPEED;
 						vy -= MARIO_GRAVITY * dt;
 					}
 					else {
@@ -374,8 +376,38 @@ void Mario::Movement()
 	{
 		// Check if both movement[LEFT] and movement[LEFT] equal 0
 		if (state != MARIO_SMALL && !AS_SHORT(movement)) {
-			if (ax != 0) ax += (ax > 0) ? -MARIO_ACCELERATION_X : MARIO_ACCELERATION_X;
+			if (ax < 0) {
+				ax += MARIO_ACCELERATION_X;
+				ax -= powerMeter * MARIO_POWER_INERTIA;
+			}
+			else if (ax > 0) {
+				ax -= MARIO_ACCELERATION_X;
+				ax += powerMeter * MARIO_POWER_INERTIA;
+			}
+			// Teleport to ducking position for accurate hitboxes
+			if (!GetAction(DUCKING))
+			{
+				if (state == MARIO_BIG) y += BIG_BBOX_DUCKING_DIFF;
+				else if (state == MARIO_RACOON) y += RACOON_BBOX_DUCKING_DIFF;
+				SetAction(DUCKING);
+			}
 		}
+		// Disable ducking when moving
+		if (AS_SHORT(movement)) 
+		{
+			if (GetAction(DUCKING))
+			{
+				if (state == MARIO_BIG) y -= BIG_BBOX_DUCKING_DIFF;
+				else if (state == MARIO_RACOON) y -= RACOON_BBOX_DUCKING_DIFF;
+			}
+			UnsetAction(DUCKING);
+		}
+	}
+	else if (GetAction(DUCKING)) {
+		// Teleport back to normal position
+		if (state == MARIO_BIG) y -= BIG_BBOX_DUCKING_DIFF;
+		else if (state == MARIO_RACOON) y -= RACOON_BBOX_DUCKING_DIFF;
+		UnsetAction(DUCKING);
 	}
 
 	if (state == MARIO_RACOON)
@@ -406,7 +438,10 @@ void Mario::Movement()
 	else if (ax > 1) ax = 1;
 	else if (ax < -1) ax = -1;
 
+	// Reset collision flags
 	if (ax == 0) AS_SHORT(collision) = 0;
+
+	// if ((AS_INT(movement) & 0x01000101) == 0x01000000) SetAction(DUCKING);
 }
 
 void Mario::ManagePowerDuration()
@@ -426,14 +461,19 @@ void Mario::ManagePowerDuration()
 			}
 		}
 
-		if (powerTimer - lastTimeGainPower >= POWER_UP_DURATION_STEP)
+		int duration;
+		// If Mario is moving in an unchaged direction
+		if (nx * ax > 0) duration = POWER_DIRECTION_UNCHANGED_STEP;
+		else duration = POWER_DIRECTION_CHANGED_STEP;
+		if (powerTimer - lastTimeGainPower >= duration)
 		{
 			// Only increase power when moving left or right
-			if (abs(ax) >= 0 && powerMeter >= 0)
+			if (abs(ax) >= POWER_ALLOW_GAINING_THRESHOLD && powerMeter >= 0)
 			{
 				if (GetAction(GAINING_POWER) && AS_SHORT(movement) &&
-					nx * ax > 0 && powerMeter < MAX_POWER_METER)
-					powerMeter++;
+					nx * ax > 0 && powerMeter < MAX_POWER_METER) powerMeter++;
+
+				else if (powerMeter > 0 && nx * ax < 0) powerMeter--;
 				lastTimeGainPower = powerTimer;
 			}
 		}

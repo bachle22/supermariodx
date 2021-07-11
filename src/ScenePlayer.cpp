@@ -203,7 +203,12 @@ void ScenePlayer::_ParseSection_OBJECTS(std::string pathString)
 				DebugOut(L"[INFO] Player object created!\n");
 				break;
 			case OBJECT_TYPE_GOOMBA: obj = new Goomba(); break;
-			case OBJECT_TYPE_BRICK: obj = new Brick(); break;
+			case OBJECT_TYPE_BRICK:
+			{
+				int type = atoi(tokens[4].c_str());
+				obj = new Brick(x, y, type);
+				break;
+			}
 			case OBJECT_TYPE_PLATFORM: obj = new Platform(); break;
 			case OBJECT_TYPE_KOOPAS: obj = new Koopa(); break;
 			case OBJECT_TYPE_PORTAL:
@@ -493,7 +498,7 @@ void ScenePlayerInputHandler::KeyState(BYTE* states)
 	Mario* mario = ((ScenePlayer*)scene)->GetPlayer();
 
 	// disable control key when Mario die 
-	//if (mario->GetState() == MARIO_STATE_DIE) return;
+	if (mario->GetState() == MARIO_STATE_DIE) return;
 	if (game->IsKeyDown(DIK_L))
 	{
 		game->DEBUG_X++;

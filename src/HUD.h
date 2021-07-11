@@ -17,9 +17,9 @@ constexpr float STATS_Y = 9;	// From HUD edge to element
 constexpr float ARROW_X = 62;
 constexpr float LIVES_Y = 17;
 constexpr float ICON_X = 14;
-constexpr float MONEY_X = 150.01f;
+constexpr float MONEY_X = 150;
 constexpr float POWER_X = 111;
-constexpr float TIME_X = 134.01f;
+constexpr float TIME_X = 134;
 constexpr float TIME_Y = 17;
 
 enum HUDTextures

@@ -49,9 +49,11 @@ void Camera::Update()
 	if (cx < viewLeft) cx = 0;
 	else if (cx > viewRight) cx = viewRight;
 
-	if (cy < CAMERA_CEIL_Y) cy = viewBottom - CAMERA_CEIL_Y + cy;
+	// TODO: Only follow Mario vertical position when on the cloud
+	if (cy < CAMERA_CEIL_Y && mario->GetState() == MARIO_RACOON)
+		cy = viewBottom - CAMERA_CEIL_Y + cy;
 	else cy = viewBottom;
 	if (cy < viewTop) cy = 0;
 
-	SetPosition(floor(cx) + Game::GetInstance()->DEBUG_X*10, (cy) +Game::GetInstance()->DEBUG_Y*10);
+	SetPosition(floor(cx) + Game::GetInstance()->DEBUG_X, (cy) + Game::GetInstance()->DEBUG_Y);
 }

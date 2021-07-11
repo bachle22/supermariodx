@@ -1,7 +1,6 @@
 #pragma once
 
 #include "GameObject.h"
-#include "Font.h"
 
 constexpr int MARIO_STATE_IDLE = 0;
 constexpr int MARIO_STATE_WALKING_RIGHT = 100;
@@ -32,29 +31,35 @@ constexpr float MARIO_POWER_ACCELERATION = .015f;
 constexpr float MARIO_POWER_JUMP = 0.1f;
 constexpr float MARIO_POWER_INERTIA = 0.003f;
 constexpr float MARIO_FLY_ACCELERATION_X = 0.96f;
-constexpr float MARIO_ACCELERATION_X_PERCENTAGE = 0.965f;
-constexpr float MARIO_SPEED_EASING = 0.01f;
-constexpr float MARIO_FLY_SPEED = 1;
-constexpr float MARIO_BRAKE_INERTIA = .01f;;
+constexpr float MARIO_FLYING_GRAVITY = 0.02f;
+constexpr float MARIO_FLY_SPEED = 0.0001f;
+constexpr float MARIO_BRAKE_INERTIA = .01f;
 constexpr float MARIO_BRAKE_IDLE_INERTIA = .08f;
+constexpr float MARIO_VELOCITY_Y_THRESHOLD = -0.08f;
 
 constexpr float POWER_ALLOW_GAINING_THRESHOLD = .3f;
 
-constexpr int POWER_MAX_FLY_TIME = 5000;
+constexpr int POWER_MAX_FLY_TIME = 3500;
 constexpr int POWER_UP_DURATION_STEP = 300;
-constexpr int POWER_DOWN_DURATION_STEP = 450;
+constexpr int POWER_DOWN_DURATION_STEP = 400;
 constexpr int POWER_PEAKED_DECREASE_TIME = 80;
+constexpr int POWER_DIRECTION_UNCHANGED_STEP = 350;
+constexpr int POWER_DIRECTION_CHANGED_STEP = 200;
 
 constexpr int MAX_POWER_METER = 7;
 
-enum MarioBoundingBox
+constexpr int BIG_BBOX_DUCKING_DIFF = 9;
+constexpr int RACOON_BBOX_DUCKING_DIFF = 10;
+
+enum MarioBBox
 {
-	SMALL_BBOX_WIDTH = 14,
-	SMALL_BBOX_HEIGHT = 16,
-	BIG_BBOX_WIDTH = 15,
-	BIG_BBOX_HEIGHT = 27,
-	RACOON_BBOX_WIDTH = 23,
-	RACOON_BBOX_HEIGHT = 28
+	SMALL_WIDTH = 14,
+	SMALL_HEIGHT = 16,
+	BIG_WIDTH = 15,
+	BIG_HEIGHT = 27,
+	RACOON_WIDTH = 23,
+	RACOON_HEIGHT = 28,
+	DUCKING_HEIGHT = 18,
 };
 
 enum MarioAnimation
@@ -105,7 +110,8 @@ enum MarioAction
 	GAINING_POWER = 3,
 	FLYING = 4,
 	PEAKING = 5,
-	DESCENDING = 6
+	DESCENDING = 6,
+	DUCKING = 7,
 };
 
 enum MarioState
@@ -123,14 +129,12 @@ class Mario : public GameObject
 	int untouchable;
 	ULONGLONG untouchable_start;
 	ULONGLONG powerTimer, flyTimer;
-	ULONGLONG lastTimeGainPower, lastTimeDecreasePowerMaxHeight;
-	ULONGLONG lastTimeDecreasePowerFlying, lastTimeDecreasePowerIdle;
+	ULONGLONG lastTimeGainPower;
+	ULONGLONG lastTimeDecreasePowerIdle, lastTimeDecreasePowerMaxHeight;
 
 
 	float start_x;
 	float start_y;
-
-	float ax, ay;
 
 	int powerMeter;
 
@@ -139,7 +143,7 @@ class Mario : public GameObject
 	bool collision[4] = { 0 };
 	bool edge[4] = { 0 };
 	bool movement[4] = { 0 };
-	bool action[7] = { 0 };
+	bool action[8] = { 0 };
 
 public:
 	Mario(float x = 0.0f, float y = 0.0f);

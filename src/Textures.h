@@ -2,6 +2,12 @@
 #include <unordered_map>
 #include <d3dx9.h>
 
+enum BackgroundTextures
+{
+	ID_TEX_BBOX = -100,	// special texture to draw object bounding box
+	ID_TEX_BACKGROUND = -1,
+};
+
 /*
 	Manage texture database
 */

@@ -5,6 +5,15 @@
 
 constexpr int DISABLED_SPRITE_ID = 0;
 
+enum RenderOptions
+{
+	NOFLIP = -1,
+	FLIP = 1,
+	OPAQUED = 255,
+	TRANS = 0,
+};
+
+
 class Sprite
 {
 	int id;				// Sprite ID in the sprite database

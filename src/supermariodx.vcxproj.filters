@@ -35,7 +35,7 @@
     <Filter Include="Utilities\Types">
       <UniqueIdentifier>{826b2ff7-e0b4-4852-828f-32952d91604d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Objects\UI">
+    <Filter Include="UI">
       <UniqueIdentifier>{c185cf63-5a8d-40df-991f-de632b0dbcbf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -93,18 +93,15 @@
       <Filter>Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Font.cpp">
-      <Filter>Objects\UI</Filter>
+      <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="HUD.cpp">
-      <Filter>Objects\UI</Filter>
+      <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="Collision.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Grid.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="Platform.cpp">
@@ -170,15 +167,12 @@
       <Filter>Utilities\Types</Filter>
     </ClInclude>
     <ClInclude Include="Font.h">
-      <Filter>Objects\UI</Filter>
+      <Filter>UI</Filter>
     </ClInclude>
     <ClInclude Include="HUD.h">
-      <Filter>Objects\UI</Filter>
+      <Filter>UI</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Grid.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="Brick.h">
