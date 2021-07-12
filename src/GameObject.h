@@ -35,6 +35,8 @@ protected:
 
 	int state;
 
+	bool isEnabled;
+
 	ULONGLONG dt;
 
 	LPANIMATION_SET animation_set;
@@ -69,6 +71,9 @@ public:
 	virtual void Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects = NULL);
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom) = 0;
 	virtual void Render() = 0;
+
+	bool IsEnabled() { return isEnabled; }
+	void Disable() { isEnabled = false;  }
 	~GameObject();
 };
 

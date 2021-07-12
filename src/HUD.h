@@ -55,7 +55,7 @@ class HUD
 	LPSPRITE arrowFilled, powerFilled;
 	LPSPRITE arrowEmpty, powerEmpty;
 	LPDIRECT3DTEXTURE9 background;
-	LPANIMATION powerMeterAnimSet;
+	LPANIMATION powerMeterIcon;
 	std::vector<LPSPRITE> score, money, time;
 
 public:

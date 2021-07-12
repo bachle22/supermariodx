@@ -1,14 +1,13 @@
 #include "Game.h"
+#include "ScenePlayer.h"
 #include "Brick.h"
 #include "Coin.h"
 #include "Debug.h"
-#include "ScenePlayer.h"
 
 Brick::Brick(float x, float y, int type)
 {
 	this->type = type;
 	isHit = false;
-	timer = 0;
 	this->x = x;
 	this->y = y;
 	entryY = y;
@@ -24,13 +23,12 @@ void Brick::Render()
 	animation_set->at(ani)->Render(NOFLIP, x, y);
 }
 
-void Brick::GetBoundingBox(float& l, float& t, float& r, float& b)
+void Brick::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-
-	l = x;
-	t = y;
-	r = x + TILE_WIDTH;
-	b = y + TILE_WIDTH;
+	left = x;
+	top = y;
+	right = x + TILE_WIDTH;
+	bottom = y + TILE_WIDTH;
 }
 
 void Brick::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
@@ -62,7 +60,7 @@ void Brick::Hit()
 	if (state == BRICK_STATE_EMPTY) return;
 	if (type == BRICK_COIN)
 	{
-		coin = new Coin(x + COIN_POSITION_OFFSET, y, COIN_HIDDEN);
+		Coin* coin = new Coin(x + COIN_POSITION_OFFSET, y, COIN_HIDDEN);
 		LPSCENE scene = Game::GetInstance()->GetCurrentScene();
 		((ScenePlayer*)scene)->AddObject(coin);
 		coin->Throw();

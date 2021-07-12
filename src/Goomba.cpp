@@ -1,8 +1,12 @@
 #include "Goomba.h"
+#include "Game.h"
+#include "ScenePlayer.h"
+#include "Point.h"
 
 Goomba::Goomba()
 {
 	SetState(GOOMBA_STATE_WALKING);
+	timer = 0;
 }
 
 void Goomba::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -35,6 +39,12 @@ void Goomba::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 	if (vx > 0 && x > 290) {
 		x = 290; vx = -vx;
 	}
+
+	if (state == GOOMBA_STATE_DIE)
+	{
+		timer += dt;
+		if (timer >= GOOMBA_REMOVAL_DELAY) Disable();
+	}
 }
 
 void Goomba::Render()
@@ -54,10 +64,17 @@ void Goomba::SetState(int state)
 	switch (state)
 	{
 	case GOOMBA_STATE_DIE:
+	{
 		y += GOOMBA_BBOX_HEIGHT - GOOMBA_BBOX_HEIGHT_DIE + 1;
 		vx = 0;
 		vy = 0;
+
+		Point* point = new Point(x + 2, y, POINT_100);
+		LPSCENE scene = Game::GetInstance()->GetCurrentScene();
+		((ScenePlayer*)scene)->AddObject(point);
+
 		break;
+	}
 	case GOOMBA_STATE_WALKING:
 		vx = -GOOMBA_WALKING_SPEED;
 	}

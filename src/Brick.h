@@ -34,15 +34,14 @@ class Brick : public GameObject
 {
 	int type;
 	bool isHit;
-	ULONGLONG timer;
-	Coin* coin;
+
 
 	float entryY;
 
 public:
 	Brick(float x, float y, int type);
 	virtual void Render();
-	virtual void GetBoundingBox(float& l, float& t, float& r, float& b);
+	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects);
 
 	void Hit();

@@ -7,7 +7,6 @@
 #include "Debug.h"
 #include "Mario.h"
 #include "ScenePlayer.h"
-#include "ScenePlayer.h"
 
 HUD::HUD()
 {
@@ -20,7 +19,7 @@ HUD::HUD()
 	powerFilled = Sprites::GetInstance()->Get(POWER_FILLED);
 	arrowEmpty = Sprites::GetInstance()->Get(ARROW_EMPTY);
 	arrowFilled = Sprites::GetInstance()->Get(ARROW_FILLED);
-	powerMeterAnimSet = AnimationSets::GetInstance()->Get(77)->at(0);
+	powerMeterIcon = AnimationSets::GetInstance()->Get(77)->at(0);
 
 	// Set default HUD values
 	font = new Font();
@@ -51,7 +50,7 @@ void HUD::Render()
 
 	if (powerMeter < MAX_POWER_METER)
 		powerEmpty->Draw(NOFLIP, x + POWER_X, y + offset_y + STATS_Y, OPAQUED);
-	else powerMeterAnimSet->Render(NOFLIP, x + POWER_X, y + offset_y + STATS_Y, OPAQUED);
+	else powerMeterIcon->Render(NOFLIP, x + POWER_X, y + offset_y + STATS_Y, OPAQUED);
 
 	font->Map('0' + world)->Draw(NOFLIP, x + STAGE_X, y + offset_y + STATS_Y, OPAQUED);
 	font->Map('0' + lives)->Draw(NOFLIP, x + STAGE_X, y + offset_y + LIVES_Y, OPAQUED);

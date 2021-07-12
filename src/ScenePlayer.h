@@ -20,6 +20,7 @@ protected:
 
 	ULONGLONG interval;
 	int timer;
+	int score;
 
 	std::vector<LPGAMEOBJECT> objects;
 
@@ -41,6 +42,7 @@ public:
 	HUD* GetHUD() { return hud; }
 
 	void AddObject(LPGAMEOBJECT object) { objects.push_back(object); }
+	void AddScore(int point);
 
 };
 

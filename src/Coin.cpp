@@ -1,4 +1,7 @@
+#include "Game.h"
+#include "ScenePlayer.h"
 #include "Coin.h"
+#include "Point.h"
 
 Coin::Coin(float x, float y, int type)
 {
@@ -6,7 +9,7 @@ Coin::Coin(float x, float y, int type)
 	this->y = y;
 	this->type = type;
 	entryY = y;
-	animation_set = AnimationSets::GetInstance()->Get(70);
+	animation_set = AnimationSets::GetInstance()->Get(COIN_ANI_SET_ID);
 }
 
 void Coin::Render()
@@ -15,33 +18,40 @@ void Coin::Render()
 	//RenderBoundingBox();
 }
 
-void Coin::GetBoundingBox(float& l, float& t, float& r, float& b)
+void Coin::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
 	if (type == COIN_HIDDEN) return;
-	l = x;
-	t = y;
-	r = x + COIN_BBOX_WIDTH;
-	b = y + COIN_BBOX_HEIGH;
+	left = x;
+	top = y;
+	right = x + COIN_BBOX_WIDTH;
+	bottom = y + COIN_BBOX_HEIGH;
 }
 
 void Coin::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 {
 	GameObject::Update(dt, coObjects);
 
-	if (vy != 0) vy += 0.001f * dt;
+	if (vy != 0) vy += COIN_GRAVITY * dt;
 	y += dy;
 
 
 	if (isThrowing && vy == 0)
 	{
-		vy = -.35f;
+		vy = COIN_VELOCITY;
 	}
 
-	if (y > entryY)
+	// Apply when coin is falling down
+	if (y > entryY - COIN_FALLING_FLOOR && vy > 0)
 	{
 		vy = 0;
-		y = entryY - 20;
+		y = entryY - COIN_FALLING_FLOOR;
 		isThrowing = false;
+		Disable();
+
+		// Shift point to the left :)
+		Point* point = new Point(x - 2, y, POINT_100);
+		LPSCENE scene = Game::GetInstance()->GetCurrentScene();
+		((ScenePlayer*)scene)->AddObject(point);
 	}
 }
 

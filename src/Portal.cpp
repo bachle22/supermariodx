@@ -14,10 +14,10 @@ void Portal::Render()
 	RenderBoundingBox();
 }
 
-void Portal::GetBoundingBox(float& l, float& t, float& r, float& b)
+void Portal::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	l = x;
-	t = y;
-	r = x + width;
-	b = y + height;
+	left = x;
+	top = y;
+	right = x + width;
+	bottom = y + height;
 }

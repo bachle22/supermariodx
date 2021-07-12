@@ -332,6 +332,7 @@ void ScenePlayer::Init()
 	interval = 0;
 	timer = 0;
 	hud = new HUD();
+	score = 0;
 }
 
 void ScenePlayer::Update(ULONGLONG dt)
@@ -341,11 +342,13 @@ void ScenePlayer::Update(ULONGLONG dt)
 	std::vector<LPGAMEOBJECT> coObjects;
 	for (size_t i = 1; i < objects.size(); i++)
 	{
+		if (objects[i]->IsEnabled())
 		coObjects.push_back(objects[i]);
 	}
 
 	for (size_t i = 0; i < objects.size(); i++)
 	{
+		if (objects[i]->IsEnabled())
 		objects[i]->Update(dt, &coObjects);
 	}
 
@@ -366,7 +369,10 @@ void ScenePlayer::Update(ULONGLONG dt)
 void ScenePlayer::Render()
 {
 	map->Render();
-	for (size_t i = 0; i < objects.size(); i++) objects[i]->Render();
+	for (size_t i = 0; i < objects.size(); i++)
+	{
+		if (objects[i]->IsEnabled()) objects[i]->Render();
+	}
 	hud->Render();
 }
 
