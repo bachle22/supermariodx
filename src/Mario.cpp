@@ -319,7 +319,9 @@ void Mario::Movement()
 				last_y = y;
 				vy = -MARIO_JUMP_SPEED_HIGH;
 			}
-			if (!GetAction(DONE_JUMPING) && last_y - y < MARIO_JUMP_HEIGHT_MAX + powerMeter * MARIO_JUMP_HEIGHT_POWER) {
+			float maxHeight = level == MARIO_SMALL ? 30.0f : MARIO_JUMP_HEIGHT_MAX;
+			if (!GetAction(DONE_JUMPING) && 
+				last_y - y < maxHeight + powerMeter * MARIO_JUMP_HEIGHT_POWER) {
 				vy -= MARIO_ACCELERATION_Y;
 				// Gravity compensation
 				vy -= MARIO_GRAVITY * dt;

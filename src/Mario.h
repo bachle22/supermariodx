@@ -149,6 +149,7 @@ public:
 	Mario(float x = 0.0f, float y = 0.0f);
 	virtual void Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();
+	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 
 	void SetCollision(int direction) { collision[direction] = true; };
 	void UnsetCollision(int direction) { collision[direction] = false; };
@@ -170,5 +171,4 @@ public:
 	void SetState(int state);
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
 	void Reset();
-	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 };

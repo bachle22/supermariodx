@@ -10,6 +10,9 @@ constexpr int DEFAULT_MAX_TIME = 300;
 
 class ScenePlayer : public Scene
 {
+	static ScenePlayer* __instance;
+	friend class ScenePlayerInputHandler;
+
 protected:
 	Mario* player;
 	TileMap* map;
@@ -37,7 +40,8 @@ public:
 	Mario* GetPlayer() { return player; }
 	HUD* GetHUD() { return hud; }
 
-	friend class ScenePlayerInputHandler;
+	void AddObject(LPGAMEOBJECT object) { objects.push_back(object); }
+
 };
 
 class ScenePlayerInputHandler : public SceneInputHandler
@@ -46,7 +50,7 @@ public:
 	virtual void KeyState(BYTE* states);
 	virtual void OnKeyDown(int KeyCode);
 	virtual void OnKeyUp(int KeyCode);
-	ScenePlayerInputHandler(LPSCENE s): SceneInputHandler(s) {};
+	ScenePlayerInputHandler(LPSCENE s) : SceneInputHandler(s) {};
 	bool isCameraFollowing = false;
 
 };

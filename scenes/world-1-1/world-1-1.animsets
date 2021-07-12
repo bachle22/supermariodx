@@ -8,12 +8,15 @@
 # GOOMBA
 3	701	702
 
-#Brick
+# Brick
 42	842	852
-#? Brick
+# ? Brick
 43	843	844
 # BREAKABLE - TYPE ? BRICK
 44	842	844
 
-#HUD 
+# Coin
+70	850	851	
+
+# HUD 
 77	858

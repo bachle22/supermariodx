@@ -1,0 +1,32 @@
+#pragma once
+
+#include "GameObject.h"
+
+enum CoinBBox
+{
+	COIN_BBOX_WIDTH = 14,
+	COIN_BBOX_HEIGH = 16
+};
+
+enum CoinType
+{
+	COIN_HIDDEN = 0,
+	COIN_VISIBLE = 1,
+};
+
+class Coin : public GameObject
+{
+	bool isThrowing;
+	int type;
+
+	float entryY;
+	
+public:
+	Coin(float x, float y, int state);
+	virtual void Render();
+	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
+	virtual void Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects);
+
+	void Throw();
+
+};

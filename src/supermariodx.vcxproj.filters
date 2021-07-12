@@ -26,9 +26,6 @@
     <Filter Include="Utilities\Strings">
       <UniqueIdentifier>{cc6ce59c-e24b-462c-8ced-901bd1ab9c0e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Objects\Stationary">
-      <UniqueIdentifier>{718e95f9-890a-40e8-84ce-fe8a45a5c22d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Graphics">
       <UniqueIdentifier>{e5fe289a-dc3c-4f59-b495-2bd13b3f076c}</UniqueIdentifier>
     </Filter>
@@ -37,6 +34,9 @@
     </Filter>
     <Filter Include="UI">
       <UniqueIdentifier>{c185cf63-5a8d-40df-991f-de632b0dbcbf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\Stationary">
+      <UniqueIdentifier>{718e95f9-890a-40e8-84ce-fe8a45a5c22d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -106,6 +106,9 @@
     </ClCompile>
     <ClCompile Include="Platform.cpp">
       <Filter>Objects\Stationary</Filter>
+    </ClCompile>
+    <ClCompile Include="Coin.cpp">
+      <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -179,6 +182,9 @@
       <Filter>Objects\Stationary</Filter>
     </ClInclude>
     <ClInclude Include="Platform.h">
+      <Filter>Objects\Stationary</Filter>
+    </ClInclude>
+    <ClInclude Include="Coin.h">
       <Filter>Objects\Stationary</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,6 +1,8 @@
-#include "Brick.h"
 #include "Game.h"
+#include "Brick.h"
+#include "Coin.h"
 #include "Debug.h"
+#include "ScenePlayer.h"
 
 Brick::Brick(float x, float y, int type)
 {
@@ -9,17 +11,22 @@ Brick::Brick(float x, float y, int type)
 	timer = 0;
 	this->x = x;
 	this->y = y;
-	temp_y = y;
+	entryY = y;
+	SetState(BRICK_STATE_DEFAULT);
+
 }
 
 void Brick::Render()
 {
-	animation_set->at(0)->Render(NOFLIP, x, y);
-	//RenderBoundingBox();
+	int ani = BRICK_ANI_DEFAULT;
+	if (state == BRICK_STATE_EMPTY) ani = BRICK_ANI_EMPTY;
+
+	animation_set->at(ani)->Render(NOFLIP, x, y);
 }
 
 void Brick::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
+
 	l = x;
 	t = y;
 	r = x + TILE_WIDTH;
@@ -30,26 +37,34 @@ void Brick::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 {
 	GameObject::Update(dt, coObjects);
 
-	if (vy != 0) vy += 0.002f * dt;
-
+	if (vy != 0) vy += BRICK_GRAVITY * dt;
 	y += dy;
 
-	if (isHit && timer < 100)
+	if (isHit && vy == 0 && state != BRICK_STATE_EMPTY)
 	{
-		timer += dt;
-		vy -= 0.05f;
-	}
-	else
-	{
-		timer = 0;
-		if (y >= temp_y) vy = 0;
-		isHit = false;
+		vy = BRICK_ACCELERATION;
 	}
 
-	DebugOut(L"vy %d\n", vy);
+	if (y > entryY)
+	{
+		vy = 0;
+		y = entryY;
+		isHit = false;
+		SetState(BRICK_STATE_EMPTY);
+		// Make empty brick harder to hit
+		y -= BRICK_EMPTY_SHIFT;
+	}
 }
 
 void Brick::Hit()
 {
 	isHit = true;
+	if (state == BRICK_STATE_EMPTY) return;
+	if (type == BRICK_COIN)
+	{
+		coin = new Coin(x + COIN_POSITION_OFFSET, y, COIN_HIDDEN);
+		LPSCENE scene = Game::GetInstance()->GetCurrentScene();
+		((ScenePlayer*)scene)->AddObject(coin);
+		coin->Throw();
+	}
 }
