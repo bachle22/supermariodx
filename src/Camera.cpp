@@ -55,5 +55,5 @@ void Camera::Update()
 	else cy = viewBottom;
 	if (cy < viewTop) cy = 0;
 
-	SetPosition(floor(cx) + Game::GetInstance()->DEBUG_X, (cy) + Game::GetInstance()->DEBUG_Y);
+	SetPosition((cx) + Game::GetInstance()->DEBUG_X, (cy) + Game::GetInstance()->DEBUG_Y);
 }

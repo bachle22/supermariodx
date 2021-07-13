@@ -361,7 +361,7 @@ void ScenePlayer::Update(ULONGLONG dt)
 	interval += dt;
 	if (interval / 1000 >= timer && timer < TIME_MAX) {
 		if (DEFAULT_MAX_TIME - timer >= 0) hud->SetTime(DEFAULT_MAX_TIME - timer++);
-		else player->SetState(MARIO_STATE_DIE);
+		else player->SetState(MARIO_DEAD);
 	}
 	hud->SetPowerMeter((GetPlayer()->GetPowerMeter()));
 }
@@ -398,9 +398,6 @@ void ScenePlayerInputHandler::OnKeyDown(int KeyCode)
 	Mario* mario = ((ScenePlayer*)scene)->GetPlayer();
 	switch (KeyCode)
 	{
-	case DIK_SPACE:
-		mario->SetState(MARIO_STATE_JUMP);
-		break;
 	case DIK_LEFT:
 		mario->UnsetMovement(RIGHT);
 		mario->SetMovement(LEFT);
@@ -504,7 +501,7 @@ void ScenePlayerInputHandler::KeyState(BYTE* states)
 	Mario* mario = ((ScenePlayer*)scene)->GetPlayer();
 
 	// disable control key when Mario die 
-	if (mario->GetState() == MARIO_STATE_DIE) return;
+	if (mario->GetState() == MARIO_DEAD) return;
 	if (game->IsKeyDown(DIK_L))
 	{
 		game->DEBUG_X++;

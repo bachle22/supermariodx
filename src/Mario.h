@@ -2,16 +2,7 @@
 
 #include "GameObject.h"
 
-constexpr int MARIO_STATE_IDLE = 0;
-constexpr int MARIO_STATE_WALKING_RIGHT = 100;
-constexpr int MARIO_STATE_WALKING_LEFT = 200;
-constexpr int MARIO_STATE_JUMP = 300;
-constexpr int MARIO_STATE_JUMP_LOW = 301;
-constexpr int MARIO_STATE_JUMP_HIGH = 302;
-constexpr int MARIO_STATE_DIE = 400;
-
 constexpr int MARIO_UNTOUCHABLE_TIME = 3000;
-
 constexpr float MARIO_WALKING_SPEED = 0.11f;
 constexpr float MARIO_WALKING_SPEED_SMALL = 0.09f;
 constexpr float MARIO_JUMP_SPEED_LOW = 0.25f;

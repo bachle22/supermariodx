@@ -32,14 +32,17 @@
     <Filter Include="Utilities\Types">
       <UniqueIdentifier>{826b2ff7-e0b4-4852-828f-32952d91604d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Objects\Stationary">
-      <UniqueIdentifier>{718e95f9-890a-40e8-84ce-fe8a45a5c22d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="UI">
-      <UniqueIdentifier>{c185cf63-5a8d-40df-991f-de632b0dbcbf}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Objects\Effects">
       <UniqueIdentifier>{fe33e34f-5bb4-43d2-bdc3-a11a24f9577c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\Misc">
+      <UniqueIdentifier>{718e95f9-890a-40e8-84ce-fe8a45a5c22d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\UI">
+      <UniqueIdentifier>{c185cf63-5a8d-40df-991f-de632b0dbcbf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Misc">
+      <UniqueIdentifier>{b3fc7f4f-fa8a-45a9-891a-f7b6d7665442}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -60,7 +63,7 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="Brick.cpp">
-      <Filter>Objects\Stationary</Filter>
+      <Filter>Objects\Misc</Filter>
     </ClCompile>
     <ClCompile Include="Goomba.cpp">
       <Filter>Objects\NPCs</Filter>
@@ -78,7 +81,7 @@
       <Filter>Utilities\Strings</Filter>
     </ClCompile>
     <ClCompile Include="Portal.cpp">
-      <Filter>Objects\Stationary</Filter>
+      <Filter>Objects\Misc</Filter>
     </ClCompile>
     <ClCompile Include="ScenePlayer.cpp">
       <Filter>Scenes</Filter>
@@ -96,10 +99,10 @@
       <Filter>Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Font.cpp">
-      <Filter>UI</Filter>
+      <Filter>Objects\UI</Filter>
     </ClCompile>
     <ClCompile Include="HUD.cpp">
-      <Filter>UI</Filter>
+      <Filter>Objects\UI</Filter>
     </ClCompile>
     <ClCompile Include="Collision.cpp">
       <Filter>Core</Filter>
@@ -108,13 +111,16 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="Platform.cpp">
-      <Filter>Objects\Stationary</Filter>
+      <Filter>Objects\Misc</Filter>
     </ClCompile>
     <ClCompile Include="Point.cpp">
       <Filter>Objects\Effects</Filter>
     </ClCompile>
     <ClCompile Include="Coin.cpp">
-      <Filter>Objects\Stationary</Filter>
+      <Filter>Objects\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="Mushroom.cpp">
+      <Filter>Objects\NPCs</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -155,7 +161,7 @@
       <Filter>Utilities\Strings</Filter>
     </ClInclude>
     <ClInclude Include="Portal.h">
-      <Filter>Objects\Stationary</Filter>
+      <Filter>Objects\Misc</Filter>
     </ClInclude>
     <ClInclude Include="Koopa.h">
       <Filter>Objects\NPCs</Filter>
@@ -176,28 +182,41 @@
       <Filter>Utilities\Types</Filter>
     </ClInclude>
     <ClInclude Include="Font.h">
-      <Filter>UI</Filter>
+      <Filter>Objects\UI</Filter>
     </ClInclude>
     <ClInclude Include="HUD.h">
-      <Filter>UI</Filter>
+      <Filter>Objects\UI</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="Brick.h">
-      <Filter>Objects\Stationary</Filter>
+      <Filter>Objects\Misc</Filter>
     </ClInclude>
     <ClInclude Include="Platform.h">
-      <Filter>Objects\Stationary</Filter>
+      <Filter>Objects\Misc</Filter>
     </ClInclude>
     <ClInclude Include="Coin.h">
-      <Filter>Objects\Stationary</Filter>
+      <Filter>Objects\Misc</Filter>
     </ClInclude>
     <ClInclude Include="Point.h">
       <Filter>Objects\Effects</Filter>
     </ClInclude>
+    <ClInclude Include="Mushroom.h">
+      <Filter>Objects\NPCs</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\docs\classes.cd" />
+    <None Include="..\docs\classes.cd">
+      <Filter>Misc</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="supermariodx.rc">
+      <Filter>Misc</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

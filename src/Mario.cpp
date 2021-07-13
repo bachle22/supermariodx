@@ -10,6 +10,7 @@
 #include "Types.h"
 #include "Platform.h"
 #include "Brick.h"
+#include "Mushroom.h"
 
 Mario::Mario(float x, float y) : GameObject()
 {
@@ -37,14 +38,13 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 	Movement();
 	ManagePowerDuration();
 
-
 	std::vector<LPCOLLISIONEVENT> coEvents;
 	std::vector<LPCOLLISIONEVENT> coEventsResult;
 
 	coEvents.clear();
 
 	// turn off collision when die 
-	if (state != MARIO_STATE_DIE)
+	if (state != MARIO_DEAD)
 		CalculatePotentialCollisions(coObjects, coEvents);
 
 	// reset untouchable timer if untouchable time has passed
@@ -67,7 +67,6 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 		float rdx = 0;
 		float rdy = 0;
 
-		// TODO: Improve this function
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
 		// how to push back Mario if collides with a moving objects, what if Mario is pushed this way into another object?
@@ -75,10 +74,10 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 			x += nx*abs(rdx); */
 
 			// block 
-		x += min_tx * dx + nx * 0.4f;		// nx*0.4f : need to push out a bit to avoid overlapping next frame
-		y += min_ty * dy + ny * 0.4f;
+		x += min_tx * dx + nx * PUSH_BACK;		// nx*0.4f : need to push out a bit to avoid overlapping next frame
+		y += min_ty * dy + ny * PUSH_BACK;
 
-		// if (nx != 0) vx = 0;
+		//if (nx != 0) vx = 0;
 		if (ny != 0) vy = 0;
 
 		// Stop when touching edge
@@ -130,7 +129,7 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 								StartUntouchable();
 							}
 							else
-								SetState(MARIO_STATE_DIE);
+								SetState(MARIO_DEAD);
 						}
 					}
 				}
@@ -159,6 +158,11 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 				Portal* p = dynamic_cast<Portal*>(e->obj);
 				Game::GetInstance()->SwitchScene(p->GetSceneId());
 			}
+
+			else if (dynamic_cast<Mushroom*>(e->obj))
+			{
+				Mushroom* m = dynamic_cast<Mushroom*>(e->obj);
+			}
 		}
 	}
 	// clean up collision events
@@ -169,7 +173,7 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 void Mario::Render()
 {
 	int ani = NULL;
-	if (state == MARIO_STATE_DIE)
+	if (state == MARIO_DEAD)
 		ani = DIE;
 	else
 		switch (state) {
@@ -252,7 +256,7 @@ void Mario::SetState(int state)
 	GameObject::SetState(state);
 	switch (state)
 	{
-	case MARIO_STATE_DIE:
+	case MARIO_DEAD:
 		vy = -MARIO_DIE_DEFLECT_SPEED;
 		break;
 	}

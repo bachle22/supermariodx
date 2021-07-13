@@ -10,6 +10,7 @@ Point::Point(float x, float y, int type)
 	this->y = y;
 	SetState(type);
 	entryY = y;
+	sprite = Sprites::GetInstance()->Get(state);
 }
 
 void Point::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
@@ -26,8 +27,7 @@ void Point::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 
 void Point::Render()
 {
-	point = Sprites::GetInstance()->Get(state);
-	point->Draw(NOFLIP, (x), y, OPAQUED);
+	sprite->Draw(NOFLIP, (x), y, OPAQUED);
 	// RenderBoundingBox();
 }
 

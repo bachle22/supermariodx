@@ -6,6 +6,7 @@
 #include "Definition.h"
 #include "Game.h"
 #include "Camera.h"
+#include "resource.h"
 
 constexpr D3DCOLOR BACKGROUND_COLOR = D3DCOLOR_XRGB(0, 0, 0);
 
@@ -79,6 +80,8 @@ HWND CreateGameWindow(
 	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wc.hbrBackground = (HBRUSH)COLOR_WINDOW;
 	wc.lpszClassName = WindowClassName;
+	wc.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON1));
+	wc.hIconSm = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON1));
 
 	RegisterClassEx(&wc);
 

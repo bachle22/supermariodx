@@ -35,7 +35,6 @@ class Brick : public GameObject
 	int type;
 	bool isHit;
 
-
 	float entryY;
 
 public:

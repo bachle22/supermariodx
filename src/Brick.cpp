@@ -2,6 +2,8 @@
 #include "ScenePlayer.h"
 #include "Brick.h"
 #include "Coin.h"
+#include "Mushroom.h"
+#include "Mario.h"
 #include "Debug.h"
 
 Brick::Brick(float x, float y, int type)
@@ -58,11 +60,30 @@ void Brick::Hit()
 {
 	isHit = true;
 	if (state == BRICK_STATE_EMPTY) return;
-	if (type == BRICK_COIN)
+
+	switch (type)
+	{
+	case BRICK_COIN:
 	{
 		Coin* coin = new Coin(x + COIN_POSITION_OFFSET, y, COIN_HIDDEN);
 		LPSCENE scene = Game::GetInstance()->GetCurrentScene();
 		((ScenePlayer*)scene)->AddObject(coin);
 		coin->Throw();
+		break;
+	}
+	case BRICK_POWER_UP:
+	{
+		LPSCENE scene = Game::GetInstance()->GetCurrentScene();
+		int marioState = ((ScenePlayer*)scene)->GetPlayer()->GetState();
+		if (marioState == MARIO_SMALL ) {
+			Mushroom* mushroom = new Mushroom(x, y, SUPER_MUSHROOM);
+			((ScenePlayer*)scene)->AddObject(mushroom);
+		}
+		else if (marioState == MARIO_RACOON) {
+			Mushroom* mushroom = new Mushroom(x, y, ONE_UP_MUSHROOM);
+			((ScenePlayer*)scene)->AddObject(mushroom);
+		}
+		break;
+	}
 	}
 }
