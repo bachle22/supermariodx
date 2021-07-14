@@ -13,6 +13,7 @@
 #include "Goomba.h"
 #include "Koopa.h"
 #include "Platform.h"
+#include "Block.h"
 
 ScenePlayer::ScenePlayer(int id, LPCWSTR filePath) : Scene(id, filePath)
 {
@@ -219,6 +220,14 @@ void ScenePlayer::_ParseSection_OBJECTS(std::string pathString)
 				obj = new Portal(x, y, r, b, scene_id);
 			}
 			break;
+
+			case OBJECT_TYPE_BLOCK:
+			{
+				float w = strtof(tokens[3].c_str(), NULL);
+				float h = strtof(tokens[4].c_str(), NULL);
+				obj = new Block(w, h);
+				break;
+			}
 			default:
 				DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 				return;
@@ -227,7 +236,8 @@ void ScenePlayer::_ParseSection_OBJECTS(std::string pathString)
 			// General object setup
 			obj->SetPosition(x, y);
 
-			if (object_type != OBJECT_TYPE_PLATFORM)
+			if (object_type != OBJECT_TYPE_PLATFORM && 
+				object_type != OBJECT_TYPE_BLOCK)
 			{
 				int ani_set_id = atoi(tokens[3].c_str());
 				LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
@@ -344,13 +354,13 @@ void ScenePlayer::Update(ULONGLONG dt)
 	for (size_t i = 1; i < objects.size(); i++)
 	{
 		if (objects[i]->IsEnabled())
-		coObjects.push_back(objects[i]);
+			coObjects.push_back(objects[i]);
 	}
 
 	for (size_t i = 0; i < objects.size(); i++)
 	{
 		if (objects[i]->IsEnabled())
-		objects[i]->Update(dt, &coObjects);
+			objects[i]->Update(dt, &coObjects);
 	}
 
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
@@ -452,6 +462,9 @@ void ScenePlayerInputHandler::OnKeyDown(int KeyCode)
 		break;
 	case DIK_F6:
 		mario->SetPosition(2500, 300);
+		break;
+	case DIK_F3:
+		mario->SetPosition(1420, 150);
 		break;
 	}
 }

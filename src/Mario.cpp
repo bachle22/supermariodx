@@ -11,6 +11,7 @@
 #include "Platform.h"
 #include "Brick.h"
 #include "Mushroom.h"
+#include "Block.h"
 
 Mario::Mario(float x, float y) : GameObject()
 {
@@ -96,14 +97,14 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 		x += min_tx * dx + nx * PUSH_BACK;		// nx*0.4f : need to push out a bit to avoid overlapping next frame
 		y += min_ty * dy + ny * PUSH_BACK;
 
-		//if (nx != 0) vx = 0;
+		float entry_vx = vx;
+		float entry_vy = vy;
+		if (nx != 0) vx = 0;
 		if (ny != 0) vy = 0;
 
 		// Stop when touching edge
 		if (min_ty == 1) {
-			ax = 0;
-			vx = 0;
-			//AS_SHORT(collision) = 257;		//0x0101 - collision[LEFT] = collision[RIGHT] = true
+			powerMeter = 0;
 		}
 
 		// Reset when touching the ground
@@ -114,7 +115,7 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 			UnsetAction(DESCENDING);
 		}
 
-		DebugOut(L"min_tx %f min_ty %f nx %f ny %f rdx %f rdy %f\n", min_tx, min_ty, nx, ny, rdx, rdy);
+		 //DebugOut(L"min_tx %f min_ty %f nx %f ny %f rdx %f rdy %f\n", min_tx, min_ty, nx, ny, rdx, rdy);
 
 		//
 		// Collision logic with other objects
@@ -159,8 +160,7 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 
 			else if (dynamic_cast<Platform*>(e->obj))
 			{
-				Platform* p = dynamic_cast<Platform*>(e->obj);
-
+				if (ny != 0) vy = 0;
 				// Stop jumping when hit an object above Mario
 				if (e->ny == 1) SetAction(DONE_JUMPING);
 			}
@@ -175,6 +175,25 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 				}
 			}
 
+			else if (dynamic_cast<Block*>(e->obj))
+			{
+				vx = entry_vx;
+				x -= min_tx * dx + nx * PUSH_BACK;
+				x += dx;
+				if (e->ny == 1) {
+					vy = entry_vy;
+					y -= min_ty * dy + ny * PUSH_BACK;
+					y += dy;
+				}
+			}
+
+			else if (dynamic_cast<Mushroom*>(e->obj))
+			{
+				Mushroom* m = dynamic_cast<Mushroom*>(e->obj);
+				m->Disable();
+				if (state == MARIO_SMALL) SetState(MARIO_SMALL_TO_BIG);
+			}
+
 			else if (dynamic_cast<Portal*>(e->obj))
 			{
 				Portal* p = dynamic_cast<Portal*>(e->obj);
@@ -185,6 +204,8 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 	// clean up collision events
 	for (size_t i = 0; i < coEvents.size(); i++) delete coEvents[i];
 	//DebugOut(L"x %f nx %d ax %f vx %f \n", x, nx, ax, vx);
+	//DebugOut(L"y %f ny %d ay %f vy %f \n", y, nx, ay, vy);
+	DebugOut(L"flying %d:\n", GetAction(FLYING));
 }
 
 void Mario::Render()
@@ -270,7 +291,7 @@ void Mario::Render()
 	if (untouchable) alpha = 128;
 
 
-	animation_set->at(ani)->Render(nx, (x), (y), alpha);
+	animation_set->at(ani)->Render(nx, floor(x), (y), alpha);
 
 	RenderBoundingBox();
 }
@@ -284,7 +305,7 @@ void Mario::SetState(int state)
 		vy = -MARIO_DIE_DEFLECT_SPEED;
 		break;
 	case MARIO_SMALL_TO_BIG:
-		y -= BIG_HEIGHT - SMALL_HEIGHT;
+		y -= BIG_HEIGHT - SMALL_HEIGHT + 0.2f;
 		animationTimer = GetTickCount64();
 		Game::GetInstance()->Pause();
 		break;
@@ -475,7 +496,7 @@ void Mario::Movement()
 	}
 	if (!GetAction(FLYING) && ax > 0 && !GetMovement(RIGHT))
 	{
-		if (vy <= MARIO_AIRBORNE_MINIMUM_THRESHOLD)
+		//if (vy <= MARIO_AIRBORNE_MINIMUM_THRESHOLD)
 			ax -= (state == MARIO_SMALL ? MARIO_INERTIA_SMALL : MARIO_INERTIA);
 		ax += powerMeter * MARIO_POWER_INERTIA;
 	}
@@ -485,11 +506,6 @@ void Mario::Movement()
 	// ax = 1 or ax = -1 are max acceleration allowed
 	else if (ax > 1) ax = 1;
 	else if (ax < -1) ax = -1;
-
-	// Reset collision flags
-	if (ax == 0) AS_SHORT(collision) = 0;
-
-	// if ((AS_INT(movement) & 0x01000101) == 0x01000000) SetAction(DUCKING);
 }
 
 void Mario::ManagePowerDuration()

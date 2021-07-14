@@ -45,7 +45,7 @@ void Camera::Update()
 	Mario* mario = ((ScenePlayer*)Game::GetInstance()->GetCurrentScene())->GetPlayer();
 
 	mario->GetPosition(cx, cy);
-	cx -= width / 2; cy -= height / 2;
+	cx -= (width + 1) / 2; cy -= (height + 1) / 2;
 	if (cx < viewLeft) cx = 0;
 	else if (cx > viewRight) cx = viewRight;
 

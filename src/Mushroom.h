@@ -3,7 +3,7 @@
 #include "GameObject.h"
 
 constexpr float MUSHROOM_GROWTH_SPEED = 0.03f;
-constexpr float MUSHROOM_MOVING_SPEED = 0.08f;
+constexpr float MUSHROOM_MOVING_SPEED = 0.068f;
 constexpr float MUSHROOM_GROWTH_HEIGHT = 16.1f;	// Prevent overlapping
 
 enum MushroomType

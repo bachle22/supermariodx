@@ -35,14 +35,17 @@
     <Filter Include="Objects\Effects">
       <UniqueIdentifier>{fe33e34f-5bb4-43d2-bdc3-a11a24f9577c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Objects\Misc">
-      <UniqueIdentifier>{718e95f9-890a-40e8-84ce-fe8a45a5c22d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Objects\UI">
       <UniqueIdentifier>{c185cf63-5a8d-40df-991f-de632b0dbcbf}</UniqueIdentifier>
     </Filter>
     <Filter Include="Misc">
       <UniqueIdentifier>{b3fc7f4f-fa8a-45a9-891a-f7b6d7665442}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\Items">
+      <UniqueIdentifier>{718e95f9-890a-40e8-84ce-fe8a45a5c22d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\World">
+      <UniqueIdentifier>{8ce35af2-89a0-43c2-a55b-6fc835ccd4be}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -62,9 +65,6 @@
     <ClCompile Include="Input.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="Brick.cpp">
-      <Filter>Objects\Misc</Filter>
-    </ClCompile>
     <ClCompile Include="Goomba.cpp">
       <Filter>Objects\NPCs</Filter>
     </ClCompile>
@@ -79,9 +79,6 @@
     </ClCompile>
     <ClCompile Include="Strings.cpp">
       <Filter>Utilities\Strings</Filter>
-    </ClCompile>
-    <ClCompile Include="Portal.cpp">
-      <Filter>Objects\Misc</Filter>
     </ClCompile>
     <ClCompile Include="ScenePlayer.cpp">
       <Filter>Scenes</Filter>
@@ -110,17 +107,26 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="Platform.cpp">
-      <Filter>Objects\Misc</Filter>
-    </ClCompile>
     <ClCompile Include="Point.cpp">
       <Filter>Objects\Effects</Filter>
     </ClCompile>
     <ClCompile Include="Coin.cpp">
-      <Filter>Objects\Misc</Filter>
+      <Filter>Objects\Items</Filter>
     </ClCompile>
     <ClCompile Include="Mushroom.cpp">
       <Filter>Objects\NPCs</Filter>
+    </ClCompile>
+    <ClCompile Include="Brick.cpp">
+      <Filter>Objects\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform.cpp">
+      <Filter>Objects\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Portal.cpp">
+      <Filter>Objects\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Block.cpp">
+      <Filter>Objects\World</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -160,9 +166,6 @@
     <ClInclude Include="Strings.h">
       <Filter>Utilities\Strings</Filter>
     </ClInclude>
-    <ClInclude Include="Portal.h">
-      <Filter>Objects\Misc</Filter>
-    </ClInclude>
     <ClInclude Include="Koopa.h">
       <Filter>Objects\NPCs</Filter>
     </ClInclude>
@@ -190,14 +193,8 @@
     <ClInclude Include="Camera.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="Brick.h">
-      <Filter>Objects\Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="Platform.h">
-      <Filter>Objects\Misc</Filter>
-    </ClInclude>
     <ClInclude Include="Coin.h">
-      <Filter>Objects\Misc</Filter>
+      <Filter>Objects\Items</Filter>
     </ClInclude>
     <ClInclude Include="Point.h">
       <Filter>Objects\Effects</Filter>
@@ -207,6 +204,18 @@
     </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="Brick.h">
+      <Filter>Objects\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform.h">
+      <Filter>Objects\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Portal.h">
+      <Filter>Objects\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Block.h">
+      <Filter>Objects\World</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -32,7 +32,7 @@ constexpr float MARIO_JUMPING_INERTIA_AX = .3f;
 constexpr float MARIO_AIRBORNE_MINIMUM_THRESHOLD = .1f;
 
 
-constexpr float POWER_ALLOW_GAINING_THRESHOLD = .3f;
+constexpr float POWER_ALLOW_GAINING_THRESHOLD = .2f;
 
 constexpr int POWER_MAX_FLY_TIME = 3500;
 constexpr int POWER_UP_DURATION_STEP = 300;

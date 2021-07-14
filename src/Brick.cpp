@@ -50,7 +50,6 @@ void Brick::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 		vy = 0;
 		y = entryY;
 		isHit = false;
-		SetState(BRICK_STATE_EMPTY);
 		// Make empty brick harder to hit
 		y -= BRICK_EMPTY_SHIFT;
 	}
@@ -58,8 +57,10 @@ void Brick::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 
 void Brick::Hit()
 {
-	isHit = true;
 	if (state == BRICK_STATE_EMPTY) return;
+
+	isHit = true;
+	SetState(BRICK_STATE_EMPTY);
 
 	switch (type)
 	{
