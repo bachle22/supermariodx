@@ -43,7 +43,7 @@ public:
 
 	void AddObject(LPGAMEOBJECT object) { objects.push_back(object); }
 	void AddScore(int point);
-
+	
 };
 
 class ScenePlayerInputHandler : public SceneInputHandler

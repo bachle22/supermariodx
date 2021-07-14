@@ -87,20 +87,6 @@ void Mushroom::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 		vx = nx * MUSHROOM_MOVING_SPEED;
 		vy += 0.001f * dt;
 	}
-
-
-	//// This is when the mushroom has fully grown
-	//if (vy == 0 && vx == 0 && x != entryX)
-	//{
-	//	float marioX, marioY;
-	//	LPSCENE scene = Game::GetInstance()->GetCurrentScene();
-	//	((ScenePlayer*)scene)->GetPlayer()->GetPosition(marioX, marioY);
-
-	//	if (entryX >= marioX) nx = 1;
-	//	else nx = -1;
-	//}
-
-	//DebugOut(L"x %f y %f nx %d ax %f vx %f ay %f vy %f \n", x, y, nx, ax, vx, ay, vy);
 }
 
 void Mushroom::Render()

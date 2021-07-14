@@ -32,6 +32,7 @@ class Game
 
 	std::unordered_map<int, LPSCENE> scenes;
 	int current_scene;
+	bool isPaused;
 
 
 public:
@@ -55,6 +56,9 @@ public:
 
 	int GetScreenWidth() { return screen_width; }
 	int GetScreenHeight() { return screen_height; }
+	bool IsPaused() { return isPaused; }
+	void Pause() { isPaused = true; }
+	void Unpause() { isPaused = false; }
 
 	LPDIRECT3DDEVICE9 GetDirect3DDevice() { return this->d3ddev; }
 	LPDIRECT3DSURFACE9 GetBackBuffer() { return backBuffer; }

@@ -35,6 +35,26 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 {
 	// Calculate dx, dy 
 	GameObject::Update(dt);
+
+	switch (state)
+	{
+	case MARIO_SMALL_TO_BIG:
+		if (GetTickCount64() - animationTimer >= SMALL_TO_BIG_DURATION) {
+			Game::GetInstance()->Unpause();
+			SetState(MARIO_BIG);
+		}
+		else return;
+		break;
+
+	case MARIO_BIG_TO_SMALL:
+		if (GetTickCount64() - animationTimer >= BIG_TO_SMALL_DURATION) {
+			Game::GetInstance()->Unpause();
+			SetState(MARIO_SMALL);
+			y += BIG_HEIGHT - SMALL_HEIGHT;
+		}
+		else return;
+	}
+
 	Movement();
 	ManagePowerDuration();
 
@@ -59,7 +79,6 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 	{
 		x += dx;
 		y += dy;
-
 	}
 	else
 	{
@@ -95,7 +114,7 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 			UnsetAction(DESCENDING);
 		}
 
-		//DebugOut(L"min_tx %f min_ty %f nx %f ny %f rdx %f rdy %f\n", min_tx, min_ty, nx, ny, rdx, rdy);
+		DebugOut(L"min_tx %f min_ty %f nx %f ny %f rdx %f rdy %f\n", min_tx, min_ty, nx, ny, rdx, rdy);
 
 		//
 		// Collision logic with other objects
@@ -123,13 +142,16 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 					{
 						if (goomba->GetState() != GOOMBA_STATE_DIE)
 						{
-							if (state > MARIO_SMALL)
+							if (state == MARIO_SMALL)
 							{
 								state = MARIO_SMALL;
 								StartUntouchable();
 							}
 							else
-								SetState(MARIO_DEAD);
+							{
+								if (state == MARIO_BIG) SetState(MARIO_BIG_TO_SMALL);
+								else SetState(MARIO_DEAD);
+							}
 						}
 					}
 				}
@@ -158,11 +180,6 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 				Portal* p = dynamic_cast<Portal*>(e->obj);
 				Game::GetInstance()->SwitchScene(p->GetSceneId());
 			}
-
-			else if (dynamic_cast<Mushroom*>(e->obj))
-			{
-				Mushroom* m = dynamic_cast<Mushroom*>(e->obj);
-			}
 		}
 	}
 	// clean up collision events
@@ -174,78 +191,85 @@ void Mario::Render()
 {
 	int ani = NULL;
 	if (state == MARIO_DEAD)
-		ani = DIE;
+		ani = ANI_DEAD;
 	else
 		switch (state) {
 
 		case MARIO_SMALL:
 			if (ax != 0 || AS_SHORT(movement))
 			{
-				ani = SMALL_WALKING;
-				if (powerMeter > 2) ani = SMALL_RUNNING;
-				if (powerMeter == MAX_POWER_METER) ani = SMALL_RUNNING_MAX;
+				ani = ANI_SMALL_WALKING;
+				if (powerMeter > 2) ani = ANI_SMALL_RUNNING;
+				if (powerMeter == MAX_POWER_METER) ani = ANI_SMALL_RUNNING_MAX;
 
-				if (ax * nx < 0 && AS_SHORT(movement)) ani = SMALL_BRAKING;
+				if (ax * nx < 0 && AS_SHORT(movement)) ani = ANI_SMALL_BRAKING;
 			}
-			else ani = SMALL_IDLE;
+			else ani = ANI_SMALL_IDLE;
 			if (GetAction(JUMPING))
 			{
-				ani = SMALL_JUMPING;
-				if (powerMeter == MAX_POWER_METER) ani = SMALL_JUMPING_MAX;
+				ani = ANI_SMALL_JUMPING;
+				if (powerMeter == MAX_POWER_METER) ani = ANI_SMALL_JUMPING_MAX;
 			}
 			break;
 
 		case MARIO_BIG:
 			if (ax != 0 || AS_SHORT(movement))
 			{
-				ani = BIG_WALKING;
-				if (powerMeter > 2) ani = BIG_RUNNING;
-				if (powerMeter == MAX_POWER_METER) ani = BIG_RUNNING_MAX;
+				ani = ANI_BIG_WALKING;
+				if (powerMeter > 2) ani = ANI_BIG_RUNNING;
+				if (powerMeter == MAX_POWER_METER) ani = ANI_BIG_RUNNING_MAX;
 
-				if (ax * nx < 0 && AS_SHORT(movement)) ani = BIG_BRAKING;
+				if (ax * nx < 0 && AS_SHORT(movement)) ani = ANI_BIG_BRAKING;
 			}
-			else ani = BIG_IDLE;
+			else ani = ANI_BIG_IDLE;
 
 			if (GetAction(JUMPING)) {
-				if (vy < 0) ani = BIG_JUMPING;
-				else ani = BIG_JUMPED;
-				if (powerMeter == MAX_POWER_METER) ani = BIG_JUMPING_MAX;
+				if (vy < 0) ani = ANI_BIG_JUMPING;
+				else ani = ANI_BIG_JUMPED;
+				if (powerMeter == MAX_POWER_METER) ani = ANI_BIG_JUMPING_MAX;
 			}
 
-			if (GetAction(DUCKING)) ani = BIG_DUCKING;
+			if (GetAction(DUCKING)) ani = ANI_BIG_DUCKING;
 			break;
-
 
 		case MARIO_RACOON:
 			if (ax != 0 || AS_SHORT(movement))
 			{
-				ani = RACOON_WALKING;
-				if (powerMeter > 2) ani = RACOON_RUNNING;
-				if (powerMeter == MAX_POWER_METER) ani = RACOON_RUNNING_MAX;
+				ani = ANI_RACOON_WALKING;
+				if (powerMeter > 2) ani = ANI_RACOON_RUNNING;
+				if (powerMeter == MAX_POWER_METER) ani = ANI_RACOON_RUNNING_MAX;
 
-				if (ax * nx < 0 && AS_SHORT(movement)) ani = RACOON_BRAKING;
+				if (ax * nx < 0 && AS_SHORT(movement)) ani = ANI_RACOON_BRAKING;
 			}
-			else ani = RACOON_IDLE;
+			else ani = ANI_RACOON_IDLE;
 
 			if (GetAction(JUMPING)) {
-				if (vy < 0) ani = RACOON_JUMPING;
-				// else ani = RACOON_JUMPED;
-				if (powerMeter == MAX_POWER_METER) ani = RACOON_JUMPING_MAX;
+				if (vy < 0) ani = ANI_RACOON_JUMPING;
+				// else ani = ANI_RACOON_JUMPED;
+				if (powerMeter == MAX_POWER_METER) ani = ANI_RACOON_JUMPING_MAX;
 			}
 			if (GetAction(FLYING))
 			{
-				ani = RACOON_FLYING;
+				ani = ANI_RACOON_FLYING;
 			}
-			if (GetAction(DESCENDING) && vy > 0) ani = RACOON_DESCENDING;
+			if (GetAction(DESCENDING) && vy > 0) ani = ANI_RACOON_DESCENDING;
 
-			if (GetAction(DUCKING)) ani = RACOON_DUCKING;
+			if (GetAction(DUCKING)) ani = ANI_RACOON_DUCKING;
+			break;
+
+		case MARIO_SMALL_TO_BIG:
+			ani = ANI_SMALL_TO_BIG;
+			break;
+
+		case MARIO_BIG_TO_SMALL:
+			ani = ANI_BIG_TO_SMALL;
 			break;
 		}
 
 	int alpha = 255;
 	if (untouchable) alpha = 128;
 
-	
+
 	animation_set->at(ani)->Render(nx, (x), (y), alpha);
 
 	RenderBoundingBox();
@@ -258,6 +282,15 @@ void Mario::SetState(int state)
 	{
 	case MARIO_DEAD:
 		vy = -MARIO_DIE_DEFLECT_SPEED;
+		break;
+	case MARIO_SMALL_TO_BIG:
+		y -= BIG_HEIGHT - SMALL_HEIGHT;
+		animationTimer = GetTickCount64();
+		Game::GetInstance()->Pause();
+		break;
+	case MARIO_BIG_TO_SMALL:
+		animationTimer = GetTickCount64();
+		Game::GetInstance()->Pause();
 		break;
 	}
 }
@@ -281,6 +314,10 @@ void Mario::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 		right = x + MarioBBox::RACOON_WIDTH;
 		bottom = y + ((GetAction(DUCKING) ? MarioBBox::DUCKING_HEIGHT : MarioBBox::RACOON_HEIGHT));
 		break;
+	default:
+		right = x;
+		bottom = y;
+		break;
 	}
 }
 
@@ -302,6 +339,8 @@ void Mario::Movement()
 		(MARIO_WALKING_SPEED + powerMeter * MARIO_POWER_ACCELERATION) * ax;
 	// Simple fall down
 	vy += MARIO_GRAVITY * dt;
+	// Max falling speed
+	if (vy > MARIO_MAX_TERMINAL_VELOCITY) vy = MARIO_MAX_TERMINAL_VELOCITY;
 
 
 	if (GetMovement(LEFT))
@@ -324,7 +363,7 @@ void Mario::Movement()
 				vy = -MARIO_JUMP_SPEED_HIGH;
 			}
 			float maxHeight = level == MARIO_SMALL ? 30.0f : MARIO_JUMP_HEIGHT_MAX;
-			if (!GetAction(DONE_JUMPING) && 
+			if (!GetAction(DONE_JUMPING) &&
 				last_y - y < maxHeight + powerMeter * MARIO_JUMP_HEIGHT_POWER) {
 				vy -= MARIO_ACCELERATION_Y;
 				// Gravity compensation
@@ -399,7 +438,7 @@ void Mario::Movement()
 			}
 		}
 		// Disable ducking when moving
-		if (AS_SHORT(movement)) 
+		if (AS_SHORT(movement))
 		{
 			if (GetAction(DUCKING))
 			{
@@ -429,12 +468,15 @@ void Mario::Movement()
 	// Disabled when moving left to prevent it slow down left movement
 	if (!GetAction(FLYING) && ax < 0 && !GetMovement(LEFT))
 	{
+		// Let Mario keep his horizontal momentum when airborne
+		//if (vy <= MARIO_AIRBORNE_MINIMUM_THRESHOLD)
 		ax += (state == MARIO_SMALL ? MARIO_INERTIA_SMALL : MARIO_INERTIA);
 		ax -= powerMeter * MARIO_POWER_INERTIA;
 	}
 	if (!GetAction(FLYING) && ax > 0 && !GetMovement(RIGHT))
 	{
-		ax -= (state == MARIO_SMALL ? MARIO_INERTIA_SMALL : MARIO_INERTIA);
+		if (vy <= MARIO_AIRBORNE_MINIMUM_THRESHOLD)
+			ax -= (state == MARIO_SMALL ? MARIO_INERTIA_SMALL : MARIO_INERTIA);
 		ax += powerMeter * MARIO_POWER_INERTIA;
 	}
 
@@ -479,7 +521,7 @@ void Mario::ManagePowerDuration()
 				if (GetAction(GAINING_POWER) && AS_SHORT(movement) &&
 					nx * ax > 0 && powerMeter < MAX_POWER_METER) powerMeter++;
 
-				else if (powerMeter > 0 && nx * ax < 0) powerMeter--;
+				else if (powerMeter > 0 && nx * ax < POWER_ALLOW_GAINING_THRESHOLD) powerMeter--;
 				lastTimeGainPower = powerTimer;
 			}
 		}

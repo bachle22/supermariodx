@@ -337,6 +337,7 @@ void ScenePlayer::Init()
 
 void ScenePlayer::Update(ULONGLONG dt)
 {
+	if (Game::GetInstance()->IsPaused()) dt = 0;
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
 	std::vector<LPGAMEOBJECT> coObjects;
@@ -422,6 +423,10 @@ void ScenePlayerInputHandler::OnKeyDown(int KeyCode)
 	case DIK_A:
 		mario->SetAction(GAINING_POWER);
 		break;
+	case DIK_P:
+		if (game->IsPaused()) game->Unpause();
+		else game->Pause();
+		break;
 
 		// Cheat keys
 	case DIK_1:
@@ -435,6 +440,12 @@ void ScenePlayerInputHandler::OnKeyDown(int KeyCode)
 	case DIK_3:
 		mario->SetMovement(UP);
 		mario->SetState(MARIO_RACOON);
+		break;
+	case DIK_4:
+		mario->SetState(MARIO_SMALL_TO_BIG);
+		break;
+	case DIK_5:
+		mario->SetState(MARIO_BIG_TO_SMALL);
 		break;
 	case DIK_R:
 		mario->Reset();

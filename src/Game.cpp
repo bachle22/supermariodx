@@ -57,6 +57,7 @@ void Game::Init(HWND hWnd)
 	D3DXCreateSprite(d3ddev, &spriteHandler);
 
 	DebugOut(L"[INFO] InitGame done;\n");
+	isPaused = false;
 }
 
 /*
