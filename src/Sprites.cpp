@@ -25,16 +25,26 @@ Sprites* Sprites::GetInstance()
 	return __instance;
 }
 
+void Sprite::Draw(int nx, float x, float y, int alpha, D3DXVECTOR2 translation)
+{
+	Game* game = Game::GetInstance();
+	game->Draw(nx, x, y, texture, left, top, right, bottom, alpha, translation);
+}
+
 void Sprite::Draw(int nx, float x, float y, int alpha)
 {
-	// if (id == DISABLED_SPRITE_ID) return;
 	Game* game = Game::GetInstance();
 	game->Draw(nx, x, y, texture, left, top, right, bottom, alpha);
 }
 
+void Sprite::Draw(float x, float y)
+{
+	Game* game = Game::GetInstance();
+	game->Draw(x, y, texture, left, top, right, bottom);
+}
+
 void Sprite::DrawClippedSprite(int nx, float x, float y, int alpha, int width, int height)
 {
-	// if (id == DISABLED_SPRITE_ID) return;
 	Game* game = Game::GetInstance();
 	game->Draw(nx, x, y, texture, left, top, left + width, top + height, alpha);
 }
@@ -43,7 +53,6 @@ void Sprites::Add(int id, int left, int top, int right, int bottom, LPDIRECT3DTE
 {
 	LPSPRITE s = new Sprite(id, left, top, right, bottom, tex);
 	sprites[id] = s;
-
 }
 
 LPSPRITE Sprites::Get(int id)

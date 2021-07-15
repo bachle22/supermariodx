@@ -14,6 +14,7 @@ constexpr int OBJECT_TYPE_GOOMBA = 2;
 constexpr int OBJECT_TYPE_KOOPAS = 3;
 constexpr int OBJECT_TYPE_PLATFORM = 4;
 constexpr int OBJECT_TYPE_BLOCK = 5;
+constexpr int OBJECT_TYPE_PPLANT= 6;
 constexpr int OBJECT_TYPE_PORTAL = 50;
 
 constexpr float PUSH_BACK = 0.4f;

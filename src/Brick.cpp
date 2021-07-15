@@ -43,7 +43,10 @@ void Brick::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 	if (isHit && vy == 0 && state != BRICK_STATE_EMPTY)
 	{
 		vy = BRICK_ACCELERATION;
+		isHit = false;
+		SetState(BRICK_STATE_EMPTY);
 	}
+
 
 	if (y > entryY)
 	{
@@ -60,13 +63,13 @@ void Brick::Hit()
 	if (state == BRICK_STATE_EMPTY) return;
 
 	isHit = true;
-	SetState(BRICK_STATE_EMPTY);
+	//SetState(BRICK_STATE_EMPTY);
 
 	switch (type)
 	{
 	case BRICK_COIN:
 	{
-		Coin* coin = new Coin(x + COIN_POSITION_OFFSET, y, COIN_HIDDEN);
+		Coin* coin = new Coin(x + COIN_POSITION_OFFSET_X, y - COIN_POSITION_OFFSET_Y, COIN_HIDDEN);
 		LPSCENE scene = Game::GetInstance()->GetCurrentScene();
 		((ScenePlayer*)scene)->AddObject(coin);
 		coin->Throw();

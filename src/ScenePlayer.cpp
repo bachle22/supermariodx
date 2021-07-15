@@ -434,6 +434,9 @@ void ScenePlayerInputHandler::OnKeyDown(int KeyCode)
 	case DIK_A:
 		mario->SetAction(GAINING_POWER);
 		break;
+	case DIK_Z:
+		mario->SetAction(SPINNING);
+		break;
 	case DIK_P:
 		if (game->IsPaused()) game->Unpause();
 		else game->Pause();
@@ -467,6 +470,9 @@ void ScenePlayerInputHandler::OnKeyDown(int KeyCode)
 	case DIK_F3:
 		mario->SetPosition(1420, 150);
 		break;
+	case DIK_F4:
+		mario->SetPosition(1825, 300);
+		break;
 	}
 }
 
@@ -498,6 +504,9 @@ void ScenePlayerInputHandler::OnKeyUp(int KeyCode)
 		mario->UnsetMovement(UP);
 		mario->UnsetAction(FLYING);
 		mario->UnsetAction(DESCENDING);
+		break;
+	case DIK_Z:
+		mario->UnsetAction(SPINNING);
 		break;
 	case DIK_A:
 		mario->UnsetAction(GAINING_POWER);

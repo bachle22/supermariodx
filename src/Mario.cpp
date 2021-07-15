@@ -51,7 +51,7 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 		if (GetTickCount64() - animationTimer >= BIG_TO_SMALL_DURATION) {
 			Game::GetInstance()->Unpause();
 			SetState(MARIO_SMALL);
-			y += BIG_HEIGHT - SMALL_HEIGHT;
+			y += MARIO_BIG_HEIGHT - MARIO_SMALL_HEIGHT + 0.1f;
 		}
 		else return;
 	}
@@ -90,10 +90,10 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
 		// how to push back Mario if collides with a moving objects, what if Mario is pushed this way into another object?
-		/*if (rdx != 0 && rdx!=dx)
-			x += nx*abs(rdx); */
+		if (rdx != 0 && rdx != dx)
+			x += nx * abs(rdx);
 
-			// block 
+		// block 
 		x += min_tx * dx + nx * PUSH_BACK;		// nx*0.4f : need to push out a bit to avoid overlapping next frame
 		y += min_ty * dy + ny * PUSH_BACK;
 
@@ -115,11 +115,11 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 			UnsetAction(DESCENDING);
 		}
 
-		 //DebugOut(L"min_tx %f min_ty %f nx %f ny %f rdx %f rdy %f\n", min_tx, min_ty, nx, ny, rdx, rdy);
+		//DebugOut(L"min_tx %f min_ty %f nx %f ny %f rdx %f rdy %f\n", min_tx, min_ty, nx, ny, rdx, rdy);
 
-		//
-		// Collision logic with other objects
-		//
+	   //
+	   // Collision logic with other objects
+	   //
 		for (size_t i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
@@ -193,10 +193,9 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 
 			else if (dynamic_cast<Mushroom*>(e->obj))
 			{
+				vx = entry_vx;
 				x -= min_tx * dx + nx * PUSH_BACK;
 				x += dx;
-				y -= min_ty * dy + ny * PUSH_BACK;
-				y += dy;
 
 				Mushroom* m = dynamic_cast<Mushroom*>(e->obj);
 				m->AddPoint();
@@ -215,18 +214,20 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 	for (size_t i = 0; i < coEvents.size(); i++) delete coEvents[i];
 	//DebugOut(L"x %f nx %d ax %f vx %f \n", x, nx, ax, vx);
 	//DebugOut(L"y %f ny %d ay %f vy %f \n", y, nx, ay, vy);
-	DebugOut(L"flying %d:\n", GetAction(FLYING));
 }
 
 void Mario::Render()
 {
 	int ani = NULL;
+	D3DXVECTOR2 translation = D3DXVECTOR2(0, 0);
+
 	if (state == MARIO_DEAD)
 		ani = ANI_DEAD;
 	else
 		switch (state) {
 
 		case MARIO_SMALL:
+			translation.x = -MARIO_SMALL_TRANSLATE_X;
 			if (ax != 0 || AS_SHORT(movement))
 			{
 				ani = ANI_SMALL_WALKING;
@@ -244,6 +245,7 @@ void Mario::Render()
 			break;
 
 		case MARIO_BIG:
+			translation.x = nx < 0 ? 0 : -MARIO_BIG_TRANSLATE_X;
 			if (ax != 0 || AS_SHORT(movement))
 			{
 				ani = ANI_BIG_WALKING;
@@ -260,17 +262,25 @@ void Mario::Render()
 				if (powerMeter == MAX_POWER_METER) ani = ANI_BIG_JUMPING_MAX;
 			}
 
-			if (GetAction(DUCKING)) ani = ANI_BIG_DUCKING;
+			if (GetAction(DUCKING)) {
+				ani = ANI_BIG_DUCKING;
+				translation.x = nx < 0 ? 0 : -MARIO_BIG_TRANSLATE_X + 3;
+			}
 			break;
 
 		case MARIO_RACOON:
+			translation.x = nx < 0 ? 0 : -MARIO_RACOON_TRANSLATE_X;
 			if (ax != 0 || AS_SHORT(movement))
 			{
 				ani = ANI_RACOON_WALKING;
 				if (powerMeter > 2) ani = ANI_RACOON_RUNNING;
 				if (powerMeter == MAX_POWER_METER) ani = ANI_RACOON_RUNNING_MAX;
+				translation.x = nx < 0 ? 0 : -MARIO_RACOON_TRANSLATE_X;
 
-				if (ax * nx < 0 && AS_SHORT(movement)) ani = ANI_RACOON_BRAKING;
+				if (ax * nx < 0 && AS_SHORT(movement)) {
+					ani = ANI_RACOON_BRAKING;
+					translation.x = 0;
+				}
 			}
 			else ani = ANI_RACOON_IDLE;
 
@@ -282,10 +292,22 @@ void Mario::Render()
 			if (GetAction(FLYING))
 			{
 				ani = ANI_RACOON_FLYING;
+				translation.x = nx < 0 ? 0 : -MARIO_RACOON_TRANSLATE_X;
 			}
-			if (GetAction(DESCENDING) && vy > 0) ani = ANI_RACOON_DESCENDING;
-
-			if (GetAction(DUCKING)) ani = ANI_RACOON_DUCKING;
+			if (GetAction(DESCENDING) && vy > 0)
+			{
+				ani = ANI_RACOON_DESCENDING;
+				translation.x = nx < 0 ? 0 : -MARIO_RACOON_TRANSLATE_X;
+			}
+			if (GetAction(DUCKING))
+			{
+				ani = ANI_RACOON_DUCKING;
+				translation.x = nx < 0 ? 0 : -MARIO_RACOON_TRANSLATE_X + 3;
+			}
+			if (GetAction(SPINNING) && !GetAction(GAINING_POWER)) {
+				ani = ANI_RACOON_SPINNING;
+				translation.x = nx < 0 ? 0 : -MARIO_RACOON_TRANSLATE_X;
+			}
 			break;
 
 		case MARIO_SMALL_TO_BIG:
@@ -300,8 +322,8 @@ void Mario::Render()
 	int alpha = 255;
 	if (untouchable) alpha = 128;
 
-
-	animation_set->at(ani)->Render(nx, (x), ceil(y), alpha);
+	animation_set->at(ani)->
+		Render(nx, (x), ceil(y), alpha, translation);
 
 	RenderBoundingBox();
 }
@@ -315,8 +337,8 @@ void Mario::SetState(int state)
 		vy = -MARIO_DIE_DEFLECT_SPEED;
 		break;
 	case MARIO_SMALL_TO_BIG:
-		// Add 0.1f to make sure Mario doesn't overlap with platform
-		y -= BIG_HEIGHT - SMALL_HEIGHT + 0.1f;
+		// Subtract 0.1f to make sure Mario doesn't overlap with platform
+		y -= MARIO_BIG_HEIGHT - MARIO_SMALL_HEIGHT - 0.1f;
 		animationTimer = GetTickCount64();
 		Game::GetInstance()->Pause();
 		break;
@@ -335,16 +357,16 @@ void Mario::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 	switch (state)
 	{
 	case MARIO_SMALL:
-		right = x + MarioBBox::SMALL_WIDTH;
-		bottom = y + MarioBBox::SMALL_HEIGHT;
+		right = x + MARIO_SMALL_WIDTH;
+		bottom = y + MARIO_SMALL_HEIGHT;
 		break;
 	case MARIO_BIG:
-		right = x + MarioBBox::BIG_WIDTH;
-		bottom = y + ((GetAction(DUCKING) ? MarioBBox::DUCKING_HEIGHT : MarioBBox::BIG_HEIGHT));
+		right = x + MARIO_BIG_WIDTH;
+		bottom = y + ((GetAction(DUCKING) ? MARIO_DUCKING_HEIGHT : MARIO_BIG_HEIGHT));
 		break;
 	case MARIO_RACOON:
-		right = x + MarioBBox::RACOON_WIDTH;
-		bottom = y + ((GetAction(DUCKING) ? MarioBBox::DUCKING_HEIGHT : MarioBBox::RACOON_HEIGHT));
+		right = x + MARIO_RACOON_WIDTH;
+		bottom = y + ((GetAction(DUCKING) ? MARIO_DUCKING_HEIGHT : MARIO_RACOON_HEIGHT));
 		break;
 	default:
 		right = x;
@@ -508,7 +530,7 @@ void Mario::Movement()
 	if (!GetAction(FLYING) && ax > 0 && !GetMovement(RIGHT))
 	{
 		//if (vy <= MARIO_AIRBORNE_MINIMUM_THRESHOLD)
-			ax -= (state == MARIO_SMALL ? MARIO_INERTIA_SMALL : MARIO_INERTIA);
+		ax -= (state == MARIO_SMALL ? MARIO_INERTIA_SMALL : MARIO_INERTIA);
 		ax += powerMeter * MARIO_POWER_INERTIA;
 	}
 

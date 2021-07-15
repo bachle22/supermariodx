@@ -39,36 +39,36 @@ void HUD::Render()
 	y = Camera::GetInstance()->GetPosition().y;
 	x = floor(x); y = floor(y);
 	// Render HUD containers textures
-	Game::GetInstance()->Draw(NOFLIP, x, y + offset_y, background, 0, 0, SCREEN_WIDTH, HUD_BAR_HEIGHT, OPAQUED);
-	statsHUD->Draw(NOFLIP, x + STATS_OFFSET_X, y + offset_y + MARGIN, OPAQUED);
-	powerupHUD->Draw(NOFLIP, x + HUD_SMALL_X, y + offset_y + MARGIN, OPAQUED);
+	Game::GetInstance()->Draw(x, y + offset_y, background, 0, 0, SCREEN_WIDTH, HUD_BAR_HEIGHT);
+	statsHUD->Draw(x + STATS_OFFSET_X, y + offset_y + MARGIN);
+	powerupHUD->Draw(x + HUD_SMALL_X, y + offset_y + MARGIN);
 
 	// Render power meter
 	for (int i = powerMeter; i < MAX_POWER_METER - 1; i++)
-		arrowEmpty->Draw(NOFLIP, x + ARROW_X + FONT_SIZE * i, y + offset_y + STATS_Y, OPAQUED);
+		arrowEmpty->Draw(x + ARROW_X + FONT_SIZE * i, y + offset_y + STATS_Y);
 	if (powerMeter > 0) for (int i = 0; i < powerMeter && i < MAX_POWER_METER - 1; i++)
-		arrowFilled->Draw(NOFLIP, x + ARROW_X + FONT_SIZE * i, y + offset_y + STATS_Y, OPAQUED);
+		arrowFilled->Draw(x + ARROW_X + FONT_SIZE * i, y + offset_y + STATS_Y);
 
 	if (powerMeter < MAX_POWER_METER)
-		powerEmpty->Draw(NOFLIP, x + POWER_X, y + offset_y + STATS_Y, OPAQUED);
-	else powerMeterIcon->Render(NOFLIP, x + POWER_X, y + offset_y + STATS_Y, OPAQUED);
+		powerEmpty->Draw(x + POWER_X, y + offset_y + STATS_Y);
+	else powerMeterIcon->Render(x + POWER_X, y + offset_y + STATS_Y);
 
-	font->Map('0' + world)->Draw(NOFLIP, x + STAGE_X, y + offset_y + STATS_Y, OPAQUED);
+	font->Map('0' + world)->Draw(x + STAGE_X, y + offset_y + STATS_Y);
 	font->Map('0' + Stats::GetInstance()->GetLives())->
-		Draw(NOFLIP, x + STAGE_X, y + offset_y + LIVES_Y, OPAQUED);
-	icon->Draw(NOFLIP, x + ICON_X, y + offset_y + LIVES_Y, OPAQUED);
+		Draw(x + STAGE_X, y + offset_y + LIVES_Y);
+	icon->Draw(x + ICON_X, y + offset_y + LIVES_Y);
 
 	// Render score
 	for (int i = 0; i < SCORE_LENGTH; i++)
-		score[i]->Draw(NOFLIP, x + ARROW_X + FONT_SIZE * i, y + offset_y + LIVES_Y, OPAQUED);
+		score[i]->Draw(x + ARROW_X + FONT_SIZE * i, y + offset_y + LIVES_Y);
 
 	// Render money
-	money[0]->Draw(NOFLIP, x + MONEY_X, y + offset_y + STATS_Y, OPAQUED);
-	if (money.size() > 1) money[1]->Draw(NOFLIP, x + MONEY_X - FONT_SIZE, y + offset_y + STATS_Y, OPAQUED);
+	money[0]->Draw(x + MONEY_X, y + offset_y + STATS_Y);
+	if (money.size() > 1) money[1]->Draw(x + MONEY_X - FONT_SIZE, y + offset_y + STATS_Y);
 
 	// Render time
 	for (int i = 0; i < TIME_LENGTH; i++)
-		time[i]->Draw(NOFLIP, x + TIME_X + FONT_SIZE * i, y + offset_y + TIME_Y, OPAQUED);
+		time[i]->Draw(x + TIME_X + FONT_SIZE * i, y + offset_y + TIME_Y);
 }
 
 void HUD::SetScore()

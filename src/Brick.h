@@ -3,10 +3,11 @@
 #include "GameObject.h"
 #include "Coin.h"
 
-constexpr float BRICK_GRAVITY = 0.003f;
-constexpr float BRICK_ACCELERATION = -0.3f;
+constexpr float BRICK_GRAVITY = 0.001f;
+constexpr float BRICK_ACCELERATION = -0.1f;
 constexpr float BRICK_EMPTY_SHIFT = 0.01f;
-constexpr int COIN_POSITION_OFFSET = 4;
+constexpr int COIN_POSITION_OFFSET_X = 4;
+constexpr int COIN_POSITION_OFFSET_Y = 2;
 
 enum BrickType
 {

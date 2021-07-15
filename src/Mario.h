@@ -31,7 +31,6 @@ constexpr float MARIO_MAX_TERMINAL_VELOCITY = .25f;
 constexpr float MARIO_JUMPING_INERTIA_AX = .3f;
 constexpr float MARIO_AIRBORNE_MINIMUM_THRESHOLD = .1f;
 
-
 constexpr float POWER_ALLOW_GAINING_THRESHOLD = .2f;
 
 constexpr int POWER_MAX_FLY_TIME = 3500;
@@ -49,16 +48,17 @@ constexpr int RACOON_BBOX_DUCKING_DIFF = 10;
 constexpr int SMALL_TO_BIG_DURATION = 1000;
 constexpr int BIG_TO_SMALL_DURATION = 600;
 
-enum MarioBBox
-{
-	SMALL_WIDTH = 14,
-	SMALL_HEIGHT = 16,
-	BIG_WIDTH = 15,
-	BIG_HEIGHT = 27,
-	RACOON_WIDTH = 23,
-	RACOON_HEIGHT = 28,
-	DUCKING_HEIGHT = 18,
-};
+constexpr int MARIO_SMALL_WIDTH = 12;
+constexpr int MARIO_SMALL_HEIGHT = 16;
+constexpr int MARIO_BIG_WIDTH = 14;
+constexpr int MARIO_BIG_HEIGHT = 27;
+constexpr int MARIO_RACOON_WIDTH = 14;
+constexpr int MARIO_RACOON_HEIGHT = 28;
+constexpr int MARIO_DUCKING_HEIGHT = 18;
+
+constexpr float MARIO_SMALL_TRANSLATE_X = 2;
+constexpr float MARIO_BIG_TRANSLATE_X = 2;
+constexpr float MARIO_RACOON_TRANSLATE_X = 10;
 
 enum MarioAnimation
 {
@@ -100,7 +100,9 @@ enum MarioAnimation
 	ANI_DEAD = 8,
 
 	ANI_BIG_DUCKING = 40,
-	ANI_RACOON_DUCKING = 42
+
+	ANI_RACOON_DUCKING = 42,
+	ANI_RACOON_SPINNING = 44,
 };
 
 enum MarioAction
@@ -113,6 +115,7 @@ enum MarioAction
 	PEAKING = 5,
 	DESCENDING = 6,
 	DUCKING = 7,
+	SPINNING = 8,
 };
 
 enum MarioState

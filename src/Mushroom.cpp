@@ -14,8 +14,9 @@ Mushroom::Mushroom(float x, float y, int type)
 	entryX = x;
 	entryY = y;
 	this->type = type;
-	SetState(MUSHROOM_GROWING);
+
 	sprite = Sprites::GetInstance()->Get(type);
+	growingDelay = 0;
 }
 
 void Mushroom::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -29,6 +30,13 @@ void Mushroom::GetBoundingBox(float& left, float& top, float& right, float& bott
 void Mushroom::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 {
 	GameObject::Update(dt, coObjects);
+
+	if (growingDelay < MUSHROOM_GROWING_DELAY)
+	{
+		growingDelay += dt;
+		if (growingDelay >= MUSHROOM_GROWING_DELAY) SetState(MUSHROOM_GROWING);
+	}
+
 
 	std::vector<LPCOLLISIONEVENT> coEvents;
 	std::vector<LPCOLLISIONEVENT> coEventsResult;
@@ -50,9 +58,11 @@ void Mushroom::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 		//DebugOut(L"min_tx %f min_ty %f nx %f ny %f rdx %f rdy %f\n", min_tx, min_ty, nx, ny, rdx, rdy);
 
-		// Push back even more
 		y += min_ty * dy + ny * PUSH_BACK * 2;
 		x += min_tx * dx + nx * PUSH_BACK * 2;
+
+		float entry_vx = vx;
+		float entry_vy = vy;
 
 		if (nx != 0) vx = 0;
 		if (ny != 0) vy = 0;
@@ -60,16 +70,15 @@ void Mushroom::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
-			if (e->nx != 0 && ny == 0)
 			{
 				if (dynamic_cast<Platform*>(e->obj))
 				{
-					this->nx = -this->nx;
+					if (e->nx != 0 && ny == 0)
+						this->nx = -this->nx;
 				}
-
 				else
 				{
-					x -= min_tx * dx + nx * PUSH_BACK;
+					x -= min_tx * dx + nx * PUSH_BACK * 2;
 					x += dx;
 				}
 			}
@@ -89,7 +98,7 @@ void Mushroom::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 	if (state == MUSHROOM_MOVING)
 	{
 		vx = nx * MUSHROOM_MOVING_SPEED;
-		vy += 0.001f * dt;
+		vy += MUSHROOM_GRAVITY * dt;
 	}
 }
 
@@ -97,7 +106,6 @@ void Mushroom::Render()
 {
 	int clippingHeight = state == MUSHROOM_GROWING ? (int)(entryY - y) : TILE_HEIGHT;
 	sprite->DrawClippedSprite(nx, x, y, OPAQUED, TILE_WIDTH, clippingHeight);
-	RenderBoundingBox();
 }
 
 void Mushroom::SetState(int state)

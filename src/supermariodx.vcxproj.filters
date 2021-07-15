@@ -110,9 +110,6 @@
     <ClCompile Include="Coin.cpp">
       <Filter>Objects\Items</Filter>
     </ClCompile>
-    <ClCompile Include="Mushroom.cpp">
-      <Filter>Objects\NPCs</Filter>
-    </ClCompile>
     <ClCompile Include="Brick.cpp">
       <Filter>Objects\World</Filter>
     </ClCompile>
@@ -130,6 +127,9 @@
     </ClCompile>
     <ClCompile Include="Font.cpp">
       <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Mushroom.cpp">
+      <Filter>Objects\Items</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -199,9 +199,6 @@
     <ClInclude Include="Point.h">
       <Filter>Objects\Effects</Filter>
     </ClInclude>
-    <ClInclude Include="Mushroom.h">
-      <Filter>Objects\NPCs</Filter>
-    </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Misc</Filter>
     </ClInclude>
@@ -222,6 +219,9 @@
     </ClInclude>
     <ClInclude Include="Font.h">
       <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Mushroom.h">
+      <Filter>Objects\Items</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

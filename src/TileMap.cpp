@@ -32,7 +32,7 @@ void TileMap::Render()
 		{
 			// Only draw tiles visible in the viewport
 			if (i >= cameraTop && j >= cameraLeft && i < cameraBottom && j < cameraRight)
-			tileSprites[tiles[i][j] - 1]->Draw(-1, j * (int)TILE_WIDTH, i * (int)TILE_HEIGHT, 255);
+			tileSprites[tiles[i][j] - 1]->Draw(j * (float)TILE_WIDTH, i * (float)TILE_HEIGHT);
 		}
 }
 

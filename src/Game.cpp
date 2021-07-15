@@ -65,6 +65,20 @@ void Game::Init(HWND hWnd)
 */
 void Game::Draw(int nx, float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom, int alpha)
 {
+	Draw(nx, x, y, texture,
+		left, top, right, bottom,
+		alpha, D3DXVECTOR2(0, 0));
+}
+
+void Game::Draw(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom)
+{
+	Draw(NOFLIP, x, y, texture,
+		left, top, right, bottom,
+		OPAQUED, D3DXVECTOR2(0, 0));
+}
+
+void Game::Draw(int nx, float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom, int alpha, D3DXVECTOR2 translation)
+{
 	D3DXVECTOR3 p(ceil(x - Camera::GetInstance()->GetPosition().x),
 		ceil(y - Camera::GetInstance()->GetPosition().y), 0);
 	RECT r;
@@ -77,16 +91,15 @@ void Game::Draw(int nx, float x, float y, LPDIRECT3DTEXTURE9 texture, int left, 
 	D3DXMATRIX oldTransform;
 	D3DXMATRIX newTransform;
 
+	// Retrieve current transformation state
 	spriteHandler->GetTransform(&oldTransform);
 	D3DXVECTOR2 center = D3DXVECTOR2(p.x + (right - left) / 2, p.y + (bottom - top) / 2);
 	D3DXVECTOR2 flip = D3DXVECTOR2(nx > 0 ? -1.0f : 1.0f, 1.0f);
 
-	D3DXMatrixTransformation2D(&newTransform, &center, 0.0f, &flip, NULL, 0.0f, NULL);
+	D3DXMatrixTransformation2D(&newTransform, &center, 0.0f, &flip, NULL, 0.0f, &translation);
 
-	D3DXMATRIX finalTransform = oldTransform * newTransform;
-	spriteHandler->SetTransform(&finalTransform);
+	spriteHandler->SetTransform(&newTransform);
 	spriteHandler->Draw(texture, &r, NULL, &p, D3DCOLOR_ARGB(alpha, 255, 255, 255));
-	spriteHandler->SetTransform(&oldTransform);
 }
 
 int Game::IsKeyDown(int KeyCode)

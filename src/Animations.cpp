@@ -10,7 +10,7 @@ void Animation::Add(int spriteId, ULONGLONG time)
 	frames.push_back(frame);
 }
 
-void Animation::Render(int nx, float x, float y, int alpha)
+void Animation::Render(int nx, float x, float y, int alpha, D3DXVECTOR2 translation)
 {
 	ULONGLONG now = GetTickCount64();
 	if (currentFrame == -1)
@@ -19,7 +19,7 @@ void Animation::Render(int nx, float x, float y, int alpha)
 		lastFrameTime = now;
 	}
 	else if (frames[currentFrame]->GetTime() == 0) {
-		frames[currentFrame]->GetSprite()->Draw(nx, x, y, alpha);
+		frames[currentFrame]->GetSprite()->Draw(nx, x, y, alpha, translation);
 		return;
 	}
 	else
@@ -35,8 +35,17 @@ void Animation::Render(int nx, float x, float y, int alpha)
 
 	}
 
-	frames[currentFrame]->GetSprite()->Draw(nx, x, y, alpha);
+	frames[currentFrame]->GetSprite()->Draw(nx, x, y, alpha, translation);
+}
 
+void Animation::Render(int nx, float x, float y, int alpha)
+{
+	Render(nx, x, y, alpha, D3DXVECTOR2(0, 0));
+}
+
+void Animation::Render(float x, float y, int alpha)
+{
+	Render(NOFLIP, x, y, alpha);
 }
 
 Animations* Animations::__instance = NULL;
