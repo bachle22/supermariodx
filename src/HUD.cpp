@@ -7,6 +7,7 @@
 #include "Debug.h"
 #include "Mario.h"
 #include "ScenePlayer.h"
+#include "Stats.h"
 
 HUD::HUD()
 {
@@ -19,13 +20,13 @@ HUD::HUD()
 	powerFilled = Sprites::GetInstance()->Get(POWER_FILLED);
 	arrowEmpty = Sprites::GetInstance()->Get(ARROW_EMPTY);
 	arrowFilled = Sprites::GetInstance()->Get(ARROW_FILLED);
-	powerMeterIcon = AnimationSets::GetInstance()->Get(77)->at(0);
+	powerMeterIcon = AnimationSets::GetInstance()->Get(POWER_ANI)->at(0);
 
 	// Set default HUD values
 	font = new Font();
-	world = 1; lives = 0;
-	SetScore(0);
-	SetMoney(0);
+	world = 1;
+	SetScore();
+	SetCoins();
 	SetTime(0);
 	SetPowerMeter(0);
 	offset_y = SCREEN_HEIGHT - HUD_Y_TRANSFROM - HUD_BAR_HEIGHT;
@@ -53,7 +54,8 @@ void HUD::Render()
 	else powerMeterIcon->Render(NOFLIP, x + POWER_X, y + offset_y + STATS_Y, OPAQUED);
 
 	font->Map('0' + world)->Draw(NOFLIP, x + STAGE_X, y + offset_y + STATS_Y, OPAQUED);
-	font->Map('0' + lives)->Draw(NOFLIP, x + STAGE_X, y + offset_y + LIVES_Y, OPAQUED);
+	font->Map('0' + Stats::GetInstance()->GetLives())->
+		Draw(NOFLIP, x + STAGE_X, y + offset_y + LIVES_Y, OPAQUED);
 	icon->Draw(NOFLIP, x + ICON_X, y + offset_y + LIVES_Y, OPAQUED);
 
 	// Render score
@@ -69,17 +71,19 @@ void HUD::Render()
 		time[i]->Draw(NOFLIP, x + TIME_X + FONT_SIZE * i, y + offset_y + TIME_Y, OPAQUED);
 }
 
-void HUD::SetScore(int s)
+void HUD::SetScore()
 {
+	int s = Stats::GetInstance()->GetScore();
 	if (s > SCORE_MAX) s = 0;
 	std::string str = std::to_string(s);
 	str.insert(str.begin(), SCORE_LENGTH - str.size(), '0'); // Padding
 	score = font->StringToSprites(str);
 }
 
-void HUD::SetMoney(int s)
+void HUD::SetCoins()
 {
-	std::string str = std::to_string(s);
+	int c = Stats::GetInstance()->GetCoins();
+	std::string str = std::to_string(c);
 	std::string reversed;
 	for (int i = str.size() - 1; i >= 0; i--) reversed = reversed.append(1, str[i]);
 	money = font->StringToSprites(reversed);
@@ -96,4 +100,9 @@ void HUD::SetTime(int s)
 void HUD::SetPowerMeter(int p)
 {
 	powerMeter = p;
+}
+
+void HUD::GetBoundingBox(float& left, float& top, float& right, float& bottom)
+{
+	return;
 }

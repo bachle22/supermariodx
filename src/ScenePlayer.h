@@ -5,6 +5,7 @@
 #include "TileMap.h"
 #include "Mario.h"
 #include "HUD.h"
+#include "Stats.h"
 
 constexpr int DEFAULT_MAX_TIME = 300;
 
@@ -17,6 +18,7 @@ protected:
 	Mario* player;
 	TileMap* map;
 	HUD* hud;
+	Stats* stats;
 
 	ULONGLONG interval;
 	int timer;
@@ -42,7 +44,7 @@ public:
 	HUD* GetHUD() { return hud; }
 
 	void AddObject(LPGAMEOBJECT object) { objects.push_back(object); }
-	void AddScore(int point);
+	void AddPriorObject(LPGAMEOBJECT object) { objects.push_back(object); }
 	
 };
 

@@ -54,3 +54,8 @@ void TileMap::SetTileSprites()
 		this->tileSprites.push_back(sprite);
 	}
 }
+
+//void TileMap::GetBoundingBox(float& left, float& top, float& right, float& bottom)
+//{
+//	return;
+//}

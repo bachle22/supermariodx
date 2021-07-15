@@ -27,6 +27,7 @@ class Sprite
 public:
 	Sprite(int id, int left, int top, int right, int bottom, LPDIRECT3DTEXTURE9 tex);
 	void Draw(int nx, float x, float y, int alpha);
+	void DrawClippedSprite(int nx, float x, float y, int alpha, int width, int height);
 };
 
 typedef Sprite* LPSPRITE;

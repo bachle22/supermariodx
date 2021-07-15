@@ -24,6 +24,7 @@ class Mushroom : public GameObject
 	float entryX, entryY;
 	LPSPRITE sprite;
 
+
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
@@ -31,4 +32,5 @@ class Mushroom : public GameObject
 public:
 	Mushroom(float x, float y, int type);
 	virtual void SetState(int state);
+	void AddPoint();
 };

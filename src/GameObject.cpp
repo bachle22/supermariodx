@@ -48,7 +48,7 @@ void GameObject::RenderBoundingBox()
 	rect.right = (int)r - (int)l;
 	rect.bottom = (int)b - (int)t;
 
-	Game::GetInstance()->Draw(nx, x, y, bbox, rect.left, rect.top, rect.right, rect.bottom, 64);
+	Game::GetInstance()->Draw(nx, ceil(x), ceil(y), bbox, rect.left, rect.top, rect.right, rect.bottom, 64);
 }
 
 /*

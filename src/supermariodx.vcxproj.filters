@@ -95,9 +95,6 @@
     <ClCompile Include="TileMap.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Font.cpp">
-      <Filter>Objects\UI</Filter>
-    </ClCompile>
     <ClCompile Include="HUD.cpp">
       <Filter>Objects\UI</Filter>
     </ClCompile>
@@ -127,6 +124,12 @@
     </ClCompile>
     <ClCompile Include="Block.cpp">
       <Filter>Objects\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Stats.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Font.cpp">
+      <Filter>Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -184,9 +187,6 @@
     <ClInclude Include="Types.h">
       <Filter>Utilities\Types</Filter>
     </ClInclude>
-    <ClInclude Include="Font.h">
-      <Filter>Objects\UI</Filter>
-    </ClInclude>
     <ClInclude Include="HUD.h">
       <Filter>Objects\UI</Filter>
     </ClInclude>
@@ -216,6 +216,12 @@
     </ClInclude>
     <ClInclude Include="Block.h">
       <Filter>Objects\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Stats.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Font.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

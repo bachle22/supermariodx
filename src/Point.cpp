@@ -3,6 +3,7 @@
 #include "Mario.h"
 #include "ScenePlayer.h"
 #include "Game.h"
+#include "Stats.h"
 
 Point::Point(float x, float y, int type)
 {
@@ -11,10 +12,19 @@ Point::Point(float x, float y, int type)
 	SetState(type);
 	entryY = y;
 	sprite = Sprites::GetInstance()->Get(state);
+	frameStart = GetTickCount64();
+	tickPerFrame = 1000 / MAX_FRAME_RATE;
 }
 
 void Point::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 {
+	// Independent timer
+	ULONGLONG dti = GetTickCount64() - frameStart;
+	if (dti >= tickPerFrame) {
+		dt = dti;
+		frameStart = GetTickCount64();
+	}
+
 	GameObject::Update(dt);
 	y += dy;
 
@@ -42,11 +52,18 @@ void Point::SetState(int state)
 
 	LPSCENE scene = Game::GetInstance()->GetCurrentScene();
 	Mario* mario = ((ScenePlayer*)scene)->GetPlayer();
+	Stats* stats = Stats::GetInstance();
 
 	switch (state)
 	{
 	case POINT_100:
-		
+		stats->AddPoint(SCORE_100);
+		break;
+	case POINT_1000:
+		stats->AddPoint(SCORE_1000);
+		break;
+	case POINT_1UP:
+		stats->AddPoint(SCORE_1UP);
 		break;
 	}
 }

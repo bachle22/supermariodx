@@ -70,21 +70,23 @@ void Brick::Hit()
 		LPSCENE scene = Game::GetInstance()->GetCurrentScene();
 		((ScenePlayer*)scene)->AddObject(coin);
 		coin->Throw();
+		Stats::GetInstance()->AddCoin();
 		break;
 	}
 	case BRICK_POWER_UP:
 	{
 		LPSCENE scene = Game::GetInstance()->GetCurrentScene();
 		int marioState = ((ScenePlayer*)scene)->GetPlayer()->GetState();
-		if (marioState == MARIO_SMALL ) {
-			Mushroom* mushroom = new Mushroom(x, y, SUPER_MUSHROOM);
-			((ScenePlayer*)scene)->AddObject(mushroom);
-		}
-		else if (marioState == MARIO_RACOON) {
-			Mushroom* mushroom = new Mushroom(x, y, ONE_UP_MUSHROOM);
-			((ScenePlayer*)scene)->AddObject(mushroom);
-		}
+		Mushroom* mushroom = new Mushroom(x, y, SUPER_MUSHROOM);
+		((ScenePlayer*)scene)->AddObject(mushroom);
 		break;
 	}
+	case BRICK_1UP:
+		LPSCENE scene = Game::GetInstance()->GetCurrentScene();
+		int marioState = ((ScenePlayer*)scene)->GetPlayer()->GetState();
+		Mushroom* mushroom = new Mushroom(x, y, ONE_UP_MUSHROOM);
+		((ScenePlayer*)scene)->AddObject(mushroom);
+		break;
+		break;
 	}
 }

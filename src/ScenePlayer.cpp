@@ -260,7 +260,7 @@ void ScenePlayer::_ParseSection_TILEMAP(std::string pathString)
 	if (!f) DebugOut(L"[ERROR] Unable to open map config!\n");
 
 	f >> id >> mapRows >> mapColumns >> tilesheetRows >> tilesheetColumns >> totalTiles;
-	Camera::GetInstance()->SetViewSize(0, 0, 2560, 241.1f);
+	Camera::GetInstance()->SetViewSize(0, 0, 2560, 240);
 
 	int** tiles = new int* [mapRows];
 	for (int i = 0; i < mapRows; i++)
@@ -342,7 +342,9 @@ void ScenePlayer::Init()
 	interval = 0;
 	timer = 0;
 	hud = new HUD();
+	AddObject(hud);
 	score = 0;
+	stats = Stats::GetInstance();
 }
 
 void ScenePlayer::Update(ULONGLONG dt)
@@ -384,7 +386,6 @@ void ScenePlayer::Render()
 	{
 		if (objects[i]->IsEnabled()) objects[i]->Render();
 	}
-	hud->Render();
 }
 
 /*

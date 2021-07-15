@@ -37,6 +37,7 @@ class Point : public GameObject
 	int type;
 	float entryY;
 	LPSPRITE sprite;
+	ULONGLONG frameStart, tickPerFrame;
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects = NULL);

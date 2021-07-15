@@ -3,7 +3,6 @@
 #include "Game.h"
 
 constexpr float CAMERA_CEIL_Y = 130;
-constexpr float CAMERA_FLOOR_Y = 241;
 constexpr int SCREEN_HORIZONTAL_MAX_TILES = 17;
 constexpr int SCREEN_VERTICAL_MAX_TILES = 13;
 

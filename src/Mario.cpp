@@ -104,7 +104,7 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 
 		// Stop when touching edge
 		if (min_ty == 1) {
-			powerMeter = 0;
+			//powerMeter = 0;
 		}
 
 		// Reset when touching the ground
@@ -160,13 +160,17 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 
 			else if (dynamic_cast<Platform*>(e->obj))
 			{
-				if (ny != 0) vy = 0;
+				// Stop when horizontally hit a platform
+				if (e->nx != 0 && min_ty == 1) ax = 0;
+				if (e->ny != 0) vy = 0;
 				// Stop jumping when hit an object above Mario
 				if (e->ny == 1) SetAction(DONE_JUMPING);
 			}
 
 			else if (dynamic_cast<Brick*>(e->obj))
 			{
+				if (e->nx != 0 && min_ty == 1) ax = 0;
+
 				Brick* b = dynamic_cast<Brick*>(e->obj);
 
 				if (e->ny == 1) {
@@ -189,7 +193,13 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 
 			else if (dynamic_cast<Mushroom*>(e->obj))
 			{
+				x -= min_tx * dx + nx * PUSH_BACK;
+				x += dx;
+				y -= min_ty * dy + ny * PUSH_BACK;
+				y += dy;
+
 				Mushroom* m = dynamic_cast<Mushroom*>(e->obj);
+				m->AddPoint();
 				m->Disable();
 				if (state == MARIO_SMALL) SetState(MARIO_SMALL_TO_BIG);
 			}
@@ -291,7 +301,7 @@ void Mario::Render()
 	if (untouchable) alpha = 128;
 
 
-	animation_set->at(ani)->Render(nx, floor(x), (y), alpha);
+	animation_set->at(ani)->Render(nx, (x), ceil(y), alpha);
 
 	RenderBoundingBox();
 }
@@ -305,7 +315,8 @@ void Mario::SetState(int state)
 		vy = -MARIO_DIE_DEFLECT_SPEED;
 		break;
 	case MARIO_SMALL_TO_BIG:
-		y -= BIG_HEIGHT - SMALL_HEIGHT + 0.2f;
+		// Add 0.1f to make sure Mario doesn't overlap with platform
+		y -= BIG_HEIGHT - SMALL_HEIGHT + 0.1f;
 		animationTimer = GetTickCount64();
 		Game::GetInstance()->Pause();
 		break;

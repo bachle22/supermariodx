@@ -4,6 +4,7 @@
 #include "Textures.h"
 #include "Font.h"
 #include "Animations.h"
+#include "GameObject.h"
 
 constexpr float HUD_LARGE_X = 5;
 constexpr float HUD_SMALL_X = 172;
@@ -31,6 +32,7 @@ enum HUDTextures
 	POWER_FILLED = 50006,
 	ARROW_EMPTY = 50007,
 	POWER_EMPTY = 50008,
+	POWER_ANI = 77,
 };
 
 enum TextLength
@@ -42,12 +44,12 @@ enum TextLength
 };
 
 
-class HUD
+class HUD : public GameObject
 {
 	int offset_y;
 	float x, y;
 
-	int world, lives, powerMeter;
+	int world, powerMeter;
 
 	Font* font;
 	LPSPRITE stage;
@@ -58,11 +60,15 @@ class HUD
 	LPANIMATION powerMeterIcon;
 	std::vector<LPSPRITE> score, money, time;
 
+	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
+
 public:
 	HUD();
-	void Render();
-	void SetScore(int);
-	void SetMoney(int);
+
+	virtual void Render();
+	//virtual void Update();
+	void SetScore();
+	void SetCoins();
 	void SetTime(int);
 	void SetPowerMeter(int);
 };

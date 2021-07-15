@@ -136,6 +136,7 @@ class Mario : public GameObject
 	ULONGLONG lastTimeDecreasePowerIdle, lastTimeDecreasePowerMaxHeight;
 	ULONGLONG animationTimer;
 
+	int score;
 
 	float start_x;
 	float start_y;
@@ -144,7 +145,6 @@ class Mario : public GameObject
 
 	float last_y;
 
-	bool collision[4] = { 0 };
 	bool edge[4] = { 0 };
 	bool movement[4] = { 0 };
 	bool action[8] = { 0 };
@@ -154,10 +154,6 @@ public:
 	virtual void Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
-
-	void SetCollision(int direction) { collision[direction] = true; };
-	void UnsetCollision(int direction) { collision[direction] = false; };
-	bool GetCollision(int direction) { return collision[direction]; }
 
 	void Movement();
 	void SetMovement(int direction) { movement[direction] = true; };
@@ -173,6 +169,7 @@ public:
 	void ManagePowerDuration();
 
 	void SetState(int state);
+	int GetState() { return state; }
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
 	void Reset();
 };
