@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GameObject.h"
+#include "Tail.h"
 
 constexpr int MARIO_UNTOUCHABLE_TIME = 3000;
 constexpr float MARIO_WALKING_SPEED = 0.11f;
@@ -29,7 +30,7 @@ constexpr float MARIO_BRAKE_IDLE_INERTIA = .08f;
 constexpr float MARIO_VELOCITY_Y_THRESHOLD = -0.08f;
 constexpr float MARIO_MAX_TERMINAL_VELOCITY = .25f;
 constexpr float MARIO_JUMPING_INERTIA_AX = .3f;
-constexpr float MARIO_AIRBORNE_MINIMUM_THRESHOLD = .1f;
+constexpr float MARIO_DEFAULT_VELOCITY_THRESHOLD = .1f;
 
 constexpr float POWER_ALLOW_GAINING_THRESHOLD = .2f;
 
@@ -52,13 +53,14 @@ constexpr int MARIO_SMALL_WIDTH = 12;
 constexpr int MARIO_SMALL_HEIGHT = 16;
 constexpr int MARIO_BIG_WIDTH = 14;
 constexpr int MARIO_BIG_HEIGHT = 27;
-constexpr int MARIO_RACOON_WIDTH = 14;
+constexpr int MARIO_RACOON_ATTACK_WIDTH = 14;
 constexpr int MARIO_RACOON_HEIGHT = 28;
 constexpr int MARIO_DUCKING_HEIGHT = 18;
 
 constexpr float MARIO_SMALL_TRANSLATE_X = 2;
 constexpr float MARIO_BIG_TRANSLATE_X = 2;
 constexpr float MARIO_RACOON_TRANSLATE_X = 10;
+constexpr float MARIO_RACOON_SPINNING_X = 7;
 
 enum MarioAnimation
 {
@@ -128,6 +130,19 @@ enum MarioState
 	MARIO_BIG_TO_SMALL = 5,
 };
 
+enum MarioSprite
+{
+	MARIO_SPINNING_TAIL = 10076,
+	MARIO_SPINNING_FRONT = 10075,
+	MARIO_SPINNING_BACK = 10083,
+};
+
+enum ShiftingSign
+{
+	SHIFT = 1,
+	UNSHIFT = -1,
+};
+
 
 class Mario : public GameObject
 {
@@ -150,7 +165,10 @@ class Mario : public GameObject
 
 	bool edge[4] = { 0 };
 	bool movement[4] = { 0 };
-	bool action[8] = { 0 };
+	bool action[9] = { 0 };
+	bool isAttacking;
+
+	Tail* tail;
 
 public:
 	Mario(float x = 0.0f, float y = 0.0f);
@@ -163,6 +181,7 @@ public:
 	void UnsetMovement(int direction) { movement[direction] = false; };
 	bool GetMovement(int direction) { return movement[direction]; }
 
+	void Action();
 	void SetAction(int action) { this->action[action] = true; }
 	void UnsetAction(int action) { this->action[action] = false; }
 	bool GetAction(int action) { return this->action[action]; }
@@ -170,6 +189,8 @@ public:
 	void SetPowerMeter(int value) { powerMeter = value; }
 	int GetPowerMeter() { return powerMeter; }
 	void ManagePowerDuration();
+	
+	void ShiftPosition(int action, int sign);
 
 	void SetState(int state);
 	int GetState() { return state; }

@@ -131,6 +131,9 @@
     <ClCompile Include="Mushroom.cpp">
       <Filter>Objects\Items</Filter>
     </ClCompile>
+    <ClCompile Include="Tail.cpp">
+      <Filter>Objects\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Debug.h">
@@ -222,6 +225,9 @@
     </ClInclude>
     <ClInclude Include="Mushroom.h">
       <Filter>Objects\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="Tail.h">
+      <Filter>Objects\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

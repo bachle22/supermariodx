@@ -78,6 +78,7 @@ public:
 
 	bool IsEnabled() { return isEnabled; }
 	void Disable() { isEnabled = false;  }
+	void Enable() { isEnabled = true; }
 	~GameObject();
 };
 

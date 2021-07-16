@@ -12,6 +12,7 @@
 #include "Brick.h"
 #include "Mushroom.h"
 #include "Block.h"
+#include "ScenePlayer.h"
 
 Mario::Mario(float x, float y) : GameObject()
 {
@@ -30,6 +31,12 @@ Mario::Mario(float x, float y) : GameObject()
 	lastTimeGainPower = 0;
 	lastTimeDecreasePowerMaxHeight = 0;
 	lastTimeDecreasePowerIdle = 0;
+
+	isAttacking = false;
+
+	tail = new Tail();
+	LPSCENE scene = Game::GetInstance()->GetCurrentScene();
+	((ScenePlayer*)scene)->AddObject(tail);
 }
 
 void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
@@ -37,26 +44,8 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 	// Calculate dx, dy 
 	GameObject::Update(dt);
 
-	switch (state)
-	{
-	case MARIO_SMALL_TO_BIG:
-		if (GetTickCount64() - animationTimer >= SMALL_TO_BIG_DURATION) {
-			Game::GetInstance()->Unpause();
-			SetState(MARIO_BIG);
-		}
-		else return;
-		break;
-
-	case MARIO_BIG_TO_SMALL:
-		if (GetTickCount64() - animationTimer >= BIG_TO_SMALL_DURATION) {
-			Game::GetInstance()->Unpause();
-			SetState(MARIO_SMALL);
-			y += MARIO_BIG_HEIGHT - MARIO_SMALL_HEIGHT + 0.1f;
-		}
-		else return;
-	}
-
 	Movement();
+	Action();
 	ManagePowerDuration();
 
 	std::vector<LPCOLLISIONEVENT> coEvents;
@@ -193,9 +182,16 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 
 			else if (dynamic_cast<Mushroom*>(e->obj))
 			{
-				vx = entry_vx;
+				/*vx = entry_vx;
 				x -= min_tx * dx + nx * PUSH_BACK;
-				x += dx;
+				x += dx;*/
+
+				if (e->ny == 1)
+				{
+					vy = entry_vy;
+					y -= min_ty * dy + ny * PUSH_BACK;
+					y += dy;
+				}
 
 				Mushroom* m = dynamic_cast<Mushroom*>(e->obj);
 				m->AddPoint();
@@ -275,11 +271,11 @@ void Mario::Render()
 				ani = ANI_RACOON_WALKING;
 				if (powerMeter > 2) ani = ANI_RACOON_RUNNING;
 				if (powerMeter == MAX_POWER_METER) ani = ANI_RACOON_RUNNING_MAX;
-				translation.x = nx < 0 ? 0 : -MARIO_RACOON_TRANSLATE_X;
+				translation.x = nx < 0 ? -1 : -MARIO_RACOON_TRANSLATE_X + 1;
 
 				if (ax * nx < 0 && AS_SHORT(movement)) {
 					ani = ANI_RACOON_BRAKING;
-					translation.x = 0;
+					translation.x = -1;
 				}
 			}
 			else ani = ANI_RACOON_IDLE;
@@ -297,14 +293,14 @@ void Mario::Render()
 			if (GetAction(DESCENDING) && vy > 0)
 			{
 				ani = ANI_RACOON_DESCENDING;
-				translation.x = nx < 0 ? 0 : -MARIO_RACOON_TRANSLATE_X;
+				translation.x = nx < 0 ? -1 : -MARIO_RACOON_TRANSLATE_X + 1;
 			}
 			if (GetAction(DUCKING))
 			{
 				ani = ANI_RACOON_DUCKING;
 				translation.x = nx < 0 ? 0 : -MARIO_RACOON_TRANSLATE_X + 3;
 			}
-			if (GetAction(SPINNING) && !GetAction(GAINING_POWER)) {
+			if (GetAction(SPINNING) && !GetAction(DUCKING)) {
 				ani = ANI_RACOON_SPINNING;
 				translation.x = nx < 0 ? 0 : -MARIO_RACOON_TRANSLATE_X;
 			}
@@ -351,6 +347,7 @@ void Mario::SetState(int state)
 
 void Mario::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
+	// - nx : allow Mario to get really close to objects
 	left = x;
 	top = y;
 
@@ -362,11 +359,13 @@ void Mario::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 		break;
 	case MARIO_BIG:
 		right = x + MARIO_BIG_WIDTH;
-		bottom = y + ((GetAction(DUCKING) ? MARIO_DUCKING_HEIGHT : MARIO_BIG_HEIGHT));
+		if (GetAction(DUCKING)) bottom = y + MARIO_DUCKING_HEIGHT;
+		else bottom = y + MARIO_BIG_HEIGHT;
 		break;
 	case MARIO_RACOON:
-		right = x + MARIO_RACOON_WIDTH;
-		bottom = y + ((GetAction(DUCKING) ? MARIO_DUCKING_HEIGHT : MARIO_RACOON_HEIGHT));
+		right = x + MARIO_BIG_WIDTH;
+		if (GetAction(DUCKING)) bottom = y + MARIO_DUCKING_HEIGHT;
+		else bottom = y + MARIO_RACOON_HEIGHT;
 		break;
 	default:
 		right = x;
@@ -426,7 +425,6 @@ void Mario::Movement()
 			else
 			{
 				SetAction(DONE_JUMPING);
-
 				// Prevent super jumping repeatedly, 
 				// just like the original game
 				UnsetMovement(UP);
@@ -463,8 +461,6 @@ void Mario::Movement()
 						SetAction(PEAKING);
 					};
 				}
-				// Set descending action after jumping finished
-				SetAction(DESCENDING);
 			}
 		}
 
@@ -473,6 +469,7 @@ void Mario::Movement()
 
 	if (GetMovement(DOWN))
 	{
+		// Slow down when ducking
 		// Check if both movement[LEFT] and movement[LEFT] equal 0
 		if (state != MARIO_SMALL && !AS_SHORT(movement)) {
 			if (ax < 0) {
@@ -484,39 +481,27 @@ void Mario::Movement()
 				ax += powerMeter * MARIO_POWER_INERTIA;
 			}
 			// Teleport to ducking position for accurate hitboxes
-			if (!GetAction(DUCKING))
+			// Prevent ducking mid-air
+			if (!GetAction(DUCKING) && !GetAction(JUMPING) && vy <= MARIO_DEFAULT_VELOCITY_THRESHOLD)
 			{
-				if (state == MARIO_BIG) y += BIG_BBOX_DUCKING_DIFF;
-				else if (state == MARIO_RACOON) y += RACOON_BBOX_DUCKING_DIFF;
+				ShiftPosition(DUCKING, SHIFT);
 				SetAction(DUCKING);
 			}
 		}
 		// Disable ducking when moving
 		if (AS_SHORT(movement))
 		{
-			if (GetAction(DUCKING))
-			{
-				if (state == MARIO_BIG) y -= BIG_BBOX_DUCKING_DIFF;
-				else if (state == MARIO_RACOON) y -= RACOON_BBOX_DUCKING_DIFF;
-			}
+			if (GetAction(DUCKING)) ShiftPosition(DUCKING, UNSHIFT);
 			UnsetAction(DUCKING);
 		}
 	}
 	else if (GetAction(DUCKING)) {
 		// Teleport back to normal position
-		if (state == MARIO_BIG) y -= BIG_BBOX_DUCKING_DIFF;
-		else if (state == MARIO_RACOON) y -= RACOON_BBOX_DUCKING_DIFF;
+		ShiftPosition(DUCKING, UNSHIFT);
 		UnsetAction(DUCKING);
 	}
 
-	if (state == MARIO_RACOON)
-	{
-		if (GetAction(DESCENDING))
-		{
-			// Set vy to a constant when falling down
-			if (vy > 0) vy = MARIO_DESCENDING_SPEED;
-		};
-	}
+	
 
 	// Mario Inertia
 	// Disabled when moving left to prevent it slow down left movement
@@ -539,6 +524,41 @@ void Mario::Movement()
 	// ax = 1 or ax = -1 are max acceleration allowed
 	else if (ax > 1) ax = 1;
 	else if (ax < -1) ax = -1;
+}
+
+void Mario::Action()
+{
+	switch (state)
+	{
+	case MARIO_SMALL_TO_BIG:
+		if (GetTickCount64() - animationTimer >= SMALL_TO_BIG_DURATION) {
+			Game::GetInstance()->Unpause();
+			SetState(MARIO_BIG);
+		}
+		break;
+
+	case MARIO_BIG_TO_SMALL:
+		if (GetTickCount64() - animationTimer >= BIG_TO_SMALL_DURATION) {
+			Game::GetInstance()->Unpause();
+			SetState(MARIO_SMALL);
+			y += MARIO_BIG_HEIGHT - MARIO_SMALL_HEIGHT + 0.1f;
+		}
+		break;
+	case MARIO_RACOON:
+		if (GetAction(DESCENDING))
+		{
+			// Set vy to a constant when falling down
+			if (vy > 0) vy = MARIO_DESCENDING_SPEED;
+		};
+
+		if (GetAction(SPINNING)) {
+			tail->Enable();
+			tail->SetDirection(nx);
+			tail->SetPosition(x, y);
+		}
+		else tail->Disable();
+		break;
+	}
 }
 
 void Mario::ManagePowerDuration()
@@ -584,5 +604,14 @@ void Mario::ManagePowerDuration()
 			powerMeter--;
 			lastTimeDecreasePowerMaxHeight = powerTimer;
 		}
+	}
+}
+
+void Mario::ShiftPosition(int action, int sign)
+{
+	if (action == DUCKING)
+	{
+		if (state == MARIO_BIG) y += BIG_BBOX_DUCKING_DIFF * sign;
+		else if (state == MARIO_RACOON) y += RACOON_BBOX_DUCKING_DIFF * sign;
 	}
 }

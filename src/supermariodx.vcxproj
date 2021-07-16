@@ -39,6 +39,7 @@
     <ClCompile Include="Platform.cpp" />
     <ClCompile Include="Point.cpp" />
     <ClCompile Include="Stats.cpp" />
+    <ClCompile Include="Tail.cpp" />
     <ClCompile Include="TileMap.cpp" />
     <ClCompile Include="Mario.cpp" />
     <ClCompile Include="Portal.cpp" />
@@ -76,6 +77,7 @@
     <ClInclude Include="Sprites.h" />
     <ClInclude Include="Stats.h" />
     <ClInclude Include="Strings.h" />
+    <ClInclude Include="Tail.h" />
     <ClInclude Include="Textures.h" />
     <ClInclude Include="TileMap.h" />
     <ClInclude Include="Types.h" />

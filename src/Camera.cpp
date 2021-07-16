@@ -43,7 +43,7 @@ void Camera::Update()
 {
 	float cx, cy;
 	Mario* mario = ((ScenePlayer*)Game::GetInstance()->GetCurrentScene())->GetPlayer();
-
+	if (mario == NULL) return;
 	mario->GetPosition(cx, cy);
 	cx -= (width + 1) / 2; cy -= (height + 1) / 2;
 	if (cx < viewLeft) cx = 0;
@@ -55,5 +55,5 @@ void Camera::Update()
 	else cy = viewBottom;
 	if (cy < viewTop) cy = 0;
 
-	SetPosition(ceil(cx) + Game::GetInstance()->DEBUG_X, ceil(cy) + Game::GetInstance()->DEBUG_Y);
+	SetPosition(ceil(cx), ceil(cy));
 }

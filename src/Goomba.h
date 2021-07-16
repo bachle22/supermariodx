@@ -11,13 +11,13 @@ enum GoombaBBox
 	GOOMBA_BBOX_HEIGHT_DIE = 9,
 };
 
-enum GoobaState
+enum GoombaState
 {
 	GOOMBA_STATE_WALKING = 0,
 	GOOMBA_STATE_DIE = 1
 };
 
-enum GoobaAnimation
+enum GoombaAnimation
 {
 	GOOMBA_ANI_WALKING = 0,
 	GOOMBA_ANI_DIE = 1
