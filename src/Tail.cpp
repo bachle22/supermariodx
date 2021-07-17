@@ -17,65 +17,42 @@ void Tail::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
 	left = x;
 	top = y;
-	right = x + MARIO_BIG_WIDTH;
-	bottom = top + TILE_HEIGHT;
+	right = x + TILE_WIDTH;
+	bottom = y + TAIL_HEIGHT;
 }
 
 void Tail::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 {
 	GameObject::Update(dt, coObjects);
 
-	// Add velocity to make collision detection work
-	vx = TAIL_VELOCITY * nx;
-
-	std::vector<LPCOLLISIONEVENT> coEvents;
-	std::vector<LPCOLLISIONEVENT> coEventsResult;
-
-	coEvents.clear();
-
-	CalculatePotentialCollisions(coObjects, coEvents);
-	if (coEvents.size() != 0)
+	for (size_t i = 0; i < coObjects->size(); i++)
 	{
-		float min_tx, min_ty, nx = 0, ny;
-		float rdx = 0;
-		float rdy = 0;
-
-		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
-
-		x += min_tx * dx + nx * PUSH_BACK;
-		y += min_ty * dy + ny * PUSH_BACK;
-
-		if (ny != 0) vy = 0;
-
-		for (UINT i = 0; i < coEventsResult.size(); i++)
+		LPGAMEOBJECT obj = CheckCollision(coObjects->at(i));
+		if (obj != NULL)
 		{
-			LPCOLLISIONEVENT e = coEventsResult[i];
+			if (dynamic_cast<Brick*>(obj))
 			{
-				if (dynamic_cast<Brick*>(e->obj))
-				{
-					Brick* b = dynamic_cast<Brick*>(e->obj);
-					b->Hit();
-				}
-				else if (dynamic_cast<Goomba*>(e->obj))
-				{
-					Goomba* g = dynamic_cast<Goomba*>(e->obj);
-					g->Hit();
-					Hit* hit = new Hit(x - nx * TAIL_HIT_OFFSET_X, y);
-					LPSCENE scene = Game::GetInstance()->GetCurrentScene();
-					((ScenePlayer*)scene)->AddObject(hit);
-				}
+				Brick* b = dynamic_cast<Brick*>(obj);
+				b->Hit();
+			}
+			else if (dynamic_cast<Goomba*>(obj))
+			{
+				Goomba* g = dynamic_cast<Goomba*>(obj);
+				if(!g->Hit()) return;
+				Hit* hit = new Hit(x + nx * TAIL_HIT_OFFSET_X, y - TAIL_HEIGHT);
+				LPSCENE scene = Game::GetInstance()->GetCurrentScene();
+				((ScenePlayer*)scene)->AddObject(hit);
 			}
 		}
-
 	}
-
-	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 
 }
 
 void Tail::SetPosition(float x, float y)
 {
-	GameObject::SetPosition(x + nx * TAIL_OFFSET_X, y + TAIL_OFFSET_Y);
+	x += nx > 0 ? TAIL_OFFSET_RIGHT : -TAIL_OFFSET_LEFT;
+	y += TAIL_OFFSET_Y;
+	GameObject::SetPosition(x , y);
 }
 
 void Tail::Render()

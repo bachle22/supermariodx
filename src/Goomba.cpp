@@ -55,7 +55,7 @@ void Goomba::Render()
 	}
 
 	animation_set->at(ani)->Render(nx, x, y);
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void Goomba::SetState(int state)
@@ -80,7 +80,12 @@ void Goomba::SetState(int state)
 	}
 }
 
-void Goomba::Hit()
+bool Goomba::Hit()
 {
-	SetState(GOOMBA_STATE_DIE);
+	if (state != GOOMBA_STATE_DIE)
+	{
+		SetState(GOOMBA_STATE_DIE);
+		return true;
+	}
+	else return false;
 }

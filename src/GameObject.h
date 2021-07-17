@@ -60,6 +60,7 @@ public:
 	void SetAnimationSet(LPANIMATION_SET ani_set) { animation_set = ani_set; }
 
 	LPCOLLISIONEVENT SweptAABBEx(LPGAMEOBJECT coO);
+	LPGAMEOBJECT CheckCollision(LPGAMEOBJECT coO);
 	void CalculatePotentialCollisions(std::vector<LPGAMEOBJECT>* coObjects, std::vector<LPCOLLISIONEVENT>& coEvents);
 	void FilterCollision(
 		std::vector<LPCOLLISIONEVENT>& coEvents,

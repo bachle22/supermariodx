@@ -14,7 +14,8 @@ enum GoombaBBox
 enum GoombaState
 {
 	GOOMBA_STATE_WALKING = 0,
-	GOOMBA_STATE_DIE = 1
+	GOOMBA_STATE_DIE = 1,
+	GOOMBA_STATE_HIT = 1
 };
 
 enum GoombaAnimation
@@ -35,5 +36,5 @@ class Goomba : public GameObject
 public:
 	Goomba();
 	virtual void SetState(int state);
-	void Hit();
+	bool Hit();
 };

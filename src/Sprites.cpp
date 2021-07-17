@@ -26,15 +26,15 @@ Sprites* Sprites::GetInstance()
 	return __instance;
 }
 
-void Sprite::Draw(int nx, float x, float y, int alpha, D3DXVECTOR2 translation)
+void Sprite::Draw(int nx, float x, float y, int alpha, D3DXVECTOR2 translation, int rotation)
 {
 	Game* game = Game::GetInstance();
 	// Special case: Mario Spinning
 	if (id == MARIO_SPINNING_TAIL) translation.x += nx * MARIO_RACOON_SPINNING_X;
 	if ((id == MARIO_SPINNING_FRONT || id == MARIO_SPINNING_BACK) && nx > 0) translation.x += 9;
-
-	game->Draw(nx, x, y, texture, left, top, right, bottom, alpha, translation);
+	game->Draw(nx, x, y, texture, left, top, right, bottom, alpha, translation, rotation);
 }
+
 
 void Sprite::Draw(int nx, float x, float y, int alpha)
 {

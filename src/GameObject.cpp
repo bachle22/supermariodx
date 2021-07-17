@@ -10,6 +10,7 @@
 #include "Textures.h"
 #include "Collision.h"
 #include "Definition.h"
+#include "Debug.h"
 
 
 GameObject::GameObject()
@@ -64,7 +65,6 @@ void GameObject::CalculatePotentialCollisions(
 	for (size_t i = 0; i < coObjects->size(); i++)
 	{
 		LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
-
 		if (e->t > 0 && e->t <= 1.0f)
 			coEvents.push_back(e);
 		else
@@ -141,4 +141,21 @@ LPCOLLISIONEVENT GameObject::SweptAABBEx(LPGAMEOBJECT coO)
 
 	CollisionEvent* e = new CollisionEvent(t, nx, ny, rdx, rdy, coO);
 	return e;
+}
+
+LPGAMEOBJECT GameObject::CheckCollision(LPGAMEOBJECT coO)
+{
+	float l1, t1, r1, b1;		// static object bbox
+	float l2, t2, r2, b2;		// moving object bbox
+
+	coO->GetBoundingBox(l1, t1, r1, b1);
+	GetBoundingBox(l2, t2, r2, b2);
+
+	float left = l2 - r1;
+	float top = b2 - t1;
+	float right = r2 - l1;
+	float bottom = t2 - b1;
+
+	if (!(left > 0 || right < 0 || top < 0 || bottom > 0)) return coO;
+	else return NULL;
 }

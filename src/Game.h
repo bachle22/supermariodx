@@ -10,6 +10,17 @@
 #include "Input.h"
 #include "Scene.h"
 
+enum RenderOptions
+{
+	NOFLIP = -1,
+	FLIP = 1,
+	OPAQUED = 255,
+	TRANS = 0,
+
+	NOROTATE = 0,
+	ROTATE180 = 1,
+};
+
 class Game
 {
 	static Game* __instance;
@@ -53,6 +64,10 @@ public:
 		LPDIRECT3DTEXTURE9 texture, 
 		int left, int top, int right, int bottom, 
 		int alpha, D3DXVECTOR2 translation);
+	void Draw(int nx, float x, float y,
+		LPDIRECT3DTEXTURE9 texture,
+		int left, int top, int right, int bottom,
+		int alpha, D3DXVECTOR2 translation, int rotation);
 
 	int IsKeyDown(int KeyCode);
 	void ProcessKeyboard();

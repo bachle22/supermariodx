@@ -1,4 +1,5 @@
 #include <fstream>
+#include <d3dx9math.h>
 
 #include "Game.h"
 #include "Camera.h"
@@ -67,17 +68,28 @@ void Game::Draw(int nx, float x, float y, LPDIRECT3DTEXTURE9 texture, int left, 
 {
 	Draw(nx, x, y, texture,
 		left, top, right, bottom,
-		alpha, D3DXVECTOR2(0, 0));
+		alpha, D3DXVECTOR2(0, 0), NOROTATE);
 }
 
 void Game::Draw(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom)
 {
 	Draw(NOFLIP, x, y, texture,
 		left, top, right, bottom,
-		OPAQUED, D3DXVECTOR2(0, 0));
+		OPAQUED, D3DXVECTOR2(0, 0), NOROTATE);
 }
 
 void Game::Draw(int nx, float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom, int alpha, D3DXVECTOR2 translation)
+{
+	Draw(nx, x, y, texture,
+		left, top, right, bottom,
+		OPAQUED, translation, NOROTATE);
+}
+
+void Game::Draw(
+	int nx, float x, float y, 
+	LPDIRECT3DTEXTURE9 texture, 
+	int left, int top, int right, int bottom, 
+	int alpha, D3DXVECTOR2 translation, int rotation)
 {
 	D3DXVECTOR3 p(ceil(x - Camera::GetInstance()->GetPosition().x),
 		ceil(y - Camera::GetInstance()->GetPosition().y), 0);
@@ -86,6 +98,7 @@ void Game::Draw(int nx, float x, float y, LPDIRECT3DTEXTURE9 texture, int left, 
 	r.top = top;
 	r.right = right;
 	r.bottom = bottom;
+	FLOAT rotate = rotation == ROTATE180 ? D3DX_PI / 2 : 0.0f;
 
 	// Flip sprite
 	D3DXMATRIX oldTransform;
@@ -96,7 +109,7 @@ void Game::Draw(int nx, float x, float y, LPDIRECT3DTEXTURE9 texture, int left, 
 	D3DXVECTOR2 center = D3DXVECTOR2(p.x + (right - left) / 2, p.y + (bottom - top) / 2);
 	D3DXVECTOR2 flip = D3DXVECTOR2(nx > 0 ? -1.0f : 1.0f, 1.0f);
 
-	D3DXMatrixTransformation2D(&newTransform, &center, 0.0f, &flip, NULL, 0.0f, &translation);
+	D3DXMatrixTransformation2D(&newTransform, &center, rotate, &flip, NULL, 0.0f, &translation);
 
 	spriteHandler->SetTransform(&newTransform);
 	spriteHandler->Draw(texture, &r, NULL, &p, D3DCOLOR_ARGB(alpha, 255, 255, 255));

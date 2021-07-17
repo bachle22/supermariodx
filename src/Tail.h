@@ -2,9 +2,11 @@
 #include "GameObject.h"
 #include "Hit.h"
 
-constexpr float TAIL_OFFSET_X = 2;
-constexpr float TAIL_OFFSET_Y = 12;
+constexpr float TAIL_OFFSET_LEFT = 6;
+constexpr float TAIL_OFFSET_RIGHT = 3;
+constexpr float TAIL_OFFSET_Y = 18;
 constexpr float TAIL_VELOCITY = 0.1f;
+constexpr int TAIL_HEIGHT = 6;
 
 class Tail : public GameObject
 {
