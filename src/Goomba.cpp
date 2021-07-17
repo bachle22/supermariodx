@@ -79,3 +79,8 @@ void Goomba::SetState(int state)
 		vx = -GOOMBA_WALKING_SPEED;
 	}
 }
+
+void Goomba::Hit()
+{
+	SetState(GOOMBA_STATE_DIE);
+}

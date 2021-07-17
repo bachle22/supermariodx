@@ -134,6 +134,9 @@
     <ClCompile Include="Tail.cpp">
       <Filter>Objects\Player</Filter>
     </ClCompile>
+    <ClCompile Include="Hit.cpp">
+      <Filter>Objects\Effects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Debug.h">
@@ -228,6 +231,9 @@
     </ClInclude>
     <ClInclude Include="Tail.h">
       <Filter>Objects\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Hit.h">
+      <Filter>Objects\Effects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

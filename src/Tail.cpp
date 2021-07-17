@@ -3,12 +3,14 @@
 #include "ScenePlayer.h"
 #include "Point.h"
 #include "Brick.h"
+#include "Goomba.h"
 #include "Debug.h"
 
 Tail::Tail()
 {
 	timer = 0;
 	Disable();
+	
 }
 
 void Tail::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -53,6 +55,14 @@ void Tail::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 				{
 					Brick* b = dynamic_cast<Brick*>(e->obj);
 					b->Hit();
+				}
+				else if (dynamic_cast<Goomba*>(e->obj))
+				{
+					Goomba* g = dynamic_cast<Goomba*>(e->obj);
+					g->Hit();
+					Hit* hit = new Hit(x - nx * TAIL_HIT_OFFSET_X, y);
+					LPSCENE scene = Game::GetInstance()->GetCurrentScene();
+					((ScenePlayer*)scene)->AddObject(hit);
 				}
 			}
 		}

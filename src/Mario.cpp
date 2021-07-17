@@ -115,6 +115,10 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 
 			if (dynamic_cast<Goomba*>(e->obj)) // if e->obj is Goomba 
 			{
+				vx = entry_vx;
+				x -= min_tx * dx + nx * PUSH_BACK;
+				x += dx;
+
 				Goomba* goomba = dynamic_cast<Goomba*>(e->obj);
 
 				// jump on top >> kill Goomba and deflect a bit 
@@ -182,9 +186,9 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 
 			else if (dynamic_cast<Mushroom*>(e->obj))
 			{
-				/*vx = entry_vx;
+				vx = entry_vx;
 				x -= min_tx * dx + nx * PUSH_BACK;
-				x += dx;*/
+				x += dx;
 
 				if (e->ny == 1)
 				{

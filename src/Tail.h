@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "Hit.h"
 
 constexpr float TAIL_OFFSET_X = 2;
 constexpr float TAIL_OFFSET_Y = 12;
