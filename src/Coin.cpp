@@ -31,7 +31,7 @@ void Coin::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 {
 	GameObject::Update(dt, coObjects);
 
-	if (vy != 0) vy += COIN_GRAVITY * dt;
+	if (vy != 0) vy += GLOBAL_GRAVITY * dt;
 	y += dy;
 
 

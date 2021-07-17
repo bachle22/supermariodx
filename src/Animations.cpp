@@ -39,9 +39,16 @@ void Animation::Render(int nx, float x, float y, int alpha, D3DXVECTOR2 translat
 	frames[currentFrame]->GetSprite()->Draw(nx, x, y, alpha, translation, rotation);
 }
 
-void Animation::Render(int nx, float x, float y, int alpha, int rotation)
+void Animation::RenderFirstFrame(float x, float y, int rotation)
 {
-	Render(nx, x, y, alpha, D3DXVECTOR2(0, 0), rotation);
+	ULONGLONG now = GetTickCount64();
+	if (currentFrame == -1)
+	{
+		currentFrame = 0;
+		lastFrameTime = now;
+	}
+	frames[currentFrame]->GetSprite()->Draw(FLIP, x, y, OPAQUED, D3DXVECTOR2(0, 0), rotation);
+
 }
 
 void Animation::Render(int nx, float x, float y, int alpha, D3DXVECTOR2 translation)

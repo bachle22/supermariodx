@@ -10,7 +10,6 @@ Tail::Tail()
 {
 	timer = 0;
 	Disable();
-	
 }
 
 void Tail::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -38,7 +37,9 @@ void Tail::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 			else if (dynamic_cast<Goomba*>(obj))
 			{
 				Goomba* g = dynamic_cast<Goomba*>(obj);
+				g->SetDirection(nx);
 				if(!g->Hit()) return;
+
 				Hit* hit = new Hit(x + nx * TAIL_HIT_OFFSET_X, y - TAIL_HEIGHT);
 				LPSCENE scene = Game::GetInstance()->GetCurrentScene();
 				((ScenePlayer*)scene)->AddObject(hit);
@@ -57,6 +58,7 @@ void Tail::SetPosition(float x, float y)
 
 void Tail::Render()
 {
-	RenderBoundingBox();
+	//RenderBoundingBox();
+	return;
 }
 

@@ -17,7 +17,9 @@ constexpr int OBJECT_TYPE_BLOCK = 5;
 constexpr int OBJECT_TYPE_PPLANT= 6;
 constexpr int OBJECT_TYPE_PORTAL = 50;
 
-constexpr float PUSH_BACK = 0.4f;
+constexpr float PUSH_BACK = 0.6f;
+constexpr float GLOBAL_GRAVITY = 0.001f;
+constexpr float GLOBAL_TERMINAL_VELOCITY = .25f;
 
 
 class GameObject
@@ -50,6 +52,7 @@ public:
 	void SetPosition(float x, float y) { this->x = x, this->y = y; }
 	void SetSpeed(float vx, float vy) { this->vx = vx, this->vy = vy; }
 	virtual void SetState(int state) { this->state = state; }
+	void SetDirection(int nx) { this->nx = nx; }
 
 	void GetPosition(float& x, float& y) { x = this->x; y = this->y; }
 	void GetSpeed(float& vx, float& vy) { vx = this->vx; vy = this->vy; }

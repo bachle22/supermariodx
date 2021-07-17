@@ -29,9 +29,9 @@ public:
 	void Add(int spriteId, ULONGLONG time = 0);
 	void Render(int nx, float x, float y, int alpha, D3DXVECTOR2 translation, int rotation);
 	void Render(int nx, float x, float y, int alpha, D3DXVECTOR2 translation);
-	void Render(int nx, float x, float y, int alpha, int rotation);
 	void Render(int nx, float x, float y, int alpha = 255);
 	void Render(float x, float y, int alpha = 255);
+	void RenderFirstFrame(float x, float y, int rotation);
 };
 
 typedef Animation* LPANIMATION;

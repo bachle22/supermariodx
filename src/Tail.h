@@ -19,5 +19,4 @@ class Tail : public GameObject
 public:
 	Tail();
 	virtual void SetPosition(float x, float y);
-	void SetDirection(int nx) { this->nx = nx; }
 };

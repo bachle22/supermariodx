@@ -395,9 +395,9 @@ void Mario::Movement()
 		(MARIO_WALKING_SPEED_SMALL + powerMeter * MARIO_POWER_ACCELERATION) * ax :
 		(MARIO_WALKING_SPEED + powerMeter * MARIO_POWER_ACCELERATION) * ax;
 	// Simple fall down
-	vy += MARIO_GRAVITY * dt;
+	vy += GLOBAL_GRAVITY * dt;
 	// Max falling speed
-	if (vy > MARIO_MAX_TERMINAL_VELOCITY) vy = MARIO_MAX_TERMINAL_VELOCITY;
+	if (vy > GLOBAL_TERMINAL_VELOCITY) vy = GLOBAL_TERMINAL_VELOCITY;
 
 
 	if (GetMovement(LEFT))

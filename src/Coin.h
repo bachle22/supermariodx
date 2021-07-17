@@ -2,7 +2,6 @@
 
 #include "GameObject.h"
 
-constexpr float COIN_GRAVITY = 0.001f;
 constexpr float COIN_VELOCITY = -.35f;
 constexpr float COIN_FALLING_FLOOR = 20;
 constexpr int COIN_ANI_SET_ID = 70;
