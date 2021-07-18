@@ -140,6 +140,9 @@
     <ClCompile Include="Plant.cpp">
       <Filter>Objects\NPCs</Filter>
     </ClCompile>
+    <ClCompile Include="Projectile.cpp">
+      <Filter>Objects\Items</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Debug.h">
@@ -240,6 +243,9 @@
     </ClInclude>
     <ClInclude Include="Plant.h">
       <Filter>Objects\NPCs</Filter>
+    </ClInclude>
+    <ClInclude Include="Projectile.h">
+      <Filter>Objects\Items</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

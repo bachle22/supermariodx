@@ -40,6 +40,7 @@
     <ClCompile Include="Plant.cpp" />
     <ClCompile Include="Platform.cpp" />
     <ClCompile Include="Point.cpp" />
+    <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="Stats.cpp" />
     <ClCompile Include="Tail.cpp" />
     <ClCompile Include="TileMap.cpp" />
@@ -75,6 +76,7 @@
     <ClInclude Include="Platform.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="Portal.h" />
+    <ClInclude Include="Projectile.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="ScenePlayer.h" />

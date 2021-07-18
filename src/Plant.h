@@ -7,6 +7,15 @@ constexpr int PLANT_BBOX_WIDTH = 16;
 constexpr int PLANT_BBOX_HEIGHT = 32;
 constexpr int PLANT_RED_BBOX_HEIGHT = 32;
 
+constexpr int PLANT_PROJECTILE_OFFSET_XX = 12;
+constexpr int PLANT_PROJECTILE_OFFSET_XY = 5;
+constexpr int PLANT_PROJECTILE_OFFSET_YX = 6;
+constexpr int PLANT_PROJECTILE_OFFSET_YY = 2;
+
+constexpr int PLANT_RED_HIDING_INTERVAL = 1500;
+constexpr int PLANT_RED_PROJECTILE_DELAY = 1000;
+constexpr int PLANT_RED_ATTACKING_INTERVAL = 1500;
+
 enum PlantType
 {
 	PLANT_GREEN_BITER = 0,
@@ -33,13 +42,13 @@ enum PlantAnimation
 	PLANT_RED_ANI_BITING_DOWN = 4,
 };
 
-
 class Plant : public GameObject
 {
 	int type;
 	int ny;
 	int height;
 	float entryY;
+	bool isProjectileShooted;
 	ULONGLONG timer;
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);

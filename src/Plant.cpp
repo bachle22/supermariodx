@@ -1,8 +1,12 @@
+#include <math.h> 
+
 #include "Plant.h"
 #include "Game.h"
 #include "ScenePlayer.h"
 #include "Point.h"
 #include "Platform.h"
+#include "Projectile.h"
+#include "Debug.h"
 
 Plant::Plant(int type)
 {
@@ -10,6 +14,7 @@ Plant::Plant(int type)
 	this->type = type;
 	SetState(PLANT_STATE_HIDING);
 	if (type == PLANT_RED_SHOOTER) height = PLANT_RED_BBOX_HEIGHT;
+
 }
 
 void Plant::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -28,19 +33,80 @@ void Plant::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 
 	timer += dt;
 
+	float marioX, marioY;
+	LPSCENE scene = Game::GetInstance()->GetCurrentScene();
+	((ScenePlayer*)scene)->GetPlayer()->GetPosition(marioX, marioY);
+	if (marioX < x) nx = -1;
+	else nx = 1;
+	if (marioY < y) ny = -1;
+	else ny = 1;
+
 	switch (type)
 	{
 	case PLANT_RED_SHOOTER:
 	{
-		if (timer >= 1500 && state == PLANT_STATE_HIDING)
+		if (state == PLANT_STATE_HIDING)
 		{
-			SetState(PLANT_STATE_EXPANDING);
-			timer = 0;
+			if (timer >= PLANT_RED_HIDING_INTERVAL)
+			{
+				SetState(PLANT_STATE_EXPANDING);
+				timer = 0;
+			}
 		}
-		if (timer >= 1500 && state == PLANT_STATE_ATTACKING)
+		if (state == PLANT_STATE_ATTACKING)
 		{
-			SetState(PLANT_STATE_COLLAPSING);
-			timer = 0;
+			if (!isProjectileShooted)
+			{
+				if (timer >= PLANT_RED_PROJECTILE_DELAY)
+				{
+					int direction;
+					// The principal value of the arc tangent of y/x, expressed in PI radian.
+					float piRad = atan2f(marioY - y, marioX - x) / -D3DX_PI;
+
+					// Find direction to shoot projectile
+					if (piRad >= 0)
+					{
+						if (piRad >= 0 && piRad < PROJECTILE_22DEG)
+							direction = UPPER_RIGHT;
+						if (piRad >= PROJECTILE_22DEG && piRad < PROJECTILE_90DEG)
+							direction = TOP_RIGHT;
+						if (piRad >= PROJECTILE_90DEG && piRad < PROJECTILE_157DEG)
+							direction = TOP_LEFT;
+						if (piRad >= PROJECTILE_157DEG)
+							direction = UPPER_LEFT;
+					}
+					else
+					{
+						if (piRad >= -PROJECTILE_22DEG && piRad < 0)
+							direction = LOWER_RIGHT;
+						if (piRad >= -PROJECTILE_90DEG && piRad < -PROJECTILE_22DEG)
+							direction = BOTTOM_RIGHT;
+						if (piRad >= -PROJECTILE_157DEG && piRad < -PROJECTILE_90DEG)
+							direction = BOTTOM_LEFT;
+						if (piRad < -PROJECTILE_157DEG)
+							direction = LOWER_LEFT;
+					}
+
+
+					float projectileX = nx > 0 ?
+						x + PLANT_PROJECTILE_OFFSET_XX :
+						x - PLANT_PROJECTILE_OFFSET_XY;
+					float projectileY = ny > 0 ? 
+						y + PLANT_PROJECTILE_OFFSET_YX :
+						y - PLANT_PROJECTILE_OFFSET_YY;
+					Projectile* projectile = new Projectile(projectileX, projectileY, direction);
+					LPSCENE scene = Game::GetInstance()->GetCurrentScene();
+					((ScenePlayer*)scene)->AddObject(projectile);
+					isProjectileShooted = true;
+				}
+			}
+
+			if (timer >= PLANT_RED_ATTACKING_INTERVAL)
+			{
+				SetState(PLANT_STATE_COLLAPSING);
+				timer = 0;
+			}
+
 		}
 		break;
 	}
@@ -60,13 +126,7 @@ void Plant::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 		timer = 0;
 	}
 
-	float marioX, marioY;
-	LPSCENE scene = Game::GetInstance()->GetCurrentScene();
-	((ScenePlayer*)scene)->GetPlayer()->GetPosition(marioX, marioY);
-	if (marioX < x) nx = -1;
-	else nx = 1;
-	if (marioY < y) ny = -1;
-	else ny = 1;
+
 }
 
 void Plant::Render()
@@ -82,7 +142,7 @@ void Plant::Render()
 		if (state == PLANT_STATE_ATTACKING)
 		{
 			if (ny > 0)
-			ani = PLANT_RED_ANI_SHOOTING_UP;
+				ani = PLANT_RED_ANI_SHOOTING_UP;
 			else ani = PLANT_RED_ANI_SHOOTING_DOWN;
 		}
 		break;
@@ -91,8 +151,8 @@ void Plant::Render()
 		ani = 0;
 	}
 
-	animation_set->at(ani)->Render(nx, x, y, PLANT_BBOX_WIDTH, entryY + PLANT_RED_BBOX_HEIGHT - y);
-	RenderBoundingBox();
+	animation_set->at(ani)->Render(nx, x, y, PLANT_BBOX_WIDTH, (int)(entryY + height - y));
+	//RenderBoundingBox();
 }
 
 void Plant::SetState(int state)
@@ -105,6 +165,8 @@ void Plant::SetState(int state)
 		break;
 	case PLANT_STATE_COLLAPSING:
 		vy += 0.045f;
+	case PLANT_STATE_ATTACKING:
+		isProjectileShooted = false;
 		break;
 	}
 }
