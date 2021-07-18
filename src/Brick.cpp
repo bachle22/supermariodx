@@ -6,15 +6,11 @@
 #include "Mario.h"
 #include "Debug.h"
 
-Brick::Brick(float x, float y, int type)
+Brick::Brick(int type)
 {
 	this->type = type;
 	isHit = false;
-	this->x = x;
-	this->y = y;
-	entryY = y;
 	SetState(BRICK_STATE_DEFAULT);
-
 }
 
 void Brick::Render()
@@ -22,7 +18,9 @@ void Brick::Render()
 	int ani = BRICK_ANI_DEFAULT;
 	if (state == BRICK_STATE_EMPTY) ani = BRICK_ANI_EMPTY;
 
-	animation_set->at(ani)->Render(NOFLIP, x, y);
+	// Keep the hitbox from moving to make collision detection work better
+	animation_set->at(ani)->Render(x, imitateY);
+
 }
 
 void Brick::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -37,8 +35,9 @@ void Brick::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 {
 	GameObject::Update(dt, coObjects);
 
-	if (vy != 0) vy += BRICK_GRAVITY * dt;
-	y += dy;
+	imitateY += dy;
+
+	if (vy != 0) vy += GLOBAL_GRAVITY * dt;
 
 	if (isHit && vy == 0 && state != BRICK_STATE_EMPTY)
 	{
@@ -48,10 +47,10 @@ void Brick::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 	}
 
 
-	if (y > entryY)
+	if (imitateY > entryY)
 	{
 		vy = 0;
-		y = entryY;
+		imitateY = entryY;
 		isHit = false;
 		// Make empty brick harder to hit
 		y -= BRICK_EMPTY_SHIFT;
@@ -63,7 +62,6 @@ void Brick::Hit()
 	if (state == BRICK_STATE_EMPTY) return;
 
 	isHit = true;
-	//SetState(BRICK_STATE_EMPTY);
 
 	switch (type)
 	{
@@ -92,4 +90,13 @@ void Brick::Hit()
 		break;
 		break;
 	}
+}
+
+void Brick::SetPosition(float x, float y)
+{
+	GameObject::SetPosition(x, y);
+	this->x = x;
+	this->y = y;
+	entryY = y;
+	imitateY = y;
 }

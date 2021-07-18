@@ -11,7 +11,10 @@ void Animation::Add(int spriteId, ULONGLONG time)
 	frames.push_back(frame);
 }
 
-void Animation::Render(int nx, float x, float y, int alpha, D3DXVECTOR2 translation, int rotation)
+void Animation::Render(
+	int nx, float x, float y,
+	int alpha, D3DXVECTOR2 translation, int rotation,
+	int clippingWidth, int clippingHeight)
 {
 	ULONGLONG now = GetTickCount64();
 	if (currentFrame == -1)
@@ -20,7 +23,10 @@ void Animation::Render(int nx, float x, float y, int alpha, D3DXVECTOR2 translat
 		lastFrameTime = now;
 	}
 	else if (frames[currentFrame]->GetTime() == 0) {
-		frames[currentFrame]->GetSprite()->Draw(nx, x, y, alpha, translation, rotation);
+		if (clippingWidth == NULL && clippingHeight == NULL)
+			frames[currentFrame]->GetSprite()->Draw(nx, x, y, alpha, translation, rotation);
+		else
+			frames[currentFrame]->GetSprite()->DrawClipped(nx, x, y, alpha, clippingWidth, clippingHeight);
 		return;
 	}
 	else
@@ -36,7 +42,10 @@ void Animation::Render(int nx, float x, float y, int alpha, D3DXVECTOR2 translat
 
 	}
 
-	frames[currentFrame]->GetSprite()->Draw(nx, x, y, alpha, translation, rotation);
+	if (clippingWidth == NULL && clippingHeight == NULL)
+		frames[currentFrame]->GetSprite()->Draw(nx, x, y, alpha, translation, rotation);
+	else
+		frames[currentFrame]->GetSprite()->DrawClipped(nx, x, y, alpha, clippingWidth, clippingHeight);
 }
 
 void Animation::RenderFirstFrame(float x, float y, int rotation)
@@ -64,6 +73,11 @@ void Animation::Render(int nx, float x, float y, int alpha)
 void Animation::Render(float x, float y, int alpha)
 {
 	Render(NOFLIP, x, y, alpha, D3DXVECTOR2(0, 0));
+}
+
+void Animation::Render(int nx, float x, float y, int clippingWidth, int clippingHeight)
+{
+	Render(nx, x, y, OPAQUED, D3DXVECTOR2(0, 0), NOROTATE, clippingWidth, clippingHeight);
 }
 
 Animations* Animations::__instance = NULL;

@@ -3,7 +3,6 @@
 #include "GameObject.h"
 #include "Coin.h"
 
-constexpr float BRICK_GRAVITY = 0.001f;
 constexpr float BRICK_ACCELERATION = -0.1f;
 constexpr float BRICK_EMPTY_SHIFT = 0.01f;
 constexpr int COIN_POSITION_OFFSET_X = 4;
@@ -36,13 +35,13 @@ class Brick : public GameObject
 	int type;
 	bool isHit;
 
-	float entryY;
+	float imitateY, entryY;
 
 public:
-	Brick(float x, float y, int type);
+	Brick(int type);
 	virtual void Render();
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects);
-
+	virtual void SetPosition(float x, float y);
 	void Hit();
 };

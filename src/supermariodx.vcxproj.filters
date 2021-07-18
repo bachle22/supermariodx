@@ -35,9 +35,6 @@
     <Filter Include="Objects\Effects">
       <UniqueIdentifier>{fe33e34f-5bb4-43d2-bdc3-a11a24f9577c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Objects\UI">
-      <UniqueIdentifier>{c185cf63-5a8d-40df-991f-de632b0dbcbf}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Misc">
       <UniqueIdentifier>{b3fc7f4f-fa8a-45a9-891a-f7b6d7665442}</UniqueIdentifier>
     </Filter>
@@ -46,6 +43,9 @@
     </Filter>
     <Filter Include="Objects\World">
       <UniqueIdentifier>{8ce35af2-89a0-43c2-a55b-6fc835ccd4be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\UI">
+      <UniqueIdentifier>{c185cf63-5a8d-40df-991f-de632b0dbcbf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -95,9 +95,6 @@
     <ClCompile Include="TileMap.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="HUD.cpp">
-      <Filter>Objects\UI</Filter>
-    </ClCompile>
     <ClCompile Include="Collision.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -136,6 +133,12 @@
     </ClCompile>
     <ClCompile Include="Hit.cpp">
       <Filter>Objects\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="HUD.cpp">
+      <Filter>Objects\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Plant.cpp">
+      <Filter>Objects\NPCs</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -193,9 +196,6 @@
     <ClInclude Include="Types.h">
       <Filter>Utilities\Types</Filter>
     </ClInclude>
-    <ClInclude Include="HUD.h">
-      <Filter>Objects\UI</Filter>
-    </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -234,6 +234,12 @@
     </ClInclude>
     <ClInclude Include="Hit.h">
       <Filter>Objects\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="HUD.h">
+      <Filter>Objects\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Plant.h">
+      <Filter>Objects\NPCs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

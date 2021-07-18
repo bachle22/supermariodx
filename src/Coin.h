@@ -6,12 +6,8 @@ constexpr float COIN_VELOCITY = -.35f;
 constexpr float COIN_FALLING_FLOOR = 20;
 constexpr int COIN_ANI_SET_ID = 70;
 
-
-enum CoinBBox
-{
-	COIN_BBOX_WIDTH = 14,
-	COIN_BBOX_HEIGH = 16
-};
+constexpr int COIN_BBOX_WIDTH = 14;
+constexpr int COIN_BBOX_HEIGH = 14;
 
 enum CoinType
 {

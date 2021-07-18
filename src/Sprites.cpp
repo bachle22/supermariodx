@@ -48,7 +48,7 @@ void Sprite::Draw(float x, float y)
 	game->Draw(x, y, texture, left, top, right, bottom);
 }
 
-void Sprite::DrawClippedSprite(int nx, float x, float y, int alpha, int width, int height)
+void Sprite::DrawClipped(int nx, float x, float y, int alpha, int width, int height)
 {
 	Game* game = Game::GetInstance();
 	game->Draw(nx, x, y, texture, left, top, left + width, top + height, alpha);

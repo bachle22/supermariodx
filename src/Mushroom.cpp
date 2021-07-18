@@ -105,7 +105,7 @@ void Mushroom::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 void Mushroom::Render()
 {
 	int clippingHeight = state == MUSHROOM_GROWING ? (int)(entryY - y) : TILE_HEIGHT;
-	sprite->DrawClippedSprite(nx, x, y, OPAQUED, TILE_WIDTH, clippingHeight);
+	sprite->DrawClipped(nx, x, y, OPAQUED, TILE_WIDTH, clippingHeight);
 }
 
 void Mushroom::SetState(int state)

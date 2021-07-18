@@ -300,8 +300,8 @@
 1	2096	400	42	5
 1	2112	400	42	5
 
-# PiranhaPlant
-#8	1816	398	0
+# Piranha Plant
+6	360	336	5	1
 
 # --- SCENE PORTAL ----
 # type	l	t	ani_set_id	r	b	scene_id

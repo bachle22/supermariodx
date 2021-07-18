@@ -73,7 +73,6 @@ void Goomba::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 				}
 			}
 		}
-
 	}
 
 	vy += GLOBAL_GRAVITY * dt;
@@ -122,7 +121,7 @@ void Goomba::SetState(int state)
 		break;
 	case GOOMBA_STATE_DIE:
 	{
-		y += GOOMBA_BBOX_HEIGHT - GOOMBA_BBOX_HEIGHT_DIE - 1;
+		y += GOOMBA_BBOX_HEIGHT - GOOMBA_BBOX_HEIGHT_DIE - 2;
 		vx = 0;
 		vy = 0;
 

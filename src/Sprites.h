@@ -20,7 +20,7 @@ public:
 	void Draw(int nx, float x, float y, int alpha, D3DXVECTOR2 translation, int rotation);
 	void Draw(int nx, float x, float y, int alpha);
 	void Draw(float x, float y);
-	void DrawClippedSprite(int nx, float x, float y, int alpha, int width, int height);
+	void DrawClipped(int nx, float x, float y, int alpha, int width, int height);
 };
 
 typedef Sprite* LPSPRITE;

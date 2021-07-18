@@ -91,11 +91,6 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 		if (nx != 0) vx = 0;
 		if (ny != 0) vy = 0;
 
-		// Stop when touching edge
-		if (min_ty == 1) {
-			//powerMeter = 0;
-		}
-
 		// Reset when touching the ground
 		if (ny == -1) {
 			UnsetAction(JUMPING);
@@ -207,6 +202,11 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 			{
 				Portal* p = dynamic_cast<Portal*>(e->obj);
 				Game::GetInstance()->SwitchScene(p->GetSceneId());
+			}
+
+			else
+			{
+				DebugOut(L"[INFO] Collided with an unspecified object!\n");
 			}
 		}
 	}
@@ -555,7 +555,7 @@ void Mario::Action()
 			if (vy > 0) vy = MARIO_DESCENDING_SPEED;
 		};
 
-		if (GetAction(SPINNING)) {
+		if (GetAction(SPINNING) && !GetAction(DUCKING)) {
 			tail->Enable();
 			tail->SetDirection(nx);
 			tail->SetPosition(x, y);

@@ -14,6 +14,7 @@
 #include "Koopa.h"
 #include "Platform.h"
 #include "Block.h"
+#include "Plant.h"
 
 ScenePlayer::ScenePlayer(int id, LPCWSTR filePath) : Scene(id, filePath)
 {
@@ -203,29 +204,40 @@ void ScenePlayer::_ParseSection_OBJECTS(std::string pathString)
 
 				DebugOut(L"[INFO] Player object created!\n");
 				break;
-			case OBJECT_TYPE_GOOMBA: obj = new Goomba(); break;
+			case OBJECT_TYPE_GOOMBA: 
+				obj = new Goomba(); 
+				break;
 			case OBJECT_TYPE_BRICK:
 			{
 				int type = atoi(tokens[4].c_str());
-				obj = new Brick(x, y, type);
+				obj = new Brick(type);
 				break;
 			}
-			case OBJECT_TYPE_PLATFORM: obj = new Platform(); break;
-			case OBJECT_TYPE_KOOPAS: obj = new Koopa(); break;
+			case OBJECT_TYPE_PLATFORM: 
+				obj = new Platform();
+				break;
+			case OBJECT_TYPE_KOOPAS: 
+				obj = new Koopa(); 
+				break;
 			case OBJECT_TYPE_PORTAL:
 			{
 				float r = strtof(tokens[4].c_str(), NULL);
 				float b = strtof(tokens[5].c_str(), NULL);
 				int scene_id = atoi(tokens[6].c_str());
 				obj = new Portal(x, y, r, b, scene_id);
+				break;
 			}
-			break;
-
 			case OBJECT_TYPE_BLOCK:
 			{
 				float w = strtof(tokens[3].c_str(), NULL);
 				float h = strtof(tokens[4].c_str(), NULL);
 				obj = new Block(w, h);
+				break;
+			}
+			case OBJECT_TYPE_PLANT:
+			{
+				int type = atoi(tokens[4].c_str());
+				obj = new Plant(type);
 				break;
 			}
 			default:
@@ -236,7 +248,7 @@ void ScenePlayer::_ParseSection_OBJECTS(std::string pathString)
 			// General object setup
 			obj->SetPosition(x, y);
 
-			if (object_type != OBJECT_TYPE_PLATFORM && 
+			if (object_type != OBJECT_TYPE_PLATFORM &&
 				object_type != OBJECT_TYPE_BLOCK)
 			{
 				int ani_set_id = atoi(tokens[3].c_str());
@@ -244,6 +256,7 @@ void ScenePlayer::_ParseSection_OBJECTS(std::string pathString)
 
 				obj->SetAnimationSet(ani_set);
 			}
+
 			objects.push_back(obj);
 
 		}
@@ -466,6 +479,9 @@ void ScenePlayerInputHandler::OnKeyDown(int KeyCode)
 		break;
 	case DIK_F6:
 		mario->SetPosition(2500, 300);
+		break;
+	case DIK_F1:
+		mario->SetPosition(320, 380);
 		break;
 	case DIK_F2:
 		mario->SetPosition(700, 370);

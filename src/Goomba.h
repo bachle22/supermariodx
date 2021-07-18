@@ -4,12 +4,9 @@
 constexpr float GOOMBA_WALKING_SPEED = 0.03f;
 constexpr int GOOMBA_REMOVAL_DELAY = 300;
 
-enum GoombaBBox
-{
-	GOOMBA_BBOX_WIDTH = 16,
-	GOOMBA_BBOX_HEIGHT = 15,
-	GOOMBA_BBOX_HEIGHT_DIE = 9,
-};
+constexpr int GOOMBA_BBOX_WIDTH = 16;
+constexpr int GOOMBA_BBOX_HEIGHT = 15;
+constexpr int GOOMBA_BBOX_HEIGHT_DIE = 9;
 
 enum GoombaState
 {
