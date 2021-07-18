@@ -23,7 +23,7 @@ void Mushroom::GetBoundingBox(float& left, float& top, float& right, float& bott
 {
 	left = x;
 	top = y;
-	right = x + TILE_WIDTH;
+	right = x + MUSHROOM_WIDTH;
 	bottom = y + TILE_HEIGHT;
 }
 
@@ -100,12 +100,15 @@ void Mushroom::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 		vx = nx * MUSHROOM_MOVING_SPEED;
 		vy += MUSHROOM_GRAVITY * dt;
 	}
+	
+	if (vy >= GLOBAL_TERMINAL_VELOCITY) vy = GLOBAL_TERMINAL_VELOCITY;
 }
 
 void Mushroom::Render()
 {
+	RenderBoundingBox();
 	int clippingHeight = state == MUSHROOM_GROWING ? (int)(entryY - y) : TILE_HEIGHT;
-	sprite->DrawClipped(nx, x, y, OPAQUED, TILE_WIDTH, clippingHeight);
+	sprite->Draw(nx, x, y, VISIBLE, D3DXVECTOR2(-1, 0), TILE_WIDTH, clippingHeight);
 }
 
 void Mushroom::SetState(int state)

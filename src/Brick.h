@@ -7,6 +7,7 @@ constexpr float BRICK_ACCELERATION = -0.1f;
 constexpr float BRICK_EMPTY_SHIFT = 0.01f;
 constexpr int COIN_POSITION_OFFSET_X = 4;
 constexpr int COIN_POSITION_OFFSET_Y = 2;
+constexpr int MUSHROOM_OFFSET_X = 1;
 
 enum BrickType
 {

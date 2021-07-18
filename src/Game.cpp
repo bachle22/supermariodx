@@ -75,14 +75,14 @@ void Game::Draw(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top,
 {
 	Draw(NOFLIP, x, y, texture,
 		left, top, right, bottom,
-		OPAQUED, D3DXVECTOR2(0, 0), NOROTATE);
+		VISIBLE, D3DXVECTOR2(0, 0), NOROTATE);
 }
 
 void Game::Draw(int nx, float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom, int alpha, D3DXVECTOR2 translation)
 {
 	Draw(nx, x, y, texture,
 		left, top, right, bottom,
-		OPAQUED, translation, NOROTATE);
+		VISIBLE, translation, NOROTATE);
 }
 
 void Game::Draw(

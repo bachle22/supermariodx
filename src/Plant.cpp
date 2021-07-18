@@ -161,10 +161,10 @@ void Plant::SetState(int state)
 	switch (state)
 	{
 	case PLANT_STATE_EXPANDING:
-		vy -= 0.045f;
+		vy -= PLANT_VELOCITY_Y;
 		break;
 	case PLANT_STATE_COLLAPSING:
-		vy += 0.045f;
+		vy += PLANT_VELOCITY_Y;
 	case PLANT_STATE_ATTACKING:
 		isProjectileShooted = false;
 		break;

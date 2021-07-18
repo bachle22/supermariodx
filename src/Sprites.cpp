@@ -48,10 +48,16 @@ void Sprite::Draw(float x, float y)
 	game->Draw(x, y, texture, left, top, right, bottom);
 }
 
-void Sprite::DrawClipped(int nx, float x, float y, int alpha, int width, int height)
+void Sprite::Draw(int nx, float x, float y, int alpha, int width, int height)
 {
 	Game* game = Game::GetInstance();
 	game->Draw(nx, x, y, texture, left, top, left + width, top + height, alpha);
+}
+
+void Sprite::Draw(int nx, float x, float y, int alpha, D3DXVECTOR2 translation, int width, int height)
+{
+	Game* game = Game::GetInstance();
+	game->Draw(nx, x, y, texture, left, top, left + width, top + height, alpha, translation);
 }
 
 void Sprites::Add(int id, int left, int top, int right, int bottom, LPDIRECT3DTEXTURE9 tex)

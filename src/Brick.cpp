@@ -78,14 +78,14 @@ void Brick::Hit()
 	{
 		LPSCENE scene = Game::GetInstance()->GetCurrentScene();
 		int marioState = ((ScenePlayer*)scene)->GetPlayer()->GetState();
-		Mushroom* mushroom = new Mushroom(x, y, SUPER_MUSHROOM);
+		Mushroom* mushroom = new Mushroom(x + MUSHROOM_OFFSET_X, y, SUPER_MUSHROOM);
 		((ScenePlayer*)scene)->AddObject(mushroom);
 		break;
 	}
 	case BRICK_1UP:
 		LPSCENE scene = Game::GetInstance()->GetCurrentScene();
 		int marioState = ((ScenePlayer*)scene)->GetPlayer()->GetState();
-		Mushroom* mushroom = new Mushroom(x, y, ONE_UP_MUSHROOM);
+		Mushroom* mushroom = new Mushroom(x + MUSHROOM_OFFSET_X, y, ONE_UP_MUSHROOM);
 		((ScenePlayer*)scene)->AddObject(mushroom);
 		break;
 		break;

@@ -12,6 +12,8 @@ constexpr int PLANT_PROJECTILE_OFFSET_XY = 5;
 constexpr int PLANT_PROJECTILE_OFFSET_YX = 6;
 constexpr int PLANT_PROJECTILE_OFFSET_YY = 2;
 
+constexpr float PLANT_VELOCITY_Y = 0.045f;
+
 constexpr int PLANT_RED_HIDING_INTERVAL = 1500;
 constexpr int PLANT_RED_PROJECTILE_DELAY = 1000;
 constexpr int PLANT_RED_ATTACKING_INTERVAL = 1500;

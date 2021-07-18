@@ -26,7 +26,7 @@ void Animation::Render(
 		if (clippingWidth == NULL && clippingHeight == NULL)
 			frames[currentFrame]->GetSprite()->Draw(nx, x, y, alpha, translation, rotation);
 		else
-			frames[currentFrame]->GetSprite()->DrawClipped(nx, x, y, alpha, clippingWidth, clippingHeight);
+			frames[currentFrame]->GetSprite()->Draw(nx, x, y, alpha, clippingWidth, clippingHeight);
 		return;
 	}
 	else
@@ -45,7 +45,7 @@ void Animation::Render(
 	if (clippingWidth == NULL && clippingHeight == NULL)
 		frames[currentFrame]->GetSprite()->Draw(nx, x, y, alpha, translation, rotation);
 	else
-		frames[currentFrame]->GetSprite()->DrawClipped(nx, x, y, alpha, clippingWidth, clippingHeight);
+		frames[currentFrame]->GetSprite()->Draw(nx, x, y, alpha, clippingWidth, clippingHeight);
 }
 
 void Animation::RenderFirstFrame(float x, float y, int rotation)
@@ -56,7 +56,7 @@ void Animation::RenderFirstFrame(float x, float y, int rotation)
 		currentFrame = 0;
 		lastFrameTime = now;
 	}
-	frames[currentFrame]->GetSprite()->Draw(FLIP, x, y, OPAQUED, D3DXVECTOR2(0, 0), rotation);
+	frames[currentFrame]->GetSprite()->Draw(FLIP, x, y, VISIBLE, D3DXVECTOR2(0, 0), rotation);
 
 }
 
@@ -77,7 +77,7 @@ void Animation::Render(float x, float y, int alpha)
 
 void Animation::Render(int nx, float x, float y, int clippingWidth, int clippingHeight)
 {
-	Render(nx, x, y, OPAQUED, D3DXVECTOR2(0, 0), NOROTATE, clippingWidth, clippingHeight);
+	Render(nx, x, y, VISIBLE, D3DXVECTOR2(0, 0), NOROTATE, clippingWidth, clippingHeight);
 }
 
 Animations* Animations::__instance = NULL;

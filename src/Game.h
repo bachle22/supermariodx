@@ -10,12 +10,13 @@
 #include "Input.h"
 #include "Scene.h"
 
+
 enum RenderOptions
 {
 	NOFLIP = -1,
 	FLIP = 1,
-	OPAQUED = 255,
-	TRANS = 0,
+	VISIBLE = 255,
+	INVISIBLE = 0,
 
 	NOROTATE = 0,
 	ROTATE180 = 1,

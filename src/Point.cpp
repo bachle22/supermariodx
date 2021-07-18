@@ -37,7 +37,7 @@ void Point::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 
 void Point::Render()
 {
-	sprite->Draw(NOFLIP, (x), y, OPAQUED);
+	sprite->Draw(NOFLIP, (x), y, VISIBLE);
 	// RenderBoundingBox();
 }
 

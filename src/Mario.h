@@ -62,6 +62,8 @@ constexpr float MARIO_BIG_TRANSLATE_X = 2;
 constexpr float MARIO_RACOON_TRANSLATE_X = 10;
 constexpr float MARIO_RACOON_SPINNING_X = 7;
 
+constexpr int MARIO_FLASH_INTERVEL = 50;
+
 enum MarioAnimation
 {
 	ANI_SMALL_IDLE = 0,
@@ -147,14 +149,16 @@ enum ShiftingSign
 class Mario : public GameObject
 {
 	int level;
-	int untouchable;
-	ULONGLONG untouchable_start;
-	ULONGLONG powerTimer, flyTimer;
-	ULONGLONG lastTimeGainPower;
-	ULONGLONG lastTimeDecreasePowerIdle, lastTimeDecreasePowerMaxHeight;
-	ULONGLONG animationTimer;
+	bool isUntouchable;
 
-	int score;
+	ULONGLONG untouchableTimer;
+	ULONGLONG powerTimer, flyTimer;
+	ULONGLONG animationTimer, flashTimer;
+
+	ULONGLONG lastTimeGainPower;
+	ULONGLONG lastTimeDecreasePowerIdle;
+	ULONGLONG lastTimeDecreasePowerMaxHeight;
+	
 
 	float start_x;
 	float start_y;
@@ -166,7 +170,6 @@ class Mario : public GameObject
 	bool edge[4] = { 0 };
 	bool movement[4] = { 0 };
 	bool action[9] = { 0 };
-	bool isAttacking;
 
 	Tail* tail;
 
@@ -176,12 +179,14 @@ public:
 	virtual void Render();
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 
+	void Downgrade();
+	void SetUntouchable() { isUntouchable = true; }
+
 	void Movement();
 	void SetMovement(int direction) { movement[direction] = true; };
 	void UnsetMovement(int direction) { movement[direction] = false; };
 	bool GetMovement(int direction) { return movement[direction]; }
 
-	void Action();
 	void SetAction(int action) { this->action[action] = true; }
 	void UnsetAction(int action) { this->action[action] = false; }
 	bool GetAction(int action) { return this->action[action]; }
@@ -194,6 +199,6 @@ public:
 
 	void SetState(int state);
 	int GetState() { return state; }
-	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
+	void UpdateState();
 	void Reset();
 };
