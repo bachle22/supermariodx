@@ -5,7 +5,6 @@
 #include "Debug.h"
 #include "Definition.h"
 #include "Game.h"
-#include "Camera.h"
 #include "resource.h"
 
 constexpr D3DCOLOR BACKGROUND_COLOR = D3DCOLOR_XRGB(0, 0, 0);

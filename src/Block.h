@@ -4,10 +4,12 @@
 
 class Block : public GameObject
 {
-	float width, height;
+	int width, height;
 
 public:
-	Block(float width, float height);
+	Block(int width, int height);
 	virtual void Render();
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
+	float GetLeftX() { return x; }
+	float GetRightX() { return x + width; }
 };

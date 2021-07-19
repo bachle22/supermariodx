@@ -177,7 +177,7 @@ void ScenePlayer::_ParseSection_OBJECTS(std::string pathString)
 			std::vector<std::string> tokens = split(str);
 			if (tokens.size() < 3)
 			{
-				DebugOut(L"[WARNING] Invalid animation set config at line %d: %s\n", linenum, ToLPCWSTR(str));
+				DebugOut(L"[WARNING] Invalid object config at line %d: %s\n", linenum, ToLPCWSTR(str));
 				return;
 			}
 
@@ -204,8 +204,8 @@ void ScenePlayer::_ParseSection_OBJECTS(std::string pathString)
 
 				DebugOut(L"[INFO] Player object created!\n");
 				break;
-			case OBJECT_TYPE_GOOMBA: 
-				obj = new Goomba(); 
+			case OBJECT_TYPE_GOOMBA:
+				obj = new Goomba();
 				break;
 			case OBJECT_TYPE_BRICK:
 			{
@@ -213,12 +213,15 @@ void ScenePlayer::_ParseSection_OBJECTS(std::string pathString)
 				obj = new Brick(type);
 				break;
 			}
-			case OBJECT_TYPE_PLATFORM: 
+			case OBJECT_TYPE_PLATFORM:
 				obj = new Platform();
 				break;
-			case OBJECT_TYPE_KOOPAS: 
-				obj = new Koopa(); 
+			case OBJECT_TYPE_KOOPA:
+			{
+				int type = atoi(tokens[4].c_str());
+				obj = new Koopa(type);
 				break;
+			}
 			case OBJECT_TYPE_PORTAL:
 			{
 				float r = strtof(tokens[4].c_str(), NULL);
@@ -229,8 +232,8 @@ void ScenePlayer::_ParseSection_OBJECTS(std::string pathString)
 			}
 			case OBJECT_TYPE_BLOCK:
 			{
-				float w = strtof(tokens[3].c_str(), NULL);
-				float h = strtof(tokens[4].c_str(), NULL);
+				int w = atoi(tokens[3].c_str());
+				int h = atoi(tokens[4].c_str());
 				obj = new Block(w, h);
 				break;
 			}
@@ -481,7 +484,7 @@ void ScenePlayerInputHandler::OnKeyDown(int KeyCode)
 		mario->SetPosition(2500, 300);
 		break;
 	case DIK_F1:
-		mario->SetPosition(320, 380);
+		mario->SetPosition(518, 310);
 		break;
 	case DIK_F2:
 		mario->SetPosition(700, 370);
@@ -491,6 +494,22 @@ void ScenePlayerInputHandler::OnKeyDown(int KeyCode)
 		break;
 	case DIK_F4:
 		mario->SetPosition(1825, 300);
+		break;
+	case DIK_L:
+		game->DEBUG_X++;
+		DebugOut(L"X %d\n", game->DEBUG_X);
+		break;
+	case DIK_J:
+		game->DEBUG_X--;
+		DebugOut(L"X %d\n", game->DEBUG_X);
+		break;
+	case DIK_I:
+		game->DEBUG_Y--;
+		DebugOut(L"Y %d\n", game->DEBUG_Y);
+		break;
+	case DIK_K:
+		game->DEBUG_Y++;
+		DebugOut(L"Y %d\n", game->DEBUG_Y);
 		break;
 	}
 }
@@ -555,24 +574,24 @@ void ScenePlayerInputHandler::KeyState(BYTE* states)
 
 	// disable control key when Mario die 
 	if (mario->GetState() == MARIO_DEAD) return;
-	if (game->IsKeyDown(DIK_L))
-	{
-		game->DEBUG_X++;
-		DebugOut(L"X %d\n", game->DEBUG_X);
-	}
-	if (game->IsKeyDown(DIK_J))
-	{
-		game->DEBUG_X--;
-		DebugOut(L"X %d\n", game->DEBUG_X);
-	}
-	if (game->IsKeyDown(DIK_I))
-	{
-		game->DEBUG_Y--;
-		DebugOut(L"Y %d\n", game->DEBUG_Y);
-	}
-	if (game->IsKeyDown(DIK_K))
-	{
-		game->DEBUG_Y++;
-		DebugOut(L"Y %d\n", game->DEBUG_Y);
-	}
+	//if (game->IsKeyDown(DIK_L))
+	//{
+	//	game->DEBUG_X++;
+	//	DebugOut(L"X %d\n", game->DEBUG_X);
+	//}
+	//if (game->IsKeyDown(DIK_J))
+	//{
+	//	game->DEBUG_X--;
+	//	DebugOut(L"X %d\n", game->DEBUG_X);
+	//}
+	//if (game->IsKeyDown(DIK_I))
+	//{
+	//	game->DEBUG_Y--;
+	//	DebugOut(L"Y %d\n", game->DEBUG_Y);
+	//}
+	//if (game->IsKeyDown(DIK_K))
+	//{
+	//	game->DEBUG_Y++;
+	//	DebugOut(L"Y %d\n", game->DEBUG_Y);
+	//}
 }

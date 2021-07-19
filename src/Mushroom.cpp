@@ -78,7 +78,7 @@ void Mushroom::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 				}
 				else
 				{
-					x -= min_tx * dx + nx * PUSH_BACK * 2;
+					x -= min_tx * dx + nx * PUSH_BACK;
 					x += dx;
 				}
 			}

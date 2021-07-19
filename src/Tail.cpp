@@ -16,8 +16,8 @@ void Tail::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
 	left = x;
 	top = y;
-	right = x + TILE_WIDTH;
-	bottom = y + TAIL_HEIGHT;
+	right = x;
+	bottom = y;
 }
 
 void Tail::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
@@ -26,7 +26,7 @@ void Tail::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 
 	for (size_t i = 0; i < coObjects->size(); i++)
 	{
-		LPGAMEOBJECT obj = CheckCollision(coObjects->at(i));
+		LPGAMEOBJECT obj = CheckOverlap(coObjects->at(i));
 		if (obj != NULL)
 		{
 			if (dynamic_cast<Brick*>(obj))
@@ -38,11 +38,15 @@ void Tail::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 			{
 				Goomba* g = dynamic_cast<Goomba*>(obj);
 				g->SetDirection(nx);
-				if(!g->Hit()) return;
+				if (!g->Hit()) return;
 
 				Hit* hit = new Hit(x + nx * TAIL_HIT_OFFSET_X, y - TAIL_HEIGHT);
 				LPSCENE scene = Game::GetInstance()->GetCurrentScene();
 				((ScenePlayer*)scene)->AddObject(hit);
+			}
+			else if (!dynamic_cast<Mario*>(obj))
+			{
+				DebugOut(L"Hit!\n");
 			}
 		}
 	}
@@ -53,7 +57,7 @@ void Tail::SetPosition(float x, float y)
 {
 	x += nx > 0 ? TAIL_OFFSET_RIGHT : -TAIL_OFFSET_LEFT;
 	y += TAIL_OFFSET_Y;
-	GameObject::SetPosition(x , y);
+	GameObject::SetPosition(x, y);
 }
 
 void Tail::Render()

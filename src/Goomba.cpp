@@ -5,12 +5,12 @@
 #include "Platform.h"
 #include "Block.h"
 #include "Brick.h"
+#include "Debug.h"
 
 Goomba::Goomba()
 {
 	SetState(GOOMBA_STATE_WALKING);
 	timer = 0;
-	
 }
 
 void Goomba::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -53,19 +53,22 @@ void Goomba::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 		y += min_ty * dy + ny * PUSH_BACK;
 		x += min_tx * dx + nx * PUSH_BACK;
 
-		float entry_vx = vx;
-		float entry_vy = vy;
-
 		if (ny != 0) vy = 0;
 
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
 			{
-				if (dynamic_cast<Platform*>(e->obj) || dynamic_cast<Brick*>(e->obj))
+				if (dynamic_cast<Platform*>(e->obj) || 
+					dynamic_cast<Brick*>(e->obj))
 				{
-					if (e->nx != 0 && ny == 0)
-						this->nx = -this->nx;
+					if (e->nx != 0 && ny == 0)Reverse();
+				}
+				else if (dynamic_cast<Goomba*>(e->obj))
+				{
+					Goomba* g = dynamic_cast<Goomba*>(e->obj);
+					g->Reverse();
+					this->Reverse();
 				}
 				else {
 					x -= min_tx * dx + nx * PUSH_BACK;
@@ -76,14 +79,6 @@ void Goomba::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 	}
 
 	vy += GLOBAL_GRAVITY * dt;
-
-	if (vx < 0 && x < 0) {
-		x = 0; vx = -vx;
-	}
-
-	if (vx > 0 && x > 290) {
-		x = 290; vx = -vx;
-	}
 	
 	if (vy >= GLOBAL_TERMINAL_VELOCITY) vy = GLOBAL_TERMINAL_VELOCITY;
 
@@ -107,7 +102,7 @@ void Goomba::Render()
 		break;
 	}
 	if (state == GOOMBA_STATE_HIT) animation_set->at(ani)->RenderFirstFrame(x, y, ROTATE180);
-	else animation_set->at(ani)->Render(nx, x, y);
+	else animation_set->at(ani)->Render(nx, (x), y);
 	RenderBoundingBox();
 }
 
@@ -121,7 +116,7 @@ void Goomba::SetState(int state)
 		break;
 	case GOOMBA_STATE_DIE:
 	{
-		y += GOOMBA_BBOX_HEIGHT - GOOMBA_BBOX_HEIGHT_DIE - 2;
+		y += GOOMBA_BBOX_HEIGHT - GOOMBA_BBOX_HEIGHT_DIE - 1.f;
 		vx = 0;
 		vy = 0;
 
@@ -135,8 +130,8 @@ void Goomba::SetState(int state)
 		LPSCENE scene = Game::GetInstance()->GetCurrentScene();
 		((ScenePlayer*)scene)->AddObject(point);
 
-		vx = nx * 0.03f;
-		vy = -0.38f;
+		vx = nx * GOOMBA_SMACKED_VX;
+		vy = -GOOMBA_SMACKED_VY;
 		break;
 	}
 }
@@ -149,4 +144,9 @@ bool Goomba::Hit()
 		return true;
 	}
 	else return false;
+}
+
+void Goomba::Reverse()
+{
+	this->vx = -this->vx;
 }

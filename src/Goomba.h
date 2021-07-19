@@ -4,6 +4,9 @@
 constexpr float GOOMBA_WALKING_SPEED = 0.03f;
 constexpr int GOOMBA_REMOVAL_DELAY = 300;
 
+constexpr float GOOMBA_SMACKED_VX = 0.03f;
+constexpr float GOOMBA_SMACKED_VY = 0.38f;
+
 constexpr int GOOMBA_BBOX_WIDTH = 16;
 constexpr int GOOMBA_BBOX_HEIGHT = 15;
 constexpr int GOOMBA_BBOX_HEIGHT_DIE = 9;
@@ -34,4 +37,5 @@ public:
 	Goomba();
 	virtual void SetState(int state);
 	bool Hit();
+	void Reverse();
 };

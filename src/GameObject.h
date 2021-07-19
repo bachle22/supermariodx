@@ -11,7 +11,7 @@
 constexpr int OBJECT_TYPE_MARIO = 0;
 constexpr int OBJECT_TYPE_BRICK = 1;
 constexpr int OBJECT_TYPE_GOOMBA = 2;
-constexpr int OBJECT_TYPE_KOOPAS = 3;
+constexpr int OBJECT_TYPE_KOOPA = 3;
 constexpr int OBJECT_TYPE_PLATFORM = 4;
 constexpr int OBJECT_TYPE_BLOCK = 5;
 constexpr int OBJECT_TYPE_PLANT= 6;
@@ -63,7 +63,7 @@ public:
 	void SetAnimationSet(LPANIMATION_SET ani_set) { animation_set = ani_set; }
 
 	LPCOLLISIONEVENT SweptAABBEx(LPGAMEOBJECT coO);
-	LPGAMEOBJECT CheckCollision(LPGAMEOBJECT coO);
+	LPGAMEOBJECT CheckOverlap(LPGAMEOBJECT coO);
 	void CalculatePotentialCollisions(std::vector<LPGAMEOBJECT>* coObjects, std::vector<LPCOLLISIONEVENT>& coEvents);
 	void FilterCollision(
 		std::vector<LPCOLLISIONEVENT>& coEvents,

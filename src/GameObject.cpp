@@ -143,7 +143,7 @@ LPCOLLISIONEVENT GameObject::SweptAABBEx(LPGAMEOBJECT coO)
 	return e;
 }
 
-LPGAMEOBJECT GameObject::CheckCollision(LPGAMEOBJECT coO)
+LPGAMEOBJECT GameObject::CheckOverlap(LPGAMEOBJECT coO)
 {
 	float l1, t1, r1, b1;		// static object bbox
 	float l2, t2, r2, b2;		// moving object bbox

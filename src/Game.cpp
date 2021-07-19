@@ -279,7 +279,7 @@ void Game::_ParseSection_SCENES(std::string line)
 
 /*
 	Load game map file
-	TODOD: Fix nullptr error when invalid map file is processed
+	TODO: Fix nullptr error when invalid map file is processed
 */
 void Game::Load(LPCWSTR gameFile)
 {
