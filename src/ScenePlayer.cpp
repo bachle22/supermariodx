@@ -481,7 +481,7 @@ void ScenePlayerInputHandler::OnKeyDown(int KeyCode)
 		mario->Reset();
 		break;
 	case DIK_F6:
-		mario->SetPosition(2500, 300);
+		mario->SetPosition(2112, 300);
 		break;
 	case DIK_F1:
 		mario->SetPosition(518, 310);

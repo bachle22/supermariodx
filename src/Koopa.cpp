@@ -9,7 +9,9 @@ Koopa::Koopa(int type)
 	this->type = type;
 	SetState(KOOPA_STATE_WALKING);
 	timer = 0;
-	isOnBlock = false;
+
+	leftBounding = 0;
+	rightBounding = 0;
 }
 
 void Koopa::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -49,8 +51,8 @@ void Koopa::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 		//DebugOut(L"min_tx %f min_ty %f nx %f ny %f rdx %f rdy %f\n", min_tx, min_ty, nx, ny, rdx, rdy);
 
-		y += min_ty * dy + ny * PUSH_BACK;
 		x += min_tx * dx + nx * PUSH_BACK;
+		y += min_ty * dy + ny * PUSH_BACK;
 
 		//if (nx != 0) vx = 0;
 		if (ny != 0) vy = 0;
@@ -60,32 +62,40 @@ void Koopa::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 			LPCOLLISIONEVENT e = coEventsResult[i];
 
 
-			if (dynamic_cast<Block*>(e->obj))
+			if (dynamic_cast<Platform*>(e->obj) || dynamic_cast<Brick*>(e->obj))
 			{
-				if (e->ny == -1)
+				/*DebugOut(L"min_tx %f min_ty %f nx %f ny %f rdx %f rdy %f ", min_tx, min_ty, nx, ny, rdx, rdy);
+				DebugOut(L"%f %f %f \n", leftBounding, x, rightBounding);*/
+
 				if (e->ny == -1)
 				{
-					isOnBlock = true;
 
-					Block* b = dynamic_cast<Block*>(e->obj);
-					leftBounding = b->GetLeftX();
-					rightBounding = b->GetRightX();
+					if (dynamic_cast<Platform*>(e->obj))
+					{
+						Platform* p = dynamic_cast<Platform*>(e->obj);
+						p->Press();
+					}
+					else if (dynamic_cast<Brick*>(e->obj))
+					{
+						Brick* b = dynamic_cast<Brick*>(e->obj);
+						b->Press();
+					}
 
-					rightBounding -= KOOPA_WIDTH;
-
-					if (x < leftBounding && nx < 0 && isOnBlock) Reverse();
-					else if (x > rightBounding && nx > 0 && isOnBlock) Reverse();
+					GetPlatformBounding(e->obj);
 				}
-			}
 
-			if (dynamic_cast<Platform*>(e->obj) ||
-				dynamic_cast<Brick*>(e->obj))
-			{
-				isOnBlock = false;
 				if (e->nx != 0 && ny != -1) {
 					Reverse();
 				}
 			}
+
+			if (dynamic_cast<Block*>(e->obj))
+			{
+				x -= min_tx * dx + nx * PUSH_BACK;
+				x += dx;
+				if (e->ny == -1) GetPlatformBounding(e->obj);
+			}
+
 			else {
 				x -= min_tx * dx + nx * PUSH_BACK;
 				x += dx;
@@ -97,16 +107,11 @@ void Koopa::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 
 	vy += GLOBAL_GRAVITY * dt;
 
-	//if (x < leftBounding - 1 && nx < 0) Reverse();
-	//else if (x +  - 1 > rightBounding && nx > 0) {
-	//	Reverse();
-	//	DebugOut(L"right to left \n");
-	//}
-
-	if (x < leftBounding && nx < 0 && isOnBlock) Reverse();
-	else if (x > rightBounding && nx > 0 && isOnBlock) Reverse();
-
-	//else if (x > 596) Reverse();
+	if (type == KOOPA_RED)
+	{
+		if (x < leftBounding - KOOPA_PLATFORM_OFFSET_LEFT && nx < 0) Reverse();
+		if (x + KOOPA_PLATFORM_OFFSET_RIGHT > rightBounding && nx > 0) Reverse();
+	}
 
 	if (vy >= GLOBAL_TERMINAL_VELOCITY) vy = GLOBAL_TERMINAL_VELOCITY;
 }
@@ -146,4 +151,15 @@ void Koopa::Reverse()
 {
 	this->nx = -this->nx;
 	this->vx = -this->vx;
+}
+
+void Koopa::GetPlatformBounding(LPGAMEOBJECT obj)
+{
+	float l, t, r, b;
+	obj->GetBoundingBox(l, t, r, b);
+
+	if (leftBounding == 0) leftBounding = l;
+	if (rightBounding == 0) rightBounding = r;
+	if (leftBounding > l) leftBounding = l;
+	if (rightBounding < r) rightBounding = r;
 }

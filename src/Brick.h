@@ -8,6 +8,7 @@ constexpr float BRICK_EMPTY_SHIFT = 0.01f;
 constexpr int COIN_POSITION_OFFSET_X = 4;
 constexpr int COIN_POSITION_OFFSET_Y = 2;
 constexpr int MUSHROOM_OFFSET_X = 1;
+constexpr int BRICK_UNPRESS_DELAY = 1000;
 
 enum BrickType
 {
@@ -38,11 +39,17 @@ class Brick : public GameObject
 
 	float imitateY, entryY;
 
+	bool isPressed;
+	ULONGLONG timer;
+
 public:
 	Brick(int type);
 	virtual void Render();
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects);
 	virtual void SetPosition(float x, float y);
+
 	void Hit();
+	void Press();
+	void Unpress();
 };

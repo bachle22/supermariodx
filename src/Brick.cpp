@@ -11,6 +11,9 @@ Brick::Brick(int type)
 	this->type = type;
 	isHit = false;
 	SetState(BRICK_STATE_DEFAULT);
+
+	isPressed = false;
+	timer = 0;
 }
 
 void Brick::Render()
@@ -21,6 +24,7 @@ void Brick::Render()
 	// Keep the hitbox from moving to make collision detection work better
 	animation_set->at(ani)->Render(x, imitateY);
 
+	if (isPressed) RenderBoundingBox();
 }
 
 void Brick::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -55,6 +59,10 @@ void Brick::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 		// Make empty brick harder to hit
 		y -= BRICK_EMPTY_SHIFT;
 	}
+
+
+	if (isPressed) timer += dt;
+	if (timer > BRICK_UNPRESS_DELAY) Unpress();
 }
 
 void Brick::Hit()
@@ -99,4 +107,22 @@ void Brick::SetPosition(float x, float y)
 	this->y = y;
 	entryY = y;
 	imitateY = y;
+}
+
+void Brick::Press()
+{
+	timer = 0;
+	if (!isPressed) {
+		y += 0.01f;
+		isPressed = true;
+	}
+}
+
+void Brick::Unpress()
+{
+	if (isPressed) {
+		y -= 0.01f;
+		isPressed = false;
+		timer = 0;
+	}
 }
