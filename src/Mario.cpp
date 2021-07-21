@@ -186,17 +186,15 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 				{
 					if (goomba->GetState() != GOOMBA_STATE_DIE)
 					{
-						goomba->SetState(GOOMBA_STATE_DIE);
+						goomba->Downgrade();
 						vy = -MARIO_JUMP_DEFLECT_SPEED;
 					}
 				}
-				else if (e->nx != 0)
+				else if(goomba->GetState() != GOOMBA_STATE_DIE)
 				{
-					if (goomba->GetState() != GOOMBA_STATE_DIE)
-					{
-						Downgrade();
-					}
+					Downgrade();
 				}
+					
 			}
 
 			else if (dynamic_cast<Koopa*>(e->obj))
@@ -576,8 +574,8 @@ void Mario::SetState(int state)
 		vy = -MARIO_DIE_DEFLECT_SPEED;
 		break;
 	case MARIO_SMALL_TO_BIG:
-		// Subtract 1 to make sure Mario doesn't overlap with platform
-		y -= MARIO_BIG_HEIGHT - MARIO_SMALL_HEIGHT + 1.f;
+		// Making sure Mario doesn't overlap with platform
+		y -= MARIO_BIG_HEIGHT - MARIO_SMALL_HEIGHT + 0.5f;
 		animationTimer = GetTickCount64();
 		Game::GetInstance()->Pause();
 		break;

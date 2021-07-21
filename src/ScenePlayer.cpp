@@ -205,8 +205,11 @@ void ScenePlayer::_ParseSection_OBJECTS(std::string pathString)
 				DebugOut(L"[INFO] Player object created!\n");
 				break;
 			case OBJECT_TYPE_GOOMBA:
-				obj = new Goomba();
+			{
+				int type = atoi(tokens[4].c_str());
+				obj = new Goomba(type);
 				break;
+			}
 			case OBJECT_TYPE_BRICK:
 			{
 				int type = atoi(tokens[4].c_str());

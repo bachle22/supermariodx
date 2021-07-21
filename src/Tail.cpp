@@ -16,8 +16,8 @@ void Tail::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
 	left = x;
 	top = y;
-	right = x;
-	bottom = y;
+	right = x + TILE_WIDTH;
+	bottom = y + TAIL_HEIGHT;
 }
 
 void Tail::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
@@ -44,10 +44,6 @@ void Tail::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 				LPSCENE scene = Game::GetInstance()->GetCurrentScene();
 				((ScenePlayer*)scene)->AddObject(hit);
 			}
-			else if (!dynamic_cast<Mario*>(obj))
-			{
-				DebugOut(L"Hit!\n");
-			}
 		}
 	}
 
@@ -62,7 +58,6 @@ void Tail::SetPosition(float x, float y)
 
 void Tail::Render()
 {
-	//RenderBoundingBox();
-	return;
+	RenderBoundingBox();
 }
 

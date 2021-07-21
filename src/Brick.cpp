@@ -21,7 +21,7 @@ void Brick::Render()
 	int ani = BRICK_ANI_DEFAULT;
 	if (state == BRICK_STATE_EMPTY) ani = BRICK_ANI_EMPTY;
 
-	// Keep the hitbox from moving to make collision detection work better
+	//Keep the hitbox from moving to make collision detection work better
 	animation_set->at(ani)->Render(x, imitateY);
 
 	if (isPressed) RenderBoundingBox();
@@ -95,7 +95,6 @@ void Brick::Hit()
 		int marioState = ((ScenePlayer*)scene)->GetPlayer()->GetState();
 		Mushroom* mushroom = new Mushroom(x + MUSHROOM_OFFSET_X, y, ONE_UP_MUSHROOM);
 		((ScenePlayer*)scene)->AddObject(mushroom);
-		break;
 		break;
 	}
 }
