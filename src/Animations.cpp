@@ -75,6 +75,12 @@ void Animation::Render(float x, float y, int alpha)
 	Render(NOFLIP, x, y, alpha, D3DXVECTOR2(0, 0));
 }
 
+void Animation::RenderFlipped(int nx, float x, float y, int alpha)
+{
+	Render(nx, x, y, alpha, D3DXVECTOR2(0, 0), ROTATE180);
+}
+
+
 void Animation::Render(int nx, float x, float y, int clippingWidth, int clippingHeight)
 {
 	Render(nx, x, y, VISIBLE, D3DXVECTOR2(0, 0), NOROTATE, clippingWidth, clippingHeight);

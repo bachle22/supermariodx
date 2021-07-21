@@ -15,6 +15,7 @@
 #include "Block.h"
 #include "Projectile.h"
 #include "Plant.h"
+#include "Koopa.h"
 
 Mario::Mario(float x, float y) : GameObject()
 {
@@ -198,6 +199,44 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 				}
 			}
 
+			else if (dynamic_cast<Koopa*>(e->obj))
+			{
+				vx = entry_vx;
+				x -= min_tx * dx + nx * PUSH_BACK;
+				x += dx;
+
+				Koopa* k = dynamic_cast<Koopa*>(e->obj);
+
+				if (e->ny < 0)
+				{
+					if (k->GetState() != KOOPA_STATE_HIDING)
+					{
+						k->SetState(KOOPA_STATE_HIDING);
+						vy = -MARIO_JUMP_DEFLECT_SPEED;
+					}
+					else
+					{
+						vy = entry_vy;
+						y -= min_ty * dy + ny * PUSH_BACK;
+						y += dy;
+
+						SetAction(KICKING);
+						k->SetDirection(this->nx);
+						k->SetState(KOOPA_STATE_ROLLING);
+					}
+				}
+				else if (e->nx != 0)
+				{
+					if (k->GetState() != KOOPA_STATE_HIDING && 
+						k->GetState() != KOOPA_STATE_REVIVING) Downgrade();
+					else {
+						SetAction(KICKING);
+						k->SetDirection(this->nx);
+						k->SetState(KOOPA_STATE_ROLLING);
+					}
+				}
+			}
+
 			else if (dynamic_cast<Projectile*>(e->obj) || dynamic_cast<Plant*>(e->obj))
 			{
 				vx = entry_vx;
@@ -271,6 +310,12 @@ void Mario::Render()
 			ani = ANI_BIG_DUCKING;
 			translation.x = nx < 0 ? 0 : -MARIO_BIG_TRANSLATE_X + 2;
 		}
+
+		if (GetAction(KICKING)) {
+			ani = ANI_BIG_KICKING;
+			translation.x = nx < 0 ? 0 : -MARIO_BIG_TRANSLATE_X + 2;
+		}
+
 		break;
 
 	case MARIO_RACOON:
@@ -577,6 +622,8 @@ void Mario::UpdateState()
 		else tail->Disable();
 		break;
 	}
+
+
 }
 
 void Mario::ManagePowerDuration()

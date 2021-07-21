@@ -8,7 +8,7 @@ Block::Block(int width, int height)
 
 void Block::Render()
 {
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void Block::GetBoundingBox(float& left, float& top, float& right, float& bottom)

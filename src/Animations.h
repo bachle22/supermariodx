@@ -33,6 +33,7 @@ public:
 	void Render(int nx, float x, float y, int alpha, D3DXVECTOR2 translation);
 	void Render(int nx, float x, float y, int alpha = 255);
 	void Render(float x, float y, int alpha = 255);
+	void RenderFlipped(int nx, float x, float y, int alpha = 255);
 	void Render(int nx, float x, float y, int clippingWidth, int clippingHeight);
 	void RenderFirstFrame(float x, float y, int rotation);
 };

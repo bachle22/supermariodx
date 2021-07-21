@@ -93,6 +93,10 @@ enum MarioAnimation
 	ANI_BIG_BRAKING = 25,
 	ANI_RACOON_BRAKING = 27,
 
+	ANI_SMALL_KICKING = 28,
+	ANI_BIG_KICKING = 29,
+	ANI_RACOON_KICKING = 31,
+
 	ANI_RACOON_DESCENDING = 45,
 	ANI_RACOON_FLYING = 46,
 
@@ -120,6 +124,7 @@ enum MarioAction
 	DESCENDING = 6,
 	DUCKING = 7,
 	SPINNING = 8,
+	KICKING = 9
 };
 
 enum MarioState
@@ -169,7 +174,7 @@ class Mario : public GameObject
 
 	bool edge[4] = { 0 };
 	bool movement[4] = { 0 };
-	bool action[9] = { 0 };
+	bool action[10] = { 0 };
 
 	Tail* tail;
 
