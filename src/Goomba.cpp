@@ -84,7 +84,7 @@ void Goomba::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 		}
 	}
 
-	vy += GOOMBA_GRAVITY * dt;
+	vy += GLOBAL_GRAVITY / 2 * dt;
 
 	if (vy >= GLOBAL_TERMINAL_VELOCITY) vy = GLOBAL_TERMINAL_VELOCITY;
 

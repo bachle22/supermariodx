@@ -209,18 +209,17 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 				{
 					if (k->GetState() != KOOPA_STATE_HIDING)
 					{
-						k->SetState(KOOPA_STATE_HIDING);
+						k->Downgrade();
 						vy = -MARIO_JUMP_DEFLECT_SPEED;
 					}
 					else
 					{
 						vy = entry_vy;
-						y -= min_ty * dy + ny * PUSH_BACK;
-						y += dy;
+						y -= min_ty * dy + ny * PUSH_BACK - dy;
 
 						SetAction(KICKING);
 						k->SetDirection(this->nx);
-						k->SetState(KOOPA_STATE_ROLLING);
+						k->Downgrade();
 					}
 				}
 				else if (e->nx != 0)
@@ -230,7 +229,7 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 					else {
 						SetAction(KICKING);
 						k->SetDirection(this->nx);
-						k->SetState(KOOPA_STATE_ROLLING);
+						k->Downgrade();
 					}
 				}
 			}

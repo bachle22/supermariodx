@@ -20,7 +20,6 @@ constexpr int PARAGOOMBA_TRANS_Y = 8;
 constexpr int PARAGOOMBA_JUMP_INTERVAL = 1000;
 constexpr int PARAGOOMBA_JUMP_DELAY = 2500;
 
-constexpr float GOOMBA_GRAVITY= 0.0005f;
 
 enum GoombaState
 {

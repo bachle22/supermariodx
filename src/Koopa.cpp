@@ -9,9 +9,10 @@
 Koopa::Koopa(int type)
 {
 	this->type = type;
-	SetState(KOOPA_STATE_WALKING);
+	if (type == KOOPA_GREEN || type == KOOPA_RED)
+		SetState(KOOPA_STATE_WALKING);
+	else SetState(KOOPA_STATE_FLYING);
 	timer = 0;
-
 	leftBounding = 0;
 	rightBounding = 0;
 }
@@ -49,6 +50,8 @@ void Koopa::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 		x += min_tx * dx + nx * PUSH_BACK;
 		y += min_ty * dy + ny * PUSH_BACK;
 
+		float entry_vy = vy;
+
 		if (ny != 0) vy = 0;
 
 		for (UINT i = 0; i < coEventsResult.size(); i++)
@@ -60,9 +63,9 @@ void Koopa::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 				/*DebugOut(L"min_tx %f min_ty %f nx %f ny %f rdx %f rdy %f ", min_tx, min_ty, nx, ny, rdx, rdy);
 				DebugOut(L"%f %f %f \n", leftBounding, x, rightBounding);*/
 
-				if (state == KOOPA_STATE_WALKING)
+				if (e->ny == -1 && e->nx == 0 && nx == 0)
 				{
-					if (e->ny == -1 && e->nx == 0 && nx == 0)
+					if (state == KOOPA_STATE_WALKING)
 					{
 
 						if (dynamic_cast<Platform*>(e->obj))
@@ -101,8 +104,9 @@ void Koopa::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 			}
 
 			else {
-				x -= min_tx * dx + nx * PUSH_BACK;
-				x += dx;
+				vy = entry_vy;
+				x -= min_tx * dx + nx * PUSH_BACK - dx;
+				y -= min_ty * dy + ny * PUSH_BACK - dy;
 			}
 
 			if (state == KOOPA_STATE_ROLLING)
@@ -121,12 +125,20 @@ void Koopa::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 					}
 				}
 			}
+			else if (state == KOOPA_STATE_FLYING)
+			{
+				if (dynamic_cast<Platform*>(e->obj) || dynamic_cast<Block*>(e->obj))
+				{
+					if (e->ny == -1 && e->nx == 0 && nx == 0)
+						vy -= KOOPA_FLYING_SPEED;
+				}
+			}
 		}
 	}
 
 
-
-	vy += GLOBAL_GRAVITY * dt;
+	if (state == KOOPA_STATE_FLYING) vy += GLOBAL_GRAVITY / 2 * dt;
+	else vy += GLOBAL_GRAVITY * dt;
 
 	if (type == KOOPA_RED && state != KOOPA_STATE_ROLLING)
 	{
@@ -188,15 +200,25 @@ void Koopa::Render()
 	D3DXVECTOR2 translation = D3DXVECTOR2(0, 0);
 	switch (type)
 	{
+	case KOOPA_GREEN:
+		if (state == KOOPA_STATE_WALKING) ani = KOOPA_GREEN_WALKING;
+		else if (state == KOOPA_STATE_HIDING) ani = KOOPA_GREEN_HIDING;
+		else if (state == KOOPA_STATE_ROLLING) ani = KOOPA_GREEN_ROLLING;
+		else if (state == KOOPA_STATE_REVIVING) ani = KOOPA_GREEN_REVIVING;
+		break;
 	case KOOPA_RED:
 		if (state == KOOPA_STATE_WALKING) ani = KOOPA_RED_WALKING;
 		else if (state == KOOPA_STATE_HIDING) ani = KOOPA_RED_HIDING;
 		else if (state == KOOPA_STATE_ROLLING) ani = KOOPA_RED_ROLLING;
 		else if (state == KOOPA_STATE_REVIVING) ani = KOOPA_RED_REVIVING;
 		break;
+	case PARAKOOPA_GREEN:
+		ani = KOOPA_GREEN_FLYING;
+		break;
 	}
 
-	if (state == KOOPA_STATE_WALKING) translation.y -= KOOPA_WALKING_TRANS_Y;
+	if (state == KOOPA_STATE_WALKING || state == KOOPA_STATE_FLYING)
+		translation.y -= KOOPA_WALKING_TRANS_Y;
 	else translation.x -= KOOPA_SHELL_TRANS_X;
 
 	//if (state == KOOPA_STATE_REVIVING) animation_set->at(ani)->RenderFlipped(nx, ceil(x), ceil(y));
@@ -233,6 +255,11 @@ void Koopa::SetState(int state)
 		vx = 0;
 		height = KOOPA_HIDING_HEIGHT;
 		break;
+	case KOOPA_STATE_FLYING:
+		nx = -1;
+		vx = -KOOPA_WALKING_SPEED;
+		height = KOOPA_WALKING_HEIGHT;
+		break;
 	}
 
 }
@@ -254,6 +281,13 @@ void Koopa::GetPlatformBounding(LPGAMEOBJECT obj)
 	if (rightBounding < r) rightBounding = r;
 }
 
-void Koopa::Stomp()
+void Koopa::Downgrade()
 {
+	if (state == KOOPA_STATE_FLYING) {
+		SetState(KOOPA_STATE_WALKING);
+		if (type == PARAKOOPA_GREEN) type = KOOPA_GREEN;
+		else type = KOOPA_RED;
+	}
+	else if (state == KOOPA_STATE_WALKING) SetState(KOOPA_STATE_HIDING);
+	else SetState(KOOPA_STATE_ROLLING);
 }

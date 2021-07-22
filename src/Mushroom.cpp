@@ -6,6 +6,7 @@
 #include "Debug.h"
 #include "Platform.h"
 #include "Goomba.h"
+#include "Brick.h"
 
 Mushroom::Mushroom(float x, float y, int type)
 {
@@ -71,7 +72,7 @@ void Mushroom::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
 			{
-				if (dynamic_cast<Platform*>(e->obj))
+				if (dynamic_cast<Platform*>(e->obj) || dynamic_cast<Brick*>(e->obj))
 				{
 					if (e->nx != 0 && ny == 0)
 						this->nx = -this->nx;
@@ -80,6 +81,10 @@ void Mushroom::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 				{
 					x -= min_tx * dx + nx * PUSH_BACK;
 					x += dx;
+
+					//vy = entry_vy;
+					y -= min_ty * dy + ny * PUSH_BACK;
+					y += dy;
 				}
 			}
 		}

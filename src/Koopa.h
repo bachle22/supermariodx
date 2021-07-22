@@ -4,6 +4,7 @@
 
 constexpr float KOOPA_WALKING_SPEED = 0.03f;
 constexpr float KOOPA_ROLLING_SPEED = 0.2f;
+constexpr float KOOPA_FLYING_SPEED = 0.2f;
 constexpr float KOOPA_PLATFORM_THRESHOLD = 0.05f;
 
 constexpr int KOOPA_WIDTH = 16;
@@ -35,19 +36,22 @@ enum KoopaAnimation
 	KOOPA_GREEN_HIDING = 0,
 	KOOPA_GREEN_WALKING = 1,
 	KOOPA_GREEN_ROLLING = 2,
+	KOOPA_GREEN_REVIVING = 3,
+	KOOPA_GREEN_FLYING = 4,
 
-	KOOPA_RED_HIDING = 3,
-	KOOPA_RED_WALKING = 4,
-	KOOPA_RED_ROLLING = 5,
-
-	KOOPA_GREEN_REVIVING = 6,
-	KOOPA_RED_REVIVING = 7,
+	KOOPA_RED_HIDING = 5,
+	KOOPA_RED_WALKING = 6,
+	KOOPA_RED_ROLLING = 7,
+	KOOPA_RED_REVIVING = 8,
+	KOOPA_RED_FLYING = 9,
 };
 
 enum KoopaType
 {
 	KOOPA_GREEN = 0,
-	KOOPA_RED = 1
+	KOOPA_RED = 1,
+	PARAKOOPA_GREEN = 2,
+	PARAKOOPA_RED = 3
 };
 
 enum KoopaState
@@ -56,6 +60,7 @@ enum KoopaState
 	KOOPA_STATE_WALKING = 1,
 	KOOPA_STATE_ROLLING = 2,
 	KOOPA_STATE_REVIVING = 3,
+	KOOPA_STATE_FLYING = 4
 };
 
 class Koopa : public GameObject
@@ -73,5 +78,5 @@ public:
 	Koopa(int type);
 	virtual void SetState(int state);
 	void Reverse();
-	void Stomp();
+	void Downgrade();
 };
