@@ -185,8 +185,6 @@ void ScenePlayer::_ParseSection_OBJECTS(std::string pathString)
 			float x = strtof(tokens[1].c_str(), NULL);
 			float y = strtof(tokens[2].c_str(), NULL);
 
-
-
 			AnimationSets* animation_sets = AnimationSets::GetInstance();
 
 			GameObject* obj = NULL;
@@ -246,6 +244,9 @@ void ScenePlayer::_ParseSection_OBJECTS(std::string pathString)
 				obj = new Plant(type);
 				break;
 			}
+			case OBJECT_TYPE_COIN:
+				obj = new Coin();
+				break;
 			default:
 				DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 				return;
@@ -493,7 +494,7 @@ void ScenePlayerInputHandler::OnKeyDown(int KeyCode)
 		mario->SetPosition(700, 370);
 		break;
 	case DIK_F3:
-		mario->SetPosition(1150, 370);
+		mario->SetPosition(1420, 150);
 		break;
 	case DIK_F4:
 		mario->SetPosition(1825, 300);

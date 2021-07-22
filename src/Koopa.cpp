@@ -50,8 +50,6 @@ void Koopa::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 		x += min_tx * dx + nx * PUSH_BACK;
 		y += min_ty * dy + ny * PUSH_BACK;
 
-		float entry_vy = vy;
-
 		if (ny != 0) vy = 0;
 
 		for (UINT i = 0; i < coEventsResult.size(); i++)
@@ -103,8 +101,8 @@ void Koopa::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 				if (e->ny == -1) GetPlatformBounding(e->obj);
 			}
 
-			else {
-				vy = entry_vy;
+			else if (!dynamic_cast<Koopa*>(e->obj))
+			{
 				x -= min_tx * dx + nx * PUSH_BACK - dx;
 				y -= min_ty * dy + ny * PUSH_BACK - dy;
 			}
@@ -184,9 +182,9 @@ void Koopa::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 		}
 		if (timer > KOOPA_REVIVING_INTERVAL)
 		{
-			SetState(KOOPA_STATE_WALKING);
 			timer = 0;
 			y -= KOOPA_WALKING_HEIGHT - KOOPA_HIDING_HEIGHT;
+			SetState(KOOPA_STATE_WALKING);
 		}
 	}
 

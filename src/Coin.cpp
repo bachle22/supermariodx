@@ -3,6 +3,11 @@
 #include "Coin.h"
 #include "Point.h"
 
+Coin::Coin()
+{
+	this->type = COIN_LARGE;
+}
+
 Coin::Coin(float x, float y, int type)
 {
 	this->x = x;
@@ -14,13 +19,13 @@ Coin::Coin(float x, float y, int type)
 
 void Coin::Render()
 {
-	animation_set->at(0)->Render(NOFLIP, x, y);
-	//RenderBoundingBox();
+	animation_set->at(type)->Render(NOFLIP, x, y);
+	RenderBoundingBox();
 }
 
 void Coin::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	if (type == COIN_HIDDEN) return;
+	if (type == COIN_SMALL) return;
 	left = x;
 	top = y;
 	right = x + COIN_BBOX_WIDTH;
@@ -48,8 +53,7 @@ void Coin::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 		isThrowing = false;
 		Disable();
 
-		// Shift point to the left :)
-		Point* point = new Point(x - 2, y, POINT_100);
+		Point* point = new Point(x - POINT_BRICK_OFFSET, y, POINT_100);
 		LPSCENE scene = Game::GetInstance()->GetCurrentScene();
 		((ScenePlayer*)scene)->AddObject(point);
 	}
@@ -58,4 +62,17 @@ void Coin::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 void Coin::Throw()
 {
 	isThrowing = true;
+	Stats::GetInstance()->AddCoin();
+}
+
+void Coin::SetPosition(float x, float y)
+{
+	x -= 1;
+	GameObject::SetPosition(x, y);
+}
+
+void Coin::Earn()
+{
+	Stats::GetInstance()->AddCoin();
+	Disable();
 }

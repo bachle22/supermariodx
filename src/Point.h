@@ -5,6 +5,7 @@
 constexpr float POINT_FLOATING_SPEED = 0.12f;
 constexpr float POINT_MIN_SPEED = -0.01f;
 constexpr int POINT_FLOATING_HEIGHT = 30;
+constexpr int POINT_BRICK_OFFSET = 2;
 
 enum PointType
 {

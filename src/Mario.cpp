@@ -88,7 +88,7 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 		/*if (rdx != 0 && rdx != dx)
 			x += nx * abs(rdx);*/
 
-		// block 
+			// block 
 		x += min_tx * dx + nx * PUSH_BACK;		// nx*0.4f : need to push out a bit to avoid overlapping next frame
 		y += min_ty * dy + ny * PUSH_BACK;
 
@@ -190,11 +190,11 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 						vy = -MARIO_JUMP_DEFLECT_SPEED;
 					}
 				}
-				else if(goomba->GetState() != GOOMBA_STATE_DIE)
+				else if (goomba->GetState() != GOOMBA_STATE_DIE)
 				{
 					Downgrade();
 				}
-					
+
 			}
 
 			else if (dynamic_cast<Koopa*>(e->obj))
@@ -224,7 +224,7 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 				}
 				else if (e->nx != 0)
 				{
-					if (k->GetState() != KOOPA_STATE_HIDING && 
+					if (k->GetState() != KOOPA_STATE_HIDING &&
 						k->GetState() != KOOPA_STATE_REVIVING) Downgrade();
 					else {
 						SetAction(KICKING);
@@ -244,6 +244,15 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 				y += dy;
 				Downgrade();
 
+			}
+
+			else if (dynamic_cast<Coin*>(e->obj))
+			{
+				vx = entry_vx;
+				vy = entry_vy;
+				x -= min_tx * dx + nx * PUSH_BACK - dx;
+				y -= min_ty * dy + ny * PUSH_BACK - dy;
+				dynamic_cast<Coin*>(e->obj)->Earn();
 			}
 
 			else

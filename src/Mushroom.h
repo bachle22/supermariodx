@@ -3,9 +3,8 @@
 #include "GameObject.h"
 
 constexpr float MUSHROOM_GROWTH_SPEED = 0.03f;
-constexpr float MUSHROOM_MOVING_SPEED = 0.068f;
+constexpr float MUSHROOM_MOVING_SPEED = 0.06f;
 constexpr float MUSHROOM_GROWTH_HEIGHT = 16.1f;	// Prevent overlapping
-constexpr float MUSHROOM_GRAVITY = 0.0015f;
 constexpr int MUSHROOM_GROWING_DELAY = 200;
 constexpr int MUSHROOM_WIDTH = 14;
 

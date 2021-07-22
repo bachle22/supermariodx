@@ -7,6 +7,7 @@
 #include "Platform.h"
 #include "Goomba.h"
 #include "Brick.h"
+#include "Block.h"
 
 Mushroom::Mushroom(float x, float y, int type)
 {
@@ -62,10 +63,6 @@ void Mushroom::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 		y += min_ty * dy + ny * PUSH_BACK;
 		x += min_tx * dx + nx * PUSH_BACK;
 
-		float entry_vx = vx;
-		float entry_vy = vy;
-
-		if (nx != 0) vx = 0;
 		if (ny != 0) vy = 0;
 
 		for (UINT i = 0; i < coEventsResult.size(); i++)
@@ -79,12 +76,9 @@ void Mushroom::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 				}
 				else
 				{
-					x -= min_tx * dx + nx * PUSH_BACK;
-					x += dx;
-
-					//vy = entry_vy;
-					y -= min_ty * dy + ny * PUSH_BACK;
-					y += dy;
+					x -= min_tx * dx + nx * PUSH_BACK - dx;
+					if (e->ny != 0 && !dynamic_cast<Block*>(e->obj))
+						y -= min_ty * dy + ny * PUSH_BACK - dy;
 				}
 			}
 		}
@@ -103,9 +97,9 @@ void Mushroom::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 	if (state == MUSHROOM_MOVING)
 	{
 		vx = nx * MUSHROOM_MOVING_SPEED;
-		vy += MUSHROOM_GRAVITY * dt;
+		vy += GLOBAL_GRAVITY * dt;
 	}
-	
+
 	if (vy >= GLOBAL_TERMINAL_VELOCITY) vy = GLOBAL_TERMINAL_VELOCITY;
 }
 

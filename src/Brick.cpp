@@ -75,11 +75,10 @@ void Brick::Hit()
 	{
 	case BRICK_COIN:
 	{
-		Coin* coin = new Coin(x + COIN_POSITION_OFFSET_X, y - COIN_POSITION_OFFSET_Y, COIN_HIDDEN);
+		Coin* coin = new Coin(x + COIN_POSITION_OFFSET_X, y - COIN_POSITION_OFFSET_Y, COIN_SMALL);
 		LPSCENE scene = Game::GetInstance()->GetCurrentScene();
 		((ScenePlayer*)scene)->AddObject(coin);
 		coin->Throw();
-		Stats::GetInstance()->AddCoin();
 		break;
 	}
 	case BRICK_POWER_UP:

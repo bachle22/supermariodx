@@ -7,12 +7,12 @@ constexpr float COIN_FALLING_FLOOR = 20;
 constexpr int COIN_ANI_SET_ID = 70;
 
 constexpr int COIN_BBOX_WIDTH = 14;
-constexpr int COIN_BBOX_HEIGH = 14;
+constexpr int COIN_BBOX_HEIGH = 16;
 
 enum CoinType
 {
-	COIN_HIDDEN = 0,
-	COIN_VISIBLE = 1,
+	COIN_SMALL = 0,
+	COIN_LARGE = 1,
 };
 
 class Coin : public GameObject
@@ -26,7 +26,10 @@ class Coin : public GameObject
 	virtual void Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects);
 
 public:
+	Coin();
 	Coin(float x, float y, int state);
-	void Throw();
 
+	virtual void SetPosition(float x, float y);
+	void Throw();
+	void Earn();
 };

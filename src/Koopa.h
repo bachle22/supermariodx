@@ -7,12 +7,12 @@ constexpr float KOOPA_ROLLING_SPEED = 0.2f;
 constexpr float KOOPA_FLYING_SPEED = 0.2f;
 constexpr float KOOPA_PLATFORM_THRESHOLD = 0.05f;
 
-constexpr int KOOPA_WIDTH = 16;
+constexpr int KOOPA_WIDTH = 14;
 constexpr int KOOPA_WALKING_HEIGHT = 20;
 constexpr int KOOPA_HIDING_HEIGHT = 15;
 
 constexpr int KOOPA_WALKING_TRANS_Y = 6;
-constexpr int KOOPA_SHELL_TRANS_X = 1;
+constexpr int KOOPA_SHELL_TRANS_X = 2;
 
 constexpr int KOOPA_PLATFORM_OFFSET_LEFT = 6;
 constexpr int KOOPA_PLATFORM_OFFSET_RIGHT = 12;
