@@ -1,9 +1,12 @@
 #pragma once
+
 #define DIRECTINPUT_VERSION 0x0800
 
 #include <d3d9.h>
 #include <d3dx9.h>
+#include <d3dx9math.h>
 #include <dinput.h>
+
 #include <unordered_map>
 #include <windows.h>
 
@@ -57,13 +60,13 @@ public:
 	void Draw(float x, float y,
 		LPDIRECT3DTEXTURE9 texture,
 		int left, int top, int right, int bottom);
-	void Draw(int nx, float x, float y, 
-		LPDIRECT3DTEXTURE9 texture, 
-		int left, int top, int right, int bottom, 
+	void Draw(int nx, float x, float y,
+		LPDIRECT3DTEXTURE9 texture,
+		int left, int top, int right, int bottom,
 		int alpha = 255);
-	void Draw(int nx, float x, float y, 
-		LPDIRECT3DTEXTURE9 texture, 
-		int left, int top, int right, int bottom, 
+	void Draw(int nx, float x, float y,
+		LPDIRECT3DTEXTURE9 texture,
+		int left, int top, int right, int bottom,
 		int alpha, D3DXVECTOR2 translation);
 	void Draw(int nx, float x, float y,
 		LPDIRECT3DTEXTURE9 texture,

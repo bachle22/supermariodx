@@ -162,8 +162,7 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 				if (e->ny == -1)
 				{
 					vy = entry_vy;
-					y -= min_ty * dy + ny * PUSH_BACK;
-					y += dy;
+					y -= min_ty * dy + ny * PUSH_BACK - dy;
 				}
 
 				Mushroom* m = dynamic_cast<Mushroom*>(e->obj);
@@ -192,7 +191,7 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 				}
 				else if (goomba->GetState() != GOOMBA_STATE_DIE)
 				{
-					Downgrade();
+					this->Downgrade();
 				}
 
 			}
@@ -249,9 +248,12 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 			else if (dynamic_cast<Coin*>(e->obj))
 			{
 				vx = entry_vx;
-				vy = entry_vy;
 				x -= min_tx * dx + nx * PUSH_BACK - dx;
-				y -= min_ty * dy + ny * PUSH_BACK - dy;
+				if (e->nx == 0)
+				{
+					vy = entry_vy;
+					y -= min_ty * dy + ny * PUSH_BACK - dy;
+				}
 				dynamic_cast<Coin*>(e->obj)->Earn();
 			}
 

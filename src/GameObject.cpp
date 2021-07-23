@@ -1,7 +1,6 @@
 #pragma once
 
 #include <algorithm>
-#include <d3dx9.h>
 #include <vector>
 
 #include "Game.h"

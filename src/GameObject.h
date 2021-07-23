@@ -1,7 +1,6 @@
 #pragma once
 
 #include <windows.h>
-#include <d3dx9.h>
 #include <vector>
 
 #include "AnimationSets.h"

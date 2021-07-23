@@ -1,7 +1,5 @@
 #pragma once
 
-#include <d3d9.h>
-
 #include "GameObject.h"
 #include "Sprites.h"
 #include "Textures.h"
@@ -14,7 +12,7 @@ class TileMap /*: public GameObject*/
 
 	LPDIRECT3DTEXTURE9 tileTexture; 
 	std::vector<LPSPRITE> tileSprites;
-	int** tiles;
+	int** tiles{};
 
 public:
 	TileMap(int textureId,

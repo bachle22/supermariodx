@@ -90,11 +90,21 @@ void Brick::Hit()
 		break;
 	}
 	case BRICK_1UP:
+	{
 		LPSCENE scene = Game::GetInstance()->GetCurrentScene();
 		int marioState = ((ScenePlayer*)scene)->GetPlayer()->GetState();
 		Mushroom* mushroom = new Mushroom(x + MUSHROOM_OFFSET_X, y, ONE_UP_MUSHROOM);
 		((ScenePlayer*)scene)->AddObject(mushroom);
 		break;
+	}
+	case BRICK_BREAKABLE:
+	{
+		Coin* coin = new Coin(x + 1, y, COIN_LARGE);
+		LPSCENE scene = Game::GetInstance()->GetCurrentScene();
+		((ScenePlayer*)scene)->AddObject(coin);
+		Disable();
+		break;
+	}
 	}
 }
 

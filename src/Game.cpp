@@ -1,5 +1,4 @@
 #include <fstream>
-#include <d3dx9math.h>
 
 #include "Game.h"
 #include "Camera.h"
@@ -333,4 +332,3 @@ void Game::SwitchScene(int scene_id)
 	Game::GetInstance()->SetKeyHandler(s->GetKeyEventHandler());
 	s->Load();
 }
-
