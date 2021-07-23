@@ -214,6 +214,16 @@
 # biting down
 734	30042	150	30043	150
 
+#======= GREEN PIRANHA PLANT =======
+# Shooting up
+735	30050	0
+# Shooting down
+736	30051	0
+# biting down
+737	30051	100	30053	100
+# biting up
+738	30050	100	30052	100
+
 #Brick - Breakable
 842	40042	150	40043	150	40044	150	40045	150
 #? Brick
