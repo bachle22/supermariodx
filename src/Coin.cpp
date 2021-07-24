@@ -22,7 +22,7 @@ Coin::Coin(float x, float y, int type)
 void Coin::Render()
 {
 	animation_set->at(type)->Render(NOFLIP, x, y);
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void Coin::GetBoundingBox(float& left, float& top, float& right, float& bottom)

@@ -43,6 +43,7 @@
     <ClCompile Include="Point.cpp" />
     <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="PSwitch.cpp" />
+    <ClCompile Include="Roulette.cpp" />
     <ClCompile Include="Stats.cpp" />
     <ClCompile Include="Tail.cpp" />
     <ClCompile Include="TileMap.cpp" />
@@ -83,6 +84,7 @@
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="PSwitch.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Roulette.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="ScenePlayer.h" />
     <ClInclude Include="Sprites.h" />

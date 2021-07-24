@@ -1,7 +1,8 @@
 #pragma once
 
-#pragma warning(push, 0)
-#pragma warning(disable: ALL_CODE_ANALYSIS_WARNINGS)
+#pragma warning(push)
+#pragma warning(disable: 26495)
+#pragma warning(disable: 28251)
 #include <d3dx9.h>
 #pragma warning( pop )
 

@@ -15,6 +15,7 @@
 #include "Platform.h"
 #include "Block.h"
 #include "Plant.h"
+#include "Roulette.h"
 
 ScenePlayer::ScenePlayer(int id, LPCWSTR filePath) : Scene(id, filePath)
 {
@@ -246,6 +247,9 @@ void ScenePlayer::_ParseSection_OBJECTS(std::string pathString)
 			}
 			case OBJECT_TYPE_COIN:
 				obj = new Coin();
+				break;
+			case OBJECT_TYPE_ROULETTE:
+				obj = new Roulette();
 				break;
 			default:
 				DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
@@ -500,7 +504,7 @@ void ScenePlayerInputHandler::OnKeyDown(int KeyCode)
 		mario->SetPosition(2263, 345);
 		break;
 	case DIK_F6:
-		mario->SetPosition(2112, 300);
+		mario->SetPosition(2690, 385);
 		break;
 	case DIK_L:
 		game->DEBUG_X++;

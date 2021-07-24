@@ -18,6 +18,7 @@
 #include "Koopa.h"
 #include "Warp.h"
 #include "PSwitch.h"
+#include "Roulette.h"
 
 Mario::Mario(float x, float y) : GameObject()
 {
@@ -200,6 +201,16 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 				PSwitch* p = dynamic_cast<PSwitch*>(e->obj);
 				if (e->ny < 0) p->Switch();
 				vy = -MARIO_JUMP_DEFLECT_SPEED;
+			}
+
+			else if (dynamic_cast<Roulette*>(e->obj))
+			{
+				vx = entry_vx;
+				x -= min_tx * dx + nx * PUSH_BACK - dx;
+				vy = entry_vy;
+				y -= min_ty * dy + ny * PUSH_BACK - dy;
+
+				dynamic_cast<Roulette*>(e->obj)->Withdraw();
 			}
 
 			else if (dynamic_cast<Koopa*>(e->obj))

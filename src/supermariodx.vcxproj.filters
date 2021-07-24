@@ -152,6 +152,9 @@
     <ClCompile Include="PSwitch.cpp">
       <Filter>Objects\Items</Filter>
     </ClCompile>
+    <ClCompile Include="Roulette.cpp">
+      <Filter>Objects\Items</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Debug.h">
@@ -263,6 +266,9 @@
       <Filter>Objects\Effects</Filter>
     </ClInclude>
     <ClInclude Include="PSwitch.h">
+      <Filter>Objects\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="Roulette.h">
       <Filter>Objects\Items</Filter>
     </ClInclude>
   </ItemGroup>

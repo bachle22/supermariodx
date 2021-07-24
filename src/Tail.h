@@ -7,6 +7,8 @@ constexpr float TAIL_OFFSET_RIGHT = 3;
 constexpr float TAIL_OFFSET_Y = 18;
 constexpr float TAIL_VELOCITY = 0.1f;
 constexpr int TAIL_HEIGHT = 6;
+constexpr int TAIL_HIT_OFFSET_X = 8;
+
 
 class Tail : public GameObject
 {

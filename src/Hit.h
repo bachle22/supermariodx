@@ -2,7 +2,6 @@
 
 #include "GameObject.h"
 
-constexpr int TAIL_HIT_OFFSET_X = 8;
 constexpr int HIT_ANIMATION_DURATION = 200;
 constexpr int HIT_ANIMSET_ID = 75;
 
