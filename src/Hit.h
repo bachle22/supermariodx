@@ -8,7 +8,6 @@ constexpr int HIT_ANIMSET_ID = 75;
 
 class Hit : public GameObject
 {
-	LPANIMATION_SET ani;
 	ULONGLONG timer;
 	ULONGLONG frameStart, tickPerFrame;
 

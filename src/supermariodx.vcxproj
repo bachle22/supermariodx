@@ -23,6 +23,7 @@
     <ClCompile Include="Animations.cpp" />
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="Brick.cpp" />
+    <ClCompile Include="BrokenBrick.cpp" />
     <ClCompile Include="Coin.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="Debug.cpp" />
@@ -57,6 +58,7 @@
     <ClInclude Include="AnimationSets.h" />
     <ClInclude Include="Block.h" />
     <ClInclude Include="Brick.h" />
+    <ClInclude Include="BrokenBrick.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Coin.h" />
     <ClInclude Include="Collision.h" />
@@ -174,9 +176,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <DisableAnalyzeExternal>true</DisableAnalyzeExternal>
       <TreatAngleIncludeAsExternal>true</TreatAngleIncludeAsExternal>
-      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
+      <DisableAnalyzeExternal>true</DisableAnalyzeExternal>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

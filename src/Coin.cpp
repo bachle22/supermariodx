@@ -6,6 +6,7 @@
 Coin::Coin()
 {
 	this->type = COIN_LARGE;
+	isThrowing = false;
 }
 
 Coin::Coin(float x, float y, int type)
@@ -15,6 +16,7 @@ Coin::Coin(float x, float y, int type)
 	this->type = type;
 	entryY = y;
 	animation_set = AnimationSets::GetInstance()->Get(COIN_ANI_SET_ID);
+	isThrowing = false;
 }
 
 void Coin::Render()

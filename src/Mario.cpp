@@ -40,6 +40,8 @@ Mario::Mario(float x, float y) : GameObject()
 	tail = new Tail();
 	LPSCENE scene = Game::GetInstance()->GetCurrentScene();
 	((ScenePlayer*)scene)->AddObject(tail);
+
+
 }
 
 void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)

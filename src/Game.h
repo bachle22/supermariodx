@@ -2,16 +2,20 @@
 
 #define DIRECTINPUT_VERSION 0x0800
 
+#pragma warning(push, 0)
+#pragma warning(disable: ALL_CODE_ANALYSIS_WARNINGS)
 #include <d3d9.h>
 #include <d3dx9.h>
-#include <d3dx9math.h>
 #include <dinput.h>
+#pragma warning( pop )
 
 #include <unordered_map>
 #include <windows.h>
 
 #include "Input.h"
 #include "Scene.h"
+
+//constexpr float D3DX_PI = 3.141592654f;
 
 
 enum RenderOptions
@@ -36,18 +40,18 @@ class Game
 	LPDIRECT3DSURFACE9 backBuffer = NULL;
 	LPD3DXSPRITE spriteHandler = NULL;						// Sprite helper library to help us draw 2D image on the screen 
 
-	LPDIRECTINPUT8 di;										// The DirectInput object         
-	LPDIRECTINPUTDEVICE8 didev;								// The keyboard device 
-	BYTE keyStates[256];									// DirectInput keyboard state buffer 
-	DIDEVICEOBJECTDATA keyEvents[KEYBOARD_BUFFER_SIZE];		// Buffered keyboard data
-	LPKEYEVENTHANDLER keyHandler;
+	LPDIRECTINPUT8 di{};										// The DirectInput object         
+	LPDIRECTINPUTDEVICE8 didev{};								// The keyboard device 
+	BYTE keyStates[256]{};									// DirectInput keyboard state buffer 
+	DIDEVICEOBJECTDATA keyEvents[KEYBOARD_BUFFER_SIZE]{};		// Buffered keyboard data
+	LPKEYEVENTHANDLER keyHandler{};
 
-	int screen_width;
-	int screen_height;
+	int screen_width{};
+	int screen_height{};
 
 	std::unordered_map<int, LPSCENE> scenes;
-	int current_scene;
-	bool isPaused;
+	int current_scene{};
+	bool isPaused{};
 
 
 public:

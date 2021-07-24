@@ -5,6 +5,7 @@
 #include "Mushroom.h"
 #include "Mario.h"
 #include "Debug.h"
+#include "BrokenBrick.h"
 
 Brick::Brick(int type)
 {
@@ -99,9 +100,10 @@ void Brick::Hit()
 	}
 	case BRICK_BREAKABLE:
 	{
-		Coin* coin = new Coin(x + 1, y, COIN_LARGE);
+		BrokenBrick* bb = new BrokenBrick(x, y);
+		//Coin* coin = new Coin(x + 1, y, COIN_LARGE);
 		LPSCENE scene = Game::GetInstance()->GetCurrentScene();
-		((ScenePlayer*)scene)->AddObject(coin);
+		((ScenePlayer*)scene)->AddObject(bb);
 		Disable();
 		break;
 	}

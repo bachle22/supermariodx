@@ -82,7 +82,6 @@ void Mushroom::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 				}
 			}
 		}
-
 	}
 
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];

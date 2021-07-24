@@ -48,6 +48,12 @@ void Sprite::Draw(float x, float y)
 	game->Draw(x, y, texture, left, top, right, bottom);
 }
 
+void Sprite::Draw(int nx, float x, float y)
+{
+	Game* game = Game::GetInstance();
+	game->Draw(nx, x, y, texture, left, top, right, bottom);
+}
+
 void Sprite::Draw(int nx, float x, float y, int alpha, int width, int height)
 {
 	Game* game = Game::GetInstance();

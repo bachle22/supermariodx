@@ -28,24 +28,24 @@ protected:
 	float x;
 	float y;
 
-	float dx;	// dx = vx*dt
-	float dy;	// dy = vy*dt
+	float dx{};	// dx = vx*dt
+	float dy{};	// dy = vy*dt
 
 	float vx;
 	float vy;
 
-	float ax;
-	float ay;
+	float ax{};
+	float ay{};
 
-	int nx;
+	int nx{};
 
-	int state;
+	int state{};
 
 	bool isEnabled;
 
-	ULONGLONG dt;
+	ULONGLONG dt{};
 
-	LPANIMATION_SET animation_set;
+	LPANIMATION_SET animation_set{};
 
 public:
 	GameObject();

@@ -143,6 +143,9 @@
     <ClCompile Include="Projectile.cpp">
       <Filter>Objects\Items</Filter>
     </ClCompile>
+    <ClCompile Include="BrokenBrick.cpp">
+      <Filter>Objects\Effects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Debug.h">
@@ -246,6 +249,9 @@
     </ClInclude>
     <ClInclude Include="Projectile.h">
       <Filter>Objects\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="BrokenBrick.h">
+      <Filter>Objects\Effects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

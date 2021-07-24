@@ -1,6 +1,9 @@
 #pragma once
 
+#pragma warning(push, 0)
+#pragma warning(disable: ALL_CODE_ANALYSIS_WARNINGS)
 #include <d3dx9.h>
+#pragma warning( pop )
 
 #include <windows.h>
 #include <unordered_map>
@@ -22,6 +25,7 @@ public:
 	void Draw(int nx, float x, float y, int alpha, D3DXVECTOR2 translation, int rotation);
 	void Draw(int nx, float x, float y, int alpha);
 	void Draw(int nx, float x, float y, int alpha, int width, int height);
+	void Draw(int nx, float x, float y);
 	void Draw(float x, float y);
 	void Draw(int nx, float x, float y, 
 		int alpha, D3DXVECTOR2 translation, 

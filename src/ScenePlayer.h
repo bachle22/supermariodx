@@ -15,14 +15,14 @@ class ScenePlayer : public Scene
 	friend class ScenePlayerInputHandler;
 
 protected:
-	Mario* player;
-	TileMap* map;
-	HUD* hud;
-	Stats* stats;
+	Mario* player{};
+	TileMap* map{};
+	HUD* hud{};
+	Stats* stats{};
 
-	ULONGLONG interval;
-	int timer;
-	int score;
+	ULONGLONG interval{};
+	int timer{};
+	int score{};
 
 	std::vector<LPGAMEOBJECT> objects;
 

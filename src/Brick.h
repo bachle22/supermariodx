@@ -37,7 +37,7 @@ class Brick : public GameObject
 	int type;
 	bool isHit;
 
-	float imitateY, entryY;
+	float imitateY{}, entryY{};
 
 	bool isPressed;
 	ULONGLONG timer;

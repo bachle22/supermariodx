@@ -19,7 +19,7 @@ class Coin : public GameObject
 {
 	bool isThrowing;
 	int type;
-	float entryY;
+	float entryY{};
 	
 	virtual void Render();
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
