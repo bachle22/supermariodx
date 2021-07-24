@@ -52,4 +52,5 @@ public:
 	void Hit();
 	void Press();
 	void Unpress();
+	int GetType() { return type; }
 };

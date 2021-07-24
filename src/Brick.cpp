@@ -6,6 +6,8 @@
 #include "Mario.h"
 #include "Debug.h"
 #include "BrokenBrick.h"
+#include "PSwitch.h"
+#include "Warp.h"
 
 Brick::Brick(int type)
 {
@@ -105,6 +107,16 @@ void Brick::Hit()
 		LPSCENE scene = Game::GetInstance()->GetCurrentScene();
 		((ScenePlayer*)scene)->AddObject(bb);
 		Disable();
+		break;
+	}
+	case BRICK_PSWITCH:
+	{
+		Warp* warp = new Warp(x, y - TILE_HEIGHT);
+		PSwitch* pswitch = new PSwitch(x, y - TILE_HEIGHT);
+
+		LPSCENE scene = Game::GetInstance()->GetCurrentScene();
+		((ScenePlayer*)scene)->AddObject(warp);
+		((ScenePlayer*)scene)->AddPriorObject(pswitch);
 		break;
 	}
 	}

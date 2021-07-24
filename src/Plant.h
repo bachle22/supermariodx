@@ -20,7 +20,7 @@ constexpr int PLANT_SHOOTER_HIDING_INTERVAL = 1500;
 constexpr int PLANT_PROJECTILE_DELAY = 1000;
 constexpr int PLANT_SHOOTER_ATTACKING_INTERVAL = 1500;
 
-constexpr int PLANT_WARP_EFFECT_Y = 1500;
+constexpr int PLANT_WARP_EFFECT_Y = 4;
 
 enum PlantType
 {

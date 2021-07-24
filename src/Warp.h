@@ -2,7 +2,7 @@
 
 #include "GameObject.h"
 
-constexpr int WARP_ANI_ID = 79;
+constexpr int WARP_ANISET_ID = 79;
 constexpr int WARP_TIMEOUT = 500;
 
 

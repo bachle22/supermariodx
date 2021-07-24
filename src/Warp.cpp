@@ -4,7 +4,7 @@ Warp::Warp(float x, float y)
 {
 	this->x = x;
 	this->y = y;
-	animation_set = AnimationSets::GetInstance()->Get(WARP_ANI_ID);
+	animation_set = AnimationSets::GetInstance()->Get(WARP_ANISET_ID);
 	frameStart = GetTickCount64();
 	tickPerFrame = 1000 / MAX_FRAME_RATE;
 	timer = 0;

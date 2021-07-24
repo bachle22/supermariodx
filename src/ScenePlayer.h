@@ -42,9 +42,10 @@ public:
 
 	Mario* GetPlayer() { return player; }
 	HUD* GetHUD() { return hud; }
+	std::vector<LPGAMEOBJECT>* GetObjects(){ return &objects; }
 
 	void AddObject(LPGAMEOBJECT object) { objects.push_back(object); }
-	void AddPriorObject(LPGAMEOBJECT object) { objects.push_back(object); }
+	void AddPriorObject(LPGAMEOBJECT object) { objects.insert(objects.begin() + 1, object); }
 	
 };
 

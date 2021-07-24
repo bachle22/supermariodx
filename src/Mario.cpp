@@ -17,6 +17,7 @@
 #include "Plant.h"
 #include "Koopa.h"
 #include "Warp.h"
+#include "PSwitch.h"
 
 Mario::Mario(float x, float y) : GameObject()
 {
@@ -143,8 +144,7 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 				x += dx;
 				if (e->ny == 1) {
 					vy = entry_vy;
-					y -= min_ty * dy + ny * PUSH_BACK;
-					y += dy;
+					y -= min_ty * dy + ny * PUSH_BACK - dy;
 				}
 			}
 
@@ -157,8 +157,7 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 			else if (dynamic_cast<Mushroom*>(e->obj))
 			{
 				vx = entry_vx;
-				x -= min_tx * dx + nx * PUSH_BACK;
-				x += dx;
+				x -= min_tx * dx + nx * PUSH_BACK - dx;
 
 				if (e->ny == -1)
 				{
@@ -176,8 +175,7 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 			else if (dynamic_cast<Goomba*>(e->obj))
 			{
 				vx = entry_vx;
-				x -= min_tx * dx + nx * PUSH_BACK;
-				x += dx;
+				x -= min_tx * dx + nx * PUSH_BACK - dx;
 
 				Goomba* goomba = dynamic_cast<Goomba*>(e->obj);
 
@@ -197,11 +195,17 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 
 			}
 
+			else if (dynamic_cast<PSwitch*>(e->obj))
+			{
+				PSwitch* p = dynamic_cast<PSwitch*>(e->obj);
+				if (e->ny < 0) p->Switch();
+				vy = -MARIO_JUMP_DEFLECT_SPEED;
+			}
+
 			else if (dynamic_cast<Koopa*>(e->obj))
 			{
 				vx = entry_vx;
-				x -= min_tx * dx + nx * PUSH_BACK;
-				x += dx;
+				x -= min_tx * dx + nx * PUSH_BACK - dx;
 
 				Koopa* k = dynamic_cast<Koopa*>(e->obj);
 
@@ -237,11 +241,9 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 			else if (dynamic_cast<Projectile*>(e->obj) || dynamic_cast<Plant*>(e->obj))
 			{
 				vx = entry_vx;
-				x -= min_tx * dx + nx * PUSH_BACK;
-				x += dx;
+				x -= min_tx * dx + nx * PUSH_BACK - dx;
 				vy = entry_vy;
-				y -= min_ty * dy + ny * PUSH_BACK;
-				y += dy;
+				y -= min_ty * dy + ny * PUSH_BACK - dy;
 				Downgrade();
 
 			}
@@ -281,6 +283,7 @@ void Mario::Render()
 	else switch (state) {
 	case MARIO_SMALL:
 		translation.x = -MARIO_SMALL_TRANSLATE_X;
+		translation.y = -1;
 		if (ax != 0 || AS_SHORT(movement))
 		{
 			ani = ANI_SMALL_WALKING;
@@ -593,6 +596,10 @@ void Mario::SetState(int state)
 		animationTimer = GetTickCount64();
 		Game::GetInstance()->Pause();
 		break;
+	case MARIO_BIG_TO_SMALL:
+		animationTimer = GetTickCount64();
+		Game::GetInstance()->Pause();
+		break;
 	case MARIO_RACOON_TO_BIG:
 		animationTimer = GetTickCount64();
 		Warp* warp = new Warp(x, y + MARIO_WARP_EFFECT_Y);
@@ -716,7 +723,6 @@ void Mario::Downgrade()
 	{
 	case MARIO_RACOON:
 		SetState(MARIO_RACOON_TO_BIG);
-		SetUntouchable();
 		break;
 	case MARIO_BIG:
 		SetState(MARIO_BIG_TO_SMALL);

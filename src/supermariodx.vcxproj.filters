@@ -149,6 +149,9 @@
     <ClCompile Include="Warp.cpp">
       <Filter>Objects\Effects</Filter>
     </ClCompile>
+    <ClCompile Include="PSwitch.cpp">
+      <Filter>Objects\Items</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Debug.h">
@@ -258,6 +261,9 @@
     </ClInclude>
     <ClInclude Include="Warp.h">
       <Filter>Objects\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="PSwitch.h">
+      <Filter>Objects\Items</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

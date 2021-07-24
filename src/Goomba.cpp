@@ -75,10 +75,10 @@ void Goomba::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 					this->Reverse();
 				}
 				else {
-					x -= min_tx * dx + nx * PUSH_BACK;
-					x += dx;
-					y -= min_ty * dy + ny * PUSH_BACK;
-					y += dy;
+					x -= min_tx * dx + nx * PUSH_BACK - dx;
+					// Prevent Mario from pushing object off the ground
+					if (!dynamic_cast<Mario*>(e->obj) && ny != 0) 
+						y -= min_ty * dy + ny * PUSH_BACK - dy;
 				}
 			}
 		}

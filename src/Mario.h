@@ -47,11 +47,11 @@ constexpr int BIG_BBOX_DUCKING_DIFF = 9;
 constexpr int RACOON_BBOX_DUCKING_DIFF = 10;
 
 constexpr int SMALL_TO_BIG_DURATION = 1000;
-constexpr int BIG_TO_SMALL_DURATION = 600;
+constexpr int BIG_TO_SMALL_DURATION = 1000;
 constexpr int RACOON_TO_BIG_DURATION = 600;
 
 constexpr int MARIO_SMALL_WIDTH = 12;
-constexpr int MARIO_SMALL_HEIGHT = 16;
+constexpr int MARIO_SMALL_HEIGHT = 15;
 constexpr int MARIO_BIG_WIDTH = 14;
 constexpr int MARIO_BIG_HEIGHT = 27;
 constexpr int MARIO_RACOON_ATTACK_WIDTH = 14;

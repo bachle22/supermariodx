@@ -5,6 +5,8 @@
 #include "Block.h"
 #include "Game.h"
 #include "Goomba.h"
+#include "Mario.h"
+#include "Coin.h"
 
 Koopa::Koopa(int type)
 {
@@ -65,7 +67,6 @@ void Koopa::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 				{
 					if (state == KOOPA_STATE_WALKING)
 					{
-
 						if (dynamic_cast<Platform*>(e->obj))
 						{
 							Platform* p = dynamic_cast<Platform*>(e->obj);
@@ -96,16 +97,19 @@ void Koopa::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 
 			else if (dynamic_cast<Block*>(e->obj))
 			{
-				x -= min_tx * dx + nx * PUSH_BACK;
-				x += dx;
+				x -= min_tx * dx + nx * PUSH_BACK - dx;
 				if (e->ny == -1) GetPlatformBounding(e->obj);
 			}
 
 			else if (!dynamic_cast<Koopa*>(e->obj))
 			{
 				x -= min_tx * dx + nx * PUSH_BACK - dx;
-				y -= min_ty * dy + ny * PUSH_BACK - dy;
+				if (dynamic_cast<Coin*>(e->obj) && e->ny == -1)
+				{
+					y -= min_ty * dy + ny * PUSH_BACK - dy;
+				}
 			}
+
 
 			if (state == KOOPA_STATE_ROLLING)
 			{

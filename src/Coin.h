@@ -13,6 +13,7 @@ enum CoinType
 {
 	COIN_SMALL = 0,
 	COIN_LARGE = 1,
+	COIN_LARGE_STATIC = 2,
 };
 
 class Coin : public GameObject
