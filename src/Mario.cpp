@@ -16,6 +16,7 @@
 #include "Projectile.h"
 #include "Plant.h"
 #include "Koopa.h"
+#include "Warp.h"
 
 Mario::Mario(float x, float y) : GameObject()
 {
@@ -40,8 +41,6 @@ Mario::Mario(float x, float y) : GameObject()
 	tail = new Tail();
 	LPSCENE scene = Game::GetInstance()->GetCurrentScene();
 	((ScenePlayer*)scene)->AddObject(tail);
-
-
 }
 
 void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
@@ -377,6 +376,9 @@ void Mario::Render()
 	case MARIO_BIG_TO_SMALL:
 		ani = ANI_BIG_TO_SMALL;
 		break;
+	case MARIO_RACOON_TO_BIG:
+		ani = ANI_BIG_IDLE;
+		break;
 	}
 
 	int alpha = VISIBLE;
@@ -591,8 +593,11 @@ void Mario::SetState(int state)
 		animationTimer = GetTickCount64();
 		Game::GetInstance()->Pause();
 		break;
-	case MARIO_BIG_TO_SMALL:
+	case MARIO_RACOON_TO_BIG:
 		animationTimer = GetTickCount64();
+		Warp* warp = new Warp(x, y + MARIO_WARP_EFFECT_Y);
+		LPSCENE scene = Game::GetInstance()->GetCurrentScene();
+		((ScenePlayer*)scene)->AddObject(warp);
 		Game::GetInstance()->Pause();
 		break;
 	}
@@ -614,6 +619,13 @@ void Mario::UpdateState()
 			Game::GetInstance()->Unpause();
 			SetState(MARIO_SMALL);
 			y += MARIO_BIG_HEIGHT - MARIO_SMALL_HEIGHT - 1.f;
+			SetUntouchable();
+		}
+		break;
+	case MARIO_RACOON_TO_BIG:
+		if (GetTickCount64() - animationTimer >= RACOON_TO_BIG_DURATION) {
+			Game::GetInstance()->Unpause();
+			SetState(MARIO_BIG);
 			SetUntouchable();
 		}
 		break;
@@ -703,7 +715,7 @@ void Mario::Downgrade()
 	switch (state)
 	{
 	case MARIO_RACOON:
-		SetState(MARIO_BIG);
+		SetState(MARIO_RACOON_TO_BIG);
 		SetUntouchable();
 		break;
 	case MARIO_BIG:

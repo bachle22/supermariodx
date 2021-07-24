@@ -140,10 +140,13 @@
     <ClCompile Include="Plant.cpp">
       <Filter>Objects\NPCs</Filter>
     </ClCompile>
-    <ClCompile Include="Projectile.cpp">
-      <Filter>Objects\Items</Filter>
-    </ClCompile>
     <ClCompile Include="BrokenBrick.cpp">
+      <Filter>Objects\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="Projectile.cpp">
+      <Filter>Objects\NPCs</Filter>
+    </ClCompile>
+    <ClCompile Include="Warp.cpp">
       <Filter>Objects\Effects</Filter>
     </ClCompile>
   </ItemGroup>
@@ -247,10 +250,13 @@
     <ClInclude Include="Plant.h">
       <Filter>Objects\NPCs</Filter>
     </ClInclude>
-    <ClInclude Include="Projectile.h">
-      <Filter>Objects\Items</Filter>
-    </ClInclude>
     <ClInclude Include="BrokenBrick.h">
+      <Filter>Objects\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Projectile.h">
+      <Filter>Objects\NPCs</Filter>
+    </ClInclude>
+    <ClInclude Include="Warp.h">
       <Filter>Objects\Effects</Filter>
     </ClInclude>
   </ItemGroup>

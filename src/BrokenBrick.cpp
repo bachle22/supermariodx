@@ -1,7 +1,4 @@
 #include "BrokenBrick.h"
-#include "Mario.h"
-#include "ScenePlayer.h"
-#include "Game.h"
 
 BrokenBrick::BrokenBrick(float x, float y)
 {
@@ -42,9 +39,9 @@ void BrokenBrick::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 
 void BrokenBrick::Render()
 {
-	float offsetX, offsetY;
-	offsetX = timer / BROKEN_BRICK_OFFSET_X;
-	offsetY = timer / BROKEN_BRICK_OFFSET_Y;
+	int offsetX, offsetY;
+	offsetX = (int) timer / BROKEN_BRICK_OFFSET_X;
+	offsetY = (int) timer / BROKEN_BRICK_OFFSET_Y;
 	animation_set->at(0)->Render(-1, x - offsetX, y + offsetY);
 	animation_set->at(0)->Render(1, x + BROKEN_BRICK_WIDTH + offsetX, y + offsetY);
 	animation_set->at(0)->Render(-1, x - offsetX, y);

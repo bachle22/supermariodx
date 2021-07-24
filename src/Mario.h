@@ -48,6 +48,7 @@ constexpr int RACOON_BBOX_DUCKING_DIFF = 10;
 
 constexpr int SMALL_TO_BIG_DURATION = 1000;
 constexpr int BIG_TO_SMALL_DURATION = 600;
+constexpr int RACOON_TO_BIG_DURATION = 600;
 
 constexpr int MARIO_SMALL_WIDTH = 12;
 constexpr int MARIO_SMALL_HEIGHT = 16;
@@ -63,6 +64,7 @@ constexpr float MARIO_RACOON_TRANSLATE_X = 10;
 constexpr float MARIO_RACOON_SPINNING_X = 7;
 
 constexpr int MARIO_FLASH_INTERVEL = 50;
+constexpr int MARIO_WARP_EFFECT_Y = 8;
 
 enum MarioAnimation
 {
@@ -135,6 +137,7 @@ enum MarioState
 	MARIO_RACOON = 3,
 	MARIO_SMALL_TO_BIG = 4,
 	MARIO_BIG_TO_SMALL = 5,
+	MARIO_RACOON_TO_BIG = 6,
 };
 
 enum MarioSprite

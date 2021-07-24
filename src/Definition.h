@@ -11,6 +11,7 @@ constexpr int SIZE_MULTIPLIER = 3;
 constexpr int MAX_FRAME_RATE = 75;
 
 #pragma warning(push, 0)
+#pragma warning(disable: ALL_CODE_ANALYSIS_WARNINGS)
 constexpr D3DCOLOR D3DCOLOR_BLACK = D3DCOLOR_XRGB(0, 0, 0);
 constexpr D3DCOLOR D3DCOLOR_WHITE = D3DCOLOR_XRGB(255, 255, 255);
 #pragma warning( pop )

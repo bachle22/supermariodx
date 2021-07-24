@@ -1,5 +1,4 @@
 #include "Point.h"
-#include "Debug.h"
 #include "Mario.h"
 #include "ScenePlayer.h"
 #include "Game.h"

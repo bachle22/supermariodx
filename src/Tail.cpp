@@ -4,6 +4,7 @@
 #include "Point.h"
 #include "Brick.h"
 #include "Goomba.h"
+#include "Plant.h"
 #include "Debug.h"
 
 Tail::Tail()
@@ -39,6 +40,15 @@ void Tail::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 				Goomba* g = dynamic_cast<Goomba*>(obj);
 				g->SetDirection(nx);
 				if (!g->Hit()) return;
+
+				Hit* hit = new Hit(x + nx * TAIL_HIT_OFFSET_X, y - TAIL_HEIGHT);
+				LPSCENE scene = Game::GetInstance()->GetCurrentScene();
+				((ScenePlayer*)scene)->AddObject(hit);
+			}
+			else if (dynamic_cast<Plant*>(obj))
+			{
+				Plant* p = dynamic_cast<Plant*>(obj);
+				if (!p->Hit()) return;
 
 				Hit* hit = new Hit(x + nx * TAIL_HIT_OFFSET_X, y - TAIL_HEIGHT);
 				LPSCENE scene = Game::GetInstance()->GetCurrentScene();

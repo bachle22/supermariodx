@@ -20,6 +20,8 @@ constexpr int PLANT_SHOOTER_HIDING_INTERVAL = 1500;
 constexpr int PLANT_PROJECTILE_DELAY = 1000;
 constexpr int PLANT_SHOOTER_ATTACKING_INTERVAL = 1500;
 
+constexpr int PLANT_WARP_EFFECT_Y = 1500;
+
 enum PlantType
 {
 	PLANT_GREEN_BITER = 0,
@@ -68,4 +70,5 @@ public:
 	Plant(int type);
 	virtual void SetState(int state);
 	virtual void SetPosition(float x, float y);
+	bool Hit();
 };

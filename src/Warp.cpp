@@ -1,16 +1,16 @@
-#include "Hit.h"
+#include "Warp.h"
 
-Hit::Hit(float x, float y)
+Warp::Warp(float x, float y)
 {
 	this->x = x;
 	this->y = y;
-	animation_set = AnimationSets::GetInstance()->Get(HIT_ANIMSET_ID);
+	animation_set = AnimationSets::GetInstance()->Get(WARP_ANI_ID);
 	frameStart = GetTickCount64();
 	tickPerFrame = 1000 / MAX_FRAME_RATE;
 	timer = 0;
 }
 
-void Hit::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
+void Warp::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 {
 	// Independent timer
 	ULONGLONG dti = GetTickCount64() - frameStart;
@@ -20,24 +20,22 @@ void Hit::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 	}
 
 	timer += dt;
-	if (timer >= HIT_ANIMATION_DURATION) this->Disable();
-
+	if (timer >= WARP_TIMEOUT) this->Disable();
 	GameObject::Update(dt);
-	y += dy;
 
 }
 
-void Hit::Render()
+void Warp::Render()
 {
 	animation_set->at(0)->Render(x, y);
 }
 
-void Hit::GetBoundingBox(float& left, float& top, float& right, float& bottom)
+void Warp::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
 	return;
 }
 
-void Hit::SetState(int state)
+void Warp::SetState(int state)
 {
 	return;
 }

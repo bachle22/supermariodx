@@ -6,7 +6,8 @@
 #include "Point.h"
 #include "Platform.h"
 #include "Projectile.h"
-#include "Debug.h"
+#include "Warp.h"
+#include "Point.h"
 
 Plant::Plant(int type)
 {
@@ -212,6 +213,15 @@ void Plant::SetState(int state)
 	case PLANT_STATE_ATTACKING:
 		isProjectileShooted = false;
 		break;
+	case PLANT_STATE_DEAD:
+		Warp* warp = new Warp(x, y + PLANT_WARP_EFFECT_Y);
+		Point* point = new Point(x, y, POINT_100);
+
+		LPSCENE scene = Game::GetInstance()->GetCurrentScene();
+		((ScenePlayer*)scene)->AddObject(warp);
+		((ScenePlayer*)scene)->AddObject(point);
+		this->Disable();
+		break;
 	}
 }
 
@@ -220,4 +230,14 @@ void Plant::SetPosition(float x, float y)
 	entryY = y;
 	y += height;
 	GameObject::SetPosition(x, y);
+}
+
+bool Plant::Hit()
+{
+	if (state != PLANT_STATE_DEAD)
+	{
+		SetState(PLANT_STATE_DEAD);
+		return true;
+	}
+	else return false;
 }

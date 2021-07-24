@@ -142,6 +142,10 @@ void Goomba::SetState(int state)
 	case GOOMBA_STATE_HIT:
 		vx = nx * GOOMBA_SMACKED_VX;
 		vy = -GOOMBA_SMACKED_VY;
+
+		Point* point = new Point(x + 2, y, POINT_100);
+		LPSCENE scene = Game::GetInstance()->GetCurrentScene();
+		((ScenePlayer*)scene)->AddObject(point);
 		break;
 	}
 }
@@ -151,10 +155,6 @@ bool Goomba::Hit()
 	if (state != GOOMBA_STATE_HIT)
 	{
 		SetState(GOOMBA_STATE_HIT);
-		
-		Point* point = new Point(x + 2, y, POINT_100);
-		LPSCENE scene = Game::GetInstance()->GetCurrentScene();
-		((ScenePlayer*)scene)->AddObject(point);
 		return true;
 	}
 	else return false;
