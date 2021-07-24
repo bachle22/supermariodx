@@ -155,6 +155,9 @@
     <ClCompile Include="Roulette.cpp">
       <Filter>Objects\Items</Filter>
     </ClCompile>
+    <ClCompile Include="Grid.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Debug.h">
@@ -270,6 +273,9 @@
     </ClInclude>
     <ClInclude Include="Roulette.h">
       <Filter>Objects\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="Grid.h">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

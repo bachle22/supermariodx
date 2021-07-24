@@ -35,8 +35,8 @@ HUD::HUD()
 void HUD::Render()
 {
 	Game* game = Game::GetInstance();
-	x = Camera::GetInstance()->GetPosition().x;
-	y = Camera::GetInstance()->GetPosition().y;
+	x = Camera::GetInstance()->GetPosition()->x;
+	y = Camera::GetInstance()->GetPosition()->y;
 	x = floor(x); y = floor(y);
 	// Render HUD containers textures
 	Game::GetInstance()->Draw(x, y + offset_y, background, 0, 0, SCREEN_WIDTH, HUD_BAR_HEIGHT);

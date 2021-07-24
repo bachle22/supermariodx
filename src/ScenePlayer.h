@@ -6,6 +6,7 @@
 #include "Mario.h"
 #include "HUD.h"
 #include "Stats.h"
+#include "Grid.h"
 
 constexpr int DEFAULT_MAX_TIME = 300;
 
@@ -17,6 +18,7 @@ class ScenePlayer : public Scene
 protected:
 	Mario* player{};
 	TileMap* map{};
+	Grid* grid{};
 	HUD* hud{};
 	Stats* stats{};
 
@@ -25,6 +27,10 @@ protected:
 	int score{};
 
 	std::vector<LPGAMEOBJECT> objects;
+	std::vector<Unit*> units;
+
+	void GetObjectFromGrid();
+	Grid* GetGrid() { return grid; };
 
 	void _ParseSection_TEXTURES(std::string line);
 	void _ParseSection_SPRITES(std::string line);
@@ -32,6 +38,8 @@ protected:
 	void _ParseSection_ANIMATION_SETS(std::string line);
 	void _ParseSection_OBJECTS(std::string line);
 	void _ParseSection_TILEMAP(std::string line);
+	void _ParseSection_GRID(std::string line);
+
 public:
 	ScenePlayer(int id, LPCWSTR filePath);
 	void Init();
@@ -43,10 +51,7 @@ public:
 	Mario* GetPlayer() { return player; }
 	HUD* GetHUD() { return hud; }
 	std::vector<LPGAMEOBJECT>* GetObjects(){ return &objects; }
-
-	void AddObject(LPGAMEOBJECT object) { objects.push_back(object); }
-	void AddPriorObject(LPGAMEOBJECT object) { objects.insert(objects.begin() + 1, object); }
-	
+	void AddObject(LPGAMEOBJECT object);
 };
 
 class ScenePlayerInputHandler : public SceneInputHandler

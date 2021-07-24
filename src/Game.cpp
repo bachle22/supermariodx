@@ -90,8 +90,8 @@ void Game::Draw(
 	int left, int top, int right, int bottom, 
 	int alpha, D3DXVECTOR2 translation, int rotation)
 {
-	D3DXVECTOR3 p(ceil(x - Camera::GetInstance()->GetPosition().x),
-		ceil(y - Camera::GetInstance()->GetPosition().y), 0);
+	D3DXVECTOR3 p(ceil(x - Camera::GetInstance()->GetPosition()->x),
+		ceil(y - Camera::GetInstance()->GetPosition()->y), 0);
 	RECT r;
 	r.left = left;
 	r.top = top;

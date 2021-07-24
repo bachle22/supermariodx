@@ -1,5 +1,4 @@
 #pragma once
-
 #include "GameObject.h"
 
 constexpr int HIT_ANIMATION_DURATION = 200;

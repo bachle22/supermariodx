@@ -6,8 +6,7 @@ Camera* Camera::__instance = NULL;
 
 Camera::Camera()
 {
-	position = D3DXVECTOR3(0, 0, 0);
-
+	position = D3DXVECTOR2(0, 0);
 	width = Game::GetInstance()->GetScreenWidth();
 	height = Game::GetInstance()->GetScreenHeight();
 
@@ -21,14 +20,14 @@ Camera* Camera::GetInstance()
 	return __instance;
 }
 
-void Camera::SetPosition(D3DXVECTOR3 position)
+void Camera::SetPosition(D3DXVECTOR2 position)
 {
 	this->position = position;
 }
 
 void Camera::SetPosition(float x, float y)
 {
-	SetPosition(D3DXVECTOR3(x, y, 0));
+	SetPosition(D3DXVECTOR2(x, y));
 }
 
 void Camera::SetViewSize(float left, float top, float right, float bottom)
@@ -55,5 +54,5 @@ void Camera::Update()
 	else cy = viewBottom;
 	if (cy < viewTop) cy = 0;
 
-	SetPosition(ceil(cx), ceil(cy));
+	SetPosition(ceil(cx) + Game::GetInstance()->DEBUG_X, ceil(cy) + Game::GetInstance()->DEBUG_Y);
 }

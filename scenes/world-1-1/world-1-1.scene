@@ -15,5 +15,7 @@
 ..\scenes\world-1-1\world-1-1.animations
 [ANIMATION_SETS]
 ..\scenes\world-1-1\world-1-1.animsets
-[OBJECTS]
-..\scenes\world-1-1\world-1-1.objects
+#[OBJECTS]
+#..\scenes\world-1-1\world-1-1.objects
+[GRID]
+..\scenes\world-1-1\world-1-1.grid

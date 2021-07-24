@@ -11,7 +11,7 @@ class Camera
 	static Camera* __instance;
 
 	int width, height;
-	D3DXVECTOR3 position;
+	D3DXVECTOR2 position;
 
 	float viewLeft, viewTop, viewRight, viewBottom;
 
@@ -19,12 +19,11 @@ public:
 	Camera();
 	static Camera* GetInstance();
 
-	void SetPosition(D3DXVECTOR3 position);
+	void SetPosition(D3DXVECTOR2 position);
 	void SetPosition(float x, float y);
 	void SetViewSize(float left, float top, float right, float bottom);
 
 	void Update();
-
-	D3DXVECTOR3 GetPosition() { return position; }
+	D3DXVECTOR2* GetPosition() { return &position; }
 };
 

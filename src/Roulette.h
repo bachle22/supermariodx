@@ -1,5 +1,4 @@
 #pragma once
-
 #include "GameObject.h"
 
 constexpr int ROULETTE_SWITCH_TIMEOUT = 100;

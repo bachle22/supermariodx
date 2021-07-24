@@ -116,7 +116,7 @@ void Brick::Hit()
 
 		LPSCENE scene = Game::GetInstance()->GetCurrentScene();
 		((ScenePlayer*)scene)->AddObject(warp);
-		((ScenePlayer*)scene)->AddPriorObject(pswitch);
+		((ScenePlayer*)scene)->AddObject(pswitch);
 		break;
 	}
 	}

@@ -2,14 +2,14 @@
 
 #include "Game.h"
 #include "Camera.h"
-#include "ScenePlayer.h"
-#include "Textures.h"
 #include "Sprites.h"
+#include "Textures.h"
+
+#include "ScenePlayer.h"
 #include "Portal.h"
 #include "Strings.h"
 #include "Debug.h"
 #include "Brick.h"
-#include "Mario.h"
 #include "Goomba.h"
 #include "Koopa.h"
 #include "Platform.h"
@@ -301,6 +301,168 @@ void ScenePlayer::_ParseSection_TILEMAP(std::string pathString)
 	map->SetTileMapData(tiles);
 }
 
+void ScenePlayer::_ParseSection_GRID(std::string pathString)
+{
+	LPCWSTR path = ToLPCWSTR(pathString);
+	std::ifstream f;
+
+	f.open(path);
+	if (!f) DebugOut(L"[ERROR] Unable to open grid config!\n");
+
+	if (f.is_open()) {
+		char str[MAX_SCENE_LINE];
+		int section = SCENE_SECTION_UNKNOWN;
+		int linenum = 0;
+
+		while (f.getline(str, MAX_SCENE_LINE))
+		{
+			linenum++;
+			std::string line(str);
+
+			if (line[0] == '#' || line == "") continue;
+
+			if (line == "[SETTINGS]") {
+				section = SCENE_SECTION_GRID_SETTINGS; continue;
+			}
+			if (line == "[OBJECTS]") {
+				section = SCENE_SECTION_GRID_OBJECTS; continue;
+			}
+			if (line[0] == '[') { section = SCENE_SECTION_UNKNOWN; continue; }
+
+
+			switch (section)
+			{
+			case SCENE_SECTION_GRID_SETTINGS:
+			{
+				std::vector<std::string> tokens = split(str);
+				if (tokens.size() < 2)
+				{
+					DebugOut(L"[WARNING] Invalid grid setting\n");
+					return;
+				}
+				if (!atoi(tokens[0].c_str()) || !atoi(tokens[1].c_str()))
+					return;
+
+				grid = new Grid(atoi(tokens[0].c_str()), atoi(tokens[1].c_str()));
+				break;
+			}
+			case SCENE_SECTION_GRID_OBJECTS:
+			{
+				std::vector<std::string> tokens = split(str);
+
+				int object_type = atoi(tokens[0].c_str());
+				if (tokens.size() < 5 && object_type != OBJECT_TYPE_MARIO)
+				{
+					DebugOut(L"[WARNING] Invalid grid object config at line %d\n", linenum);
+					return;
+				}
+				float x = strtof(tokens[1].c_str(), NULL);
+				float y = strtof(tokens[2].c_str(), NULL);
+
+				int ani_set_id = atoi(tokens[3].c_str());
+
+				AnimationSets* animation_sets = AnimationSets::GetInstance();
+
+				GameObject* obj = NULL;
+
+				switch (object_type)
+				{
+				case OBJECT_TYPE_MARIO:
+					if (player != NULL)
+					{
+						DebugOut(L"[ERROR] MARIO object was created before!\n");
+						return;
+					}
+					obj = new Mario(x, y);
+					player = (Mario*)obj;
+
+					DebugOut(L"[INFO] Player object created!\n");
+					break;
+				case OBJECT_TYPE_GOOMBA:
+				{
+					int type = atoi(tokens[4].c_str());
+					obj = new Goomba(type);
+					break;
+				}
+				case OBJECT_TYPE_BRICK:
+				{
+					int type = atoi(tokens[4].c_str());
+					obj = new Brick(type);
+					break;
+				}
+				case OBJECT_TYPE_PLATFORM:
+					obj = new Platform();
+					break;
+				case OBJECT_TYPE_KOOPA:
+				{
+					int type = atoi(tokens[4].c_str());
+					obj = new Koopa(type);
+					break;
+				}
+				case OBJECT_TYPE_PORTAL:
+				{
+					float r = strtof(tokens[4].c_str(), NULL);
+					float b = strtof(tokens[5].c_str(), NULL);
+					int scene_id = atoi(tokens[6].c_str());
+					obj = new Portal(x, y, r, b, scene_id);
+					break;
+				}
+				case OBJECT_TYPE_BLOCK:
+				{
+					int w = atoi(tokens[3].c_str());
+					int h = atoi(tokens[4].c_str());
+					obj = new Block(w, h);
+					break;
+				}
+				case OBJECT_TYPE_PLANT:
+				{
+					int type = atoi(tokens[4].c_str());
+					obj = new Plant(type);
+					break;
+				}
+				case OBJECT_TYPE_COIN:
+					obj = new Coin();
+					break;
+				case OBJECT_TYPE_ROULETTE:
+					obj = new Roulette();
+					break;
+				default:
+					DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
+					return;
+				}
+
+				// General object setup
+				obj->SetPosition(x, y);
+
+				if (object_type != OBJECT_TYPE_PLATFORM &&
+					object_type != OBJECT_TYPE_BLOCK)
+				{
+					int ani_set_id = atoi(tokens[3].c_str());
+					LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+
+					obj->SetAnimationSet(ani_set);
+				}
+
+				if (object_type != OBJECT_TYPE_MARIO)
+				{
+					int gridCol = (int)atoi(tokens[tokens.size() - 1].c_str());
+					int gridRow = (int)atoi(tokens[tokens.size() - 2].c_str());
+					Unit* unit = new Unit(grid, obj, gridRow, gridCol);
+				}
+
+				break;
+			}
+
+			default:
+				DebugOut(L"[ERR] Invalid section!\n");
+				return;
+			}
+		}
+		f.close();
+	}
+}
+
+
 
 void ScenePlayer::Load()
 {
@@ -352,6 +514,7 @@ void ScenePlayer::Load()
 		case SCENE_SECTION_ANIMATION_SETS: _ParseSection_ANIMATION_SETS(line); break;
 		case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
 		case SCENE_SECTION_TILEMAP: _ParseSection_TILEMAP(line); break;
+		case SCENE_SECTION_GRID: _ParseSection_GRID(line); break;
 		}
 	}
 
@@ -366,14 +529,29 @@ void ScenePlayer::Init()
 	interval = 0;
 	timer = 0;
 	hud = new HUD();
-	AddObject(hud);
 	score = 0;
 	stats = Stats::GetInstance();
 }
 
+void ScenePlayer::GetObjectFromGrid()
+{
+	units.clear();
+	objects.clear();
+
+	grid->Get(units);
+
+	for (UINT i = 0; i < units.size(); i++)
+	{
+		LPGAMEOBJECT obj = units[i]->GetObj();
+		objects.push_back(obj);
+	}
+}
+
+
 void ScenePlayer::Update(ULONGLONG dt)
 {
 	if (Game::GetInstance()->IsPaused()) dt = 0;
+	GetObjectFromGrid();
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
 	std::vector<LPGAMEOBJECT> coObjects;
@@ -391,6 +569,7 @@ void ScenePlayer::Update(ULONGLONG dt)
 
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return;
+	player->Update(dt, &coObjects);
 
 	Camera::GetInstance()->Update();
 
@@ -410,6 +589,8 @@ void ScenePlayer::Render()
 	{
 		if (objects[i]->IsEnabled()) objects[i]->Render();
 	}
+	player->Render();
+	hud->Render();
 }
 
 /*
@@ -425,6 +606,8 @@ void ScenePlayer::Unload()
 
 	DebugOut(L"[INFO] Scene %s unloaded! \n", sceneFilePath);
 }
+
+
 
 void ScenePlayerInputHandler::OnKeyDown(int KeyCode)
 {
@@ -585,24 +768,32 @@ void ScenePlayerInputHandler::KeyState(BYTE* states)
 
 	// disable control key when Mario die 
 	if (mario->GetState() == MARIO_DEAD) return;
-	//if (game->IsKeyDown(DIK_L))
-	//{
-	//	game->DEBUG_X++;
-	//	DebugOut(L"X %d\n", game->DEBUG_X);
-	//}
-	//if (game->IsKeyDown(DIK_J))
-	//{
-	//	game->DEBUG_X--;
-	//	DebugOut(L"X %d\n", game->DEBUG_X);
-	//}
-	//if (game->IsKeyDown(DIK_I))
-	//{
-	//	game->DEBUG_Y--;
-	//	DebugOut(L"Y %d\n", game->DEBUG_Y);
-	//}
-	//if (game->IsKeyDown(DIK_K))
-	//{
-	//	game->DEBUG_Y++;
-	//	DebugOut(L"Y %d\n", game->DEBUG_Y);
-	//}
+	if (game->IsKeyDown(DIK_L))
+	{
+		game->DEBUG_X++;
+		DebugOut(L"X %d\n", game->DEBUG_X);
+	}
+	if (game->IsKeyDown(DIK_J))
+	{
+		game->DEBUG_X--;
+		DebugOut(L"X %d\n", game->DEBUG_X);
+	}
+	if (game->IsKeyDown(DIK_I))
+	{
+		game->DEBUG_Y--;
+		DebugOut(L"Y %d\n", game->DEBUG_Y);
+	}
+	if (game->IsKeyDown(DIK_K))
+	{
+		game->DEBUG_Y++;
+		DebugOut(L"Y %d\n", game->DEBUG_Y);
+	}
+}
+
+
+void ScenePlayer::AddObject(LPGAMEOBJECT object)
+{
+	float objectX, objectY;
+	object->GetPosition(objectX, objectY);
+	Unit* unit = new Unit(grid, object, objectX, objectY);
 }
