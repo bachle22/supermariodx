@@ -97,7 +97,6 @@ void Game::Draw(
 	r.top = top;
 	r.right = right;
 	r.bottom = bottom;
-	FLOAT rotate = rotation == ROTATE180 ? D3DX_PI / 2 : 0.0f;
 
 	// Flip sprite
 	D3DXMATRIX oldTransform;
@@ -106,9 +105,9 @@ void Game::Draw(
 	// Retrieve current transformation state
 	spriteHandler->GetTransform(&oldTransform);
 	D3DXVECTOR2 center = D3DXVECTOR2(p.x + (right - left) / 2, p.y + (bottom - top) / 2);
-	D3DXVECTOR2 flip = D3DXVECTOR2(nx > 0 ? -1.0f : 1.0f, 1.0f);
+	D3DXVECTOR2 flip = D3DXVECTOR2(nx > 0 ? -1.0f : 1.0f, 1.0f * rotation);
 
-	D3DXMatrixTransformation2D(&newTransform, &center, rotate, &flip, NULL, 0.0f, &translation);
+	D3DXMatrixTransformation2D(&newTransform, &center, NULL, &flip, NULL, 0.0f, &translation);
 
 	spriteHandler->SetTransform(&newTransform);
 	spriteHandler->Draw(texture, &r, NULL, &p, D3DCOLOR_ARGB(alpha, 255, 255, 255));

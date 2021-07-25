@@ -199,5 +199,5 @@ void Goomba::Downgrade()
 	Point* p = new Point(x + 2, y, point);
 	LPSCENE scene = Game::GetInstance()->GetCurrentScene();
 	((ScenePlayer*)scene)->AddObject(p);
-
 }
+

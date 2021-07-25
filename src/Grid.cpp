@@ -128,3 +128,26 @@ void Grid::Move(Unit* unit, float x, float y)
 
 	Add(unit);
 }
+
+void Grid::Clear()
+{
+	for (int i = 0; i < rows; i++)
+	{
+		for (int j = 0; j < columns; j++)
+		{
+			Unit* unit = cells[i][j];
+
+			while (unit != NULL)
+			{
+				if (cells[i][j] == unit) cells[i][j] = unit->next;
+				if (unit->next != NULL) unit->next->prev = unit->prev;
+				if (unit->prev != NULL) unit->prev->next = unit->next;
+
+				Unit* temp = unit;
+				unit = unit->next;
+				delete temp->GetObject();
+				delete temp;
+			}
+		}
+	}
+}

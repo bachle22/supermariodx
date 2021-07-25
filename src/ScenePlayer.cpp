@@ -545,7 +545,7 @@ void ScenePlayer::GetObjectFromGrid()
 
 	for (UINT i = 0; i < units.size(); i++)
 	{
-		LPGAMEOBJECT obj = units[i]->GetObj();
+		LPGAMEOBJECT obj = units[i]->GetObject();
 		objects.push_back(obj);
 	}
 }
@@ -616,10 +616,10 @@ void ScenePlayer::Unload()
 {
 	for (size_t i = 0; i < objects.size(); i++)
 	{
-		objects[i]->~GameObject();
 		delete objects[i];
 	}
 
+	//if (grid != nullptr) grid->Clear();
 	objects.clear();
 	player = NULL;
 
@@ -638,7 +638,7 @@ void ScenePlayer::UpdateGrid()
 {
 	for (int i = 0; i < units.size(); i++)
 	{
-		LPGAMEOBJECT obj = units[i]->GetObj();
+		LPGAMEOBJECT obj = units[i]->GetObject();
 
 		//if (obj->IsEnabled() == false)
 		//	continue;

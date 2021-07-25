@@ -6,6 +6,10 @@ constexpr float KOOPA_WALKING_SPEED = 0.03f;
 constexpr float KOOPA_ROLLING_SPEED = 0.2f;
 constexpr float KOOPA_FLYING_SPEED = 0.2f;
 constexpr float KOOPA_PLATFORM_THRESHOLD = 0.05f;
+constexpr float KOOPA_BOUNCE_SPEED = 0.1f;
+constexpr float KOOPA_HIT_SPEED_X = 0.08f;
+constexpr float KOOPA_HIT_SPEED_Y = 0.38f;
+constexpr float KOOPA_HIT_MIN_SPEED = 0.002f;
 
 constexpr int KOOPA_WIDTH = 14;
 constexpr int KOOPA_WALKING_HEIGHT = 20;
@@ -21,15 +25,6 @@ constexpr int KOOPA_HIDING_INTERVAL = 5000;
 constexpr int KOOPA_REVIVING_INTERVAL = 2000;
 
 constexpr int KOOPA_REFRESH_CONSTANT = 500;
-
-#define KOOPA_BBOX_HEIGHT 26
-#define KOOPA_BBOX_HEIGHT_DIE 16
-
-#define KOOPA_STATE_DIE 200
-
-#define KOOPA_ANI_WALKING_LEFT 0
-#define KOOPA_ANI_WALKING_RIGHT 1
-#define KOOPA_ANI_DIE 2
 
 enum KoopaAnimation
 {
@@ -66,6 +61,8 @@ enum KoopaState
 class Koopa : public GameObject
 {
 	int type;
+	bool isFlipped, isHit;
+	int bounce;
 	float height;
 	float leftBounding, rightBounding;
 	ULONGLONG timer;
@@ -79,4 +76,6 @@ public:
 	virtual void SetState(int state);
 	void Reverse();
 	void Downgrade();
+	bool Hit();
+	void Bounce();
 };

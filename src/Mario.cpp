@@ -269,7 +269,8 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 				else if (e->nx != 0)
 				{
 					if (k->GetState() != KOOPA_STATE_HIDING &&
-						k->GetState() != KOOPA_STATE_REVIVING) Downgrade();
+						k->GetState() != KOOPA_STATE_REVIVING) 
+						Downgrade();
 					else {
 						SetAction(KICKING);
 						k->SetDirection(this->nx);

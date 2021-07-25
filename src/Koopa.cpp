@@ -8,6 +8,8 @@
 #include "Mario.h"
 #include "Coin.h"
 #include "Projectile.h"
+#include "Plant.h"
+#include "Hit.h"
 
 Koopa::Koopa(int type)
 {
@@ -18,6 +20,9 @@ Koopa::Koopa(int type)
 	timer = 0;
 	leftBounding = 0;
 	rightBounding = 0;
+	isFlipped = false;
+	isHit = false;
+	bounce = 0;
 }
 
 void Koopa::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -52,7 +57,7 @@ void Koopa::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 
 		x += min_tx * dx + nx * PUSH_BACK;
 		y += min_ty * dy + ny * PUSH_BACK;
-
+		
 		if (ny != 0) vy = 0;
 
 		for (UINT i = 0; i < coEventsResult.size(); i++)
@@ -64,7 +69,7 @@ void Koopa::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 				/*DebugOut(L"min_tx %f min_ty %f nx %f ny %f rdx %f rdy %f ", min_tx, min_ty, nx, ny, rdx, rdy);
 				DebugOut(L"%f %f %f \n", leftBounding, x, rightBounding);*/
 
-				if (e->ny == -1 && e->nx == 0 && nx == 0)
+				if (e->ny == -1)
 				{
 					if (state == KOOPA_STATE_WALKING)
 					{
@@ -78,10 +83,10 @@ void Koopa::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 							Brick* b = dynamic_cast<Brick*>(e->obj);
 							b->Press();
 						}
-
 						GetPlatformBounding(e->obj);
-
 					}
+					else if (state == KOOPA_STATE_HIDING && isFlipped)
+						Bounce();
 				}
 
 
@@ -92,14 +97,20 @@ void Koopa::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 
 					// Only reverse when the next tile is
 					// at least 1px higher than current platform
-					if (y + height - 1 > t) Reverse();
+					if (state != KOOPA_STATE_REVIVING && y + height - 1 > t) 
+						Reverse();
 				}
 			}
 
 			else if (dynamic_cast<Block*>(e->obj))
 			{
 				x -= min_tx * dx + nx * PUSH_BACK - dx;
-				if (e->ny == -1) GetPlatformBounding(e->obj);
+				if (e->ny == -1)
+				{
+					if (state != KOOPA_STATE_HIDING) GetPlatformBounding(e->obj);
+					else if(isFlipped) Bounce();
+					isHit = false;
+				}
 			}
 
 			else if (!dynamic_cast<Koopa*>(e->obj))
@@ -135,6 +146,10 @@ void Koopa::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 						Goomba* g = dynamic_cast<Goomba*>(e->obj);
 						g->Hit();
 					}
+					else if (dynamic_cast<Plant*>(e->obj))
+					{
+						dynamic_cast<Plant*>(e->obj)->Hit();
+					}
 				}
 			}
 			else if (state == KOOPA_STATE_FLYING)
@@ -152,7 +167,7 @@ void Koopa::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 	if (state == KOOPA_STATE_FLYING) vy += GLOBAL_GRAVITY / 2 * dt;
 	else vy += GLOBAL_GRAVITY * dt;
 
-	if (type == KOOPA_RED && state != KOOPA_STATE_ROLLING)
+	if (type == KOOPA_RED && state != KOOPA_STATE_ROLLING && state != KOOPA_STATE_HIDING)
 	{
 		if (x < leftBounding - KOOPA_PLATFORM_OFFSET_LEFT && nx < 0) Reverse();
 		if (x + KOOPA_PLATFORM_OFFSET_RIGHT > rightBounding && nx > 0) Reverse();
@@ -174,6 +189,9 @@ void Koopa::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 			SetState(KOOPA_STATE_REVIVING);
 			timer = 0;
 		}
+		if (vx > KOOPA_HIT_MIN_SPEED) vx -= KOOPA_HIT_MIN_SPEED / 2;
+		else if (vx < -KOOPA_HIT_MIN_SPEED) vx += KOOPA_HIT_MIN_SPEED / 2;
+		else vx = 0;
 	}
 
 	if (state == KOOPA_STATE_REVIVING)
@@ -201,7 +219,6 @@ void Koopa::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 			SetState(KOOPA_STATE_WALKING);
 		}
 	}
-
 
 	if (vy >= GLOBAL_TERMINAL_VELOCITY) vy = GLOBAL_TERMINAL_VELOCITY;
 }
@@ -233,8 +250,8 @@ void Koopa::Render()
 		translation.y -= KOOPA_WALKING_TRANS_Y;
 	else translation.x -= KOOPA_SHELL_TRANS_X;
 
-	//if (state == KOOPA_STATE_REVIVING) animation_set->at(ani)->RenderFlipped(nx, ceil(x), ceil(y));
-	animation_set->at(ani)->Render(nx, ceil(x), ceil(y), VISIBLE, translation);
+	int rotation = isFlipped ? -1 : 1;
+	animation_set->at(ani)->Render(nx, ceil(x), ceil(y), VISIBLE, translation, rotation);
 
 	RenderBoundingBox();
 }
@@ -244,15 +261,11 @@ void Koopa::SetState(int state)
 	GameObject::SetState(state);
 	switch (state)
 	{
-	case KOOPA_STATE_DIE:
-		y += KOOPA_BBOX_HEIGHT - KOOPA_BBOX_HEIGHT_DIE + 1;
-		vx = 0;
-		vy = 0;
-		break;
 	case KOOPA_STATE_WALKING:
 		nx = -1;
 		vx = -KOOPA_WALKING_SPEED;
 		height = KOOPA_WALKING_HEIGHT;
+		isFlipped = false;
 		break;
 	case KOOPA_STATE_HIDING:
 		vx = 0;
@@ -302,4 +315,25 @@ void Koopa::Downgrade()
 	}
 	else if (state == KOOPA_STATE_WALKING) SetState(KOOPA_STATE_HIDING);
 	else SetState(KOOPA_STATE_ROLLING);
+}
+
+bool Koopa::Hit()
+{
+	if (isHit) return false;
+	isHit = true;
+	isFlipped = true;
+	SetState(KOOPA_STATE_HIDING);
+	timer = 0;
+	vx += nx * KOOPA_HIT_SPEED_X;
+	vy -= KOOPA_HIT_SPEED_Y;
+	return true;
+}
+
+void Koopa::Bounce()
+{
+	if (bounce < 2)
+	{
+		bounce++;
+		vy -= KOOPA_BOUNCE_SPEED / bounce;
+	}
 }

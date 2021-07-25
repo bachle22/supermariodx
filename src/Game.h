@@ -26,8 +26,8 @@ enum RenderOptions
 	VISIBLE = 255,
 	INVISIBLE = 0,
 
-	NOROTATE = 0,
-	ROTATE180 = 1,
+	NOROTATE = 1,
+	ROTATE180 = -1,
 };
 
 class Game

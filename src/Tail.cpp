@@ -6,6 +6,7 @@
 #include "Goomba.h"
 #include "Plant.h"
 #include "Debug.h"
+#include "Koopa.h"
 
 Tail::Tail()
 {
@@ -50,6 +51,16 @@ void Tail::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 			{
 				Plant* p = dynamic_cast<Plant*>(obj);
 				if (!p->Hit()) return;
+
+				Hit* hit = new Hit(x + nx * TAIL_HIT_OFFSET_X, y - TAIL_HEIGHT);
+				LPSCENE scene = Game::GetInstance()->GetCurrentScene();
+				((ScenePlayer*)scene)->AddObject(hit);
+			}
+			else if (dynamic_cast<Koopa*>(obj))
+			{
+				Koopa* k = dynamic_cast<Koopa*>(obj);
+				k->SetDirection(nx);
+				if (!k->Hit()) return;
 
 				Hit* hit = new Hit(x + nx * TAIL_HIT_OFFSET_X, y - TAIL_HEIGHT);
 				LPSCENE scene = Game::GetInstance()->GetCurrentScene();
