@@ -22,6 +22,11 @@ constexpr float PUSH_BACK = 0.4f;
 constexpr float GLOBAL_GRAVITY = 0.001f;
 constexpr float GLOBAL_TERMINAL_VELOCITY = .25f;
 
+enum RenderPriority
+{
+	PRIORITY_LOW = 0,
+	PRIORITY_HIGH = 1,
+};
 
 class GameObject
 {
@@ -45,8 +50,9 @@ protected:
 	bool isEnabled;
 
 	ULONGLONG dt{};
-
 	LPANIMATION_SET animation_set{};
+
+	bool priority;
 
 public:
 	GameObject();
@@ -84,6 +90,7 @@ public:
 	bool IsEnabled() { return isEnabled; }
 	void Disable() { isEnabled = false;  }
 	void Enable() { isEnabled = true; }
+	bool IsPrioritized() { return priority; }
 	~GameObject();
 };
 

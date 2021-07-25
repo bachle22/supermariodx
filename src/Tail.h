@@ -12,13 +12,14 @@ constexpr int TAIL_HIT_OFFSET_X = 8;
 
 class Tail : public GameObject
 {
+	friend class Mario;
 	ULONGLONG timer;
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
-	virtual void Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
+	virtual void Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects);
+	virtual void SetPosition(float x, float y);
 
 public:
 	Tail();
-	virtual void SetPosition(float x, float y);
 };

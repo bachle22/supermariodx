@@ -555,10 +555,10 @@ void ScenePlayer::Update(ULONGLONG dt)
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
 	std::vector<LPGAMEOBJECT> coObjects;
-	for (size_t i = 1; i < objects.size(); i++)
+	for (size_t i = 0; i < objects.size(); i++)
 	{
 		if (objects[i]->IsEnabled())
-			coObjects.push_back(objects[i]);
+			coObjects.emplace_back(objects[i]);
 	}
 
 	for (size_t i = 0; i < objects.size(); i++)
@@ -580,16 +580,29 @@ void ScenePlayer::Update(ULONGLONG dt)
 		else player->SetState(MARIO_DEAD);
 	}
 	hud->SetPowerMeter((GetPlayer()->GetPowerMeter()));
+
+	UpdateGrid();
 }
 
 void ScenePlayer::Render()
 {
 	map->Render();
+
+	std::vector<LPGAMEOBJECT> priotizedObjects;
 	for (size_t i = 0; i < objects.size(); i++)
-	{
-		if (objects[i]->IsEnabled()) objects[i]->Render();
-	}
+		if (objects[i]->IsEnabled())
+		{
+			objects[i]->Render();
+			if (objects[i]->IsPrioritized()) 
+				priotizedObjects.emplace_back(objects[i]);
+		}
+
+
 	player->Render();
+
+	for (size_t i = 0; i < priotizedObjects.size(); i++)
+		priotizedObjects[i]->Render();
+
 	hud->Render();
 }
 
@@ -607,6 +620,28 @@ void ScenePlayer::Unload()
 	DebugOut(L"[INFO] Scene %s unloaded! \n", sceneFilePath);
 }
 
+
+void ScenePlayer::AddObject(LPGAMEOBJECT object)
+{
+	float objectX, objectY;
+	object->GetPosition(objectX, objectY);
+	Unit* unit = new Unit(grid, object, objectX, objectY);
+}
+
+void ScenePlayer::UpdateGrid()
+{
+	for (int i = 0; i < units.size(); i++)
+	{
+		LPGAMEOBJECT obj = units[i]->GetObj();
+
+		//if (obj->IsEnabled() == false)
+		//	continue;
+		float newPosX, newPosY;
+
+		obj->GetPosition(newPosX, newPosY);
+		units[i]->Move(newPosX, newPosY);
+	}
+}
 
 
 void ScenePlayerInputHandler::OnKeyDown(int KeyCode)
@@ -788,12 +823,4 @@ void ScenePlayerInputHandler::KeyState(BYTE* states)
 		game->DEBUG_Y++;
 		DebugOut(L"Y %d\n", game->DEBUG_Y);
 	}
-}
-
-
-void ScenePlayer::AddObject(LPGAMEOBJECT object)
-{
-	float objectX, objectY;
-	object->GetPosition(objectX, objectY);
-	Unit* unit = new Unit(grid, object, objectX, objectY);
 }

@@ -18,6 +18,7 @@ GameObject::GameObject()
 	vx = vy = 0;
 	nx = 1;
 	isEnabled = true;
+	priority = PRIORITY_LOW;
 }
 
 

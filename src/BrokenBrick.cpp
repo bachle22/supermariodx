@@ -9,6 +9,7 @@ BrokenBrick::BrokenBrick(float x, float y)
 	timer = 0;
 	animation_set = AnimationSets::GetInstance()->Get(BROKEN_BRICK_ANI_ID);
 	isStarted = false;
+	priority = PRIORITY_HIGH;
 }
 
 void BrokenBrick::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)

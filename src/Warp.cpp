@@ -8,6 +8,7 @@ Warp::Warp(float x, float y)
 	frameStart = GetTickCount64();
 	tickPerFrame = 1000 / MAX_FRAME_RATE;
 	timer = 0;
+	priority = PRIORITY_HIGH;
 }
 
 void Warp::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)

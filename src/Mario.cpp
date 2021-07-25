@@ -49,10 +49,12 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 {
 	// Calculate dx, dy 
 	GameObject::Update(dt);
+	if (tail->IsEnabled()) tail->Update(dt, coObjects);
 
 	Movement();
 	UpdateState();
 	ManagePowerDuration();
+
 
 	// reset untouchable timer if untouchable time has passed
 	if (isUntouchable)
@@ -392,6 +394,7 @@ void Mario::Render()
 		break;
 	case MARIO_RACOON_TO_BIG:
 		ani = ANI_BIG_IDLE;
+		tail->Disable();
 		break;
 	}
 
@@ -407,6 +410,7 @@ void Mario::Render()
 	animation_set->at(ani)->Render(nx, (x), ceil(y), alpha, translation);
 
 	RenderBoundingBox();
+	tail->Render();
 }
 
 

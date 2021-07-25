@@ -31,6 +31,7 @@ protected:
 
 	void GetObjectFromGrid();
 	Grid* GetGrid() { return grid; };
+	void UpdateGrid();
 
 	void _ParseSection_TEXTURES(std::string line);
 	void _ParseSection_SPRITES(std::string line);

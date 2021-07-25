@@ -13,6 +13,7 @@ Point::Point(float x, float y, int type)
 	sprite = Sprites::GetInstance()->Get(state);
 	frameStart = GetTickCount64();
 	tickPerFrame = 1000 / MAX_FRAME_RATE;
+	priority = PRIORITY_HIGH;
 }
 
 void Point::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)

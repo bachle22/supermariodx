@@ -20,6 +20,7 @@ class Unit
 public:
 	Unit(Grid* grid, LPGAMEOBJECT obj, float x, float y);
 	Unit(Grid* grid, LPGAMEOBJECT obj, int gridRow, int gridCol);
+	void Move(float x, float y);
 
 	LPGAMEOBJECT GetObj() { return this->obj; }
 
@@ -39,5 +40,6 @@ public:
 	void Add(Unit* unit);
 	void Add(Unit* unit, int gridRow, int gridCol);
 	void Get(std::vector<Unit*>& units);
+	void Move(Unit* unit, float x, float y);
 };
 

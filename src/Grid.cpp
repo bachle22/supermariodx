@@ -27,6 +27,11 @@ Unit::Unit(Grid* grid, LPGAMEOBJECT obj, int gridRow, int gridCol)
 	grid->Add(this, gridRow, gridCol);
 }
 
+void Unit::Move(float x, float y)
+{
+	grid->Move(this, x, y);
+}
+
 void Grid::Add(Unit* unit)
 {
 	int col = (int)(unit->x / CELL_WIDTH);
@@ -98,4 +103,28 @@ Grid::Grid(int gridCols, int gridRows)
 	for (int i = 0; i < rows; i++)
 		for (int j = 0; j < columns; j++)
 			cells[i][j] = NULL;
+}
+
+void Grid::Move(Unit* unit, float x, float y)
+{
+	int oldCol = (int)(unit->x / CELL_WIDTH);
+	int oldRow = (int)(unit->y / CELL_HEIGHT);
+
+	int newCol = (int)(x / CELL_WIDTH);
+	int newRow = (int)(y / CELL_HEIGHT);
+
+	if (newCol < 0 || newCol >= columns || newRow < 0 || newRow >= rows)
+		return;
+
+	unit->x = x;
+	unit->y = y;
+
+	if (oldRow == newRow && oldCol == newCol) return;
+
+	if (unit->prev != NULL) unit->prev->next = unit->next;
+	if (unit->next != NULL) unit->next->prev = unit->prev;
+
+	if (cells[oldRow][oldCol] == unit) cells[oldRow][oldCol] = unit->next;
+
+	Add(unit);
 }

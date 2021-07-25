@@ -15,6 +15,7 @@ Tail::Tail()
 
 void Tail::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
+	if (!isEnabled) return;
 	left = x;
 	top = y;
 	right = x + TILE_WIDTH;
