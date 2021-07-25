@@ -19,6 +19,7 @@
 #include "Warp.h"
 #include "PSwitch.h"
 #include "Roulette.h"
+#include "Leaf.h"
 
 Mario::Mario(float x, float y) : GameObject()
 {
@@ -175,6 +176,32 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 			}
 
 
+			else if (dynamic_cast<Coin*>(e->obj))
+			{
+				vx = entry_vx;
+				x -= min_tx * dx + nx * PUSH_BACK - dx;
+				if (e->nx == 0)
+				{
+					vy = entry_vy;
+					y -= min_ty * dy + ny * PUSH_BACK - dy;
+				}
+				dynamic_cast<Coin*>(e->obj)->Earn();
+			}
+
+			else if (dynamic_cast<Leaf*>(e->obj))
+			{
+				vx = entry_vx;
+				x -= min_tx * dx + nx * PUSH_BACK - dx;
+				if (e->nx == 0 && e->ny == 1)
+				{
+					vy = entry_vy;
+					y -= min_ty * dy + ny * PUSH_BACK - dy;
+				}
+				SetState(MARIO_BIG_TO_RACOON);
+
+				dynamic_cast<Leaf*>(e->obj)->Consume();
+			}
+
 			else if (dynamic_cast<Goomba*>(e->obj))
 			{
 				vx = entry_vx;
@@ -259,18 +286,6 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 				y -= min_ty * dy + ny * PUSH_BACK - dy;
 				Downgrade();
 
-			}
-
-			else if (dynamic_cast<Coin*>(e->obj))
-			{
-				vx = entry_vx;
-				x -= min_tx * dx + nx * PUSH_BACK - dx;
-				if (e->nx == 0)
-				{
-					vy = entry_vy;
-					y -= min_ty * dy + ny * PUSH_BACK - dy;
-				}
-				dynamic_cast<Coin*>(e->obj)->Earn();
 			}
 
 			else
@@ -392,9 +407,12 @@ void Mario::Render()
 	case MARIO_BIG_TO_SMALL:
 		ani = ANI_BIG_TO_SMALL;
 		break;
+
+	case MARIO_BIG_TO_RACOON:
+		ani = ANI_BIG_IDLE;
+		break;
 	case MARIO_RACOON_TO_BIG:
 		ani = ANI_BIG_IDLE;
-		tail->Disable();
 		break;
 	}
 
@@ -615,13 +633,25 @@ void Mario::SetState(int state)
 		animationTimer = GetTickCount64();
 		Game::GetInstance()->Pause();
 		break;
-	case MARIO_RACOON_TO_BIG:
+	case MARIO_BIG_TO_RACOON:
+	{
 		animationTimer = GetTickCount64();
 		Warp* warp = new Warp(x, y + MARIO_WARP_EFFECT_Y);
 		LPSCENE scene = Game::GetInstance()->GetCurrentScene();
 		((ScenePlayer*)scene)->AddObject(warp);
 		Game::GetInstance()->Pause();
 		break;
+	}
+	case MARIO_RACOON_TO_BIG:
+	{
+		tail->Disable();
+		animationTimer = GetTickCount64();
+		Warp* warp = new Warp(x, y + MARIO_WARP_EFFECT_Y);
+		LPSCENE scene = Game::GetInstance()->GetCurrentScene();
+		((ScenePlayer*)scene)->AddObject(warp);
+		Game::GetInstance()->Pause();
+		break;
+	}
 	}
 }
 
@@ -641,6 +671,14 @@ void Mario::UpdateState()
 			Game::GetInstance()->Unpause();
 			SetState(MARIO_SMALL);
 			y += MARIO_BIG_HEIGHT - MARIO_SMALL_HEIGHT - 1.f;
+			SetUntouchable();
+		}
+		break;
+	case MARIO_BIG_TO_RACOON:
+		if (GetTickCount64() - animationTimer >= BIG_TO_RACOON_DURATION) {
+			Game::GetInstance()->Unpause();
+			SetState(MARIO_RACOON);
+			y -= 1.f;
 			SetUntouchable();
 		}
 		break;

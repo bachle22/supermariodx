@@ -9,6 +9,7 @@ Projectile::Projectile(float x, float y, int direction)
 	this->y = y;
 	SetState(direction);
 	animation_set = AnimationSets::GetInstance()->Get(PROJECTILE_ANI_SET_ID);
+	priority = PRIORITY_HIGH;
 }
 
 void Projectile::Render()

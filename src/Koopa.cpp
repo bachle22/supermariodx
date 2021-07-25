@@ -7,6 +7,7 @@
 #include "Goomba.h"
 #include "Mario.h"
 #include "Coin.h"
+#include "Projectile.h"
 
 Koopa::Koopa(int type)
 {
@@ -105,6 +106,15 @@ void Koopa::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 			{
 				x -= min_tx * dx + nx * PUSH_BACK - dx;
 				if (dynamic_cast<Coin*>(e->obj) && e->ny == -1)
+				{
+					y -= min_ty * dy + ny * PUSH_BACK - dy;
+				}
+			}
+			else {
+				x -= min_tx * dx + nx * PUSH_BACK - dx;
+				// Prevent from pushing object off the ground
+				if (!dynamic_cast<Mario*>(e->obj) &&
+					!dynamic_cast<Projectile*>(e->obj) && ny != 0)
 				{
 					y -= min_ty * dy + ny * PUSH_BACK - dy;
 				}

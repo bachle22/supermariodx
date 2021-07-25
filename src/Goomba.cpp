@@ -6,6 +6,7 @@
 #include "Block.h"
 #include "Brick.h"
 #include "Debug.h"
+#include "Projectile.h"
 
 Goomba::Goomba(int type)
 {
@@ -76,9 +77,12 @@ void Goomba::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 				}
 				else {
 					x -= min_tx * dx + nx * PUSH_BACK - dx;
-					// Prevent Mario from pushing object off the ground
-					if (!dynamic_cast<Mario*>(e->obj) && ny != 0) 
+					// Prevent from pushing object off the ground
+					if (!dynamic_cast<Mario*>(e->obj) &&
+						!dynamic_cast<Projectile*>(e->obj) && ny != 0)
+					{
 						y -= min_ty * dy + ny * PUSH_BACK - dy;
+					}
 				}
 			}
 		}

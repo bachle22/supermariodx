@@ -8,6 +8,7 @@
 #include "BrokenBrick.h"
 #include "PSwitch.h"
 #include "Warp.h"
+#include "Leaf.h"
 
 Brick::Brick(int type)
 {
@@ -88,14 +89,21 @@ void Brick::Hit()
 	{
 		LPSCENE scene = Game::GetInstance()->GetCurrentScene();
 		int marioState = ((ScenePlayer*)scene)->GetPlayer()->GetState();
-		Mushroom* mushroom = new Mushroom(x + MUSHROOM_OFFSET_X, y, SUPER_MUSHROOM);
-		((ScenePlayer*)scene)->AddObject(mushroom);
+		if (marioState != MARIO_SMALL)
+		{
+			Leaf* leaf = new Leaf(x, y);
+			((ScenePlayer*)scene)->AddObject(leaf);
+		}
+		else
+		{
+			Mushroom* mushroom = new Mushroom(x + MUSHROOM_OFFSET_X, y, SUPER_MUSHROOM);
+			((ScenePlayer*)scene)->AddObject(mushroom);
+		}
 		break;
 	}
 	case BRICK_1UP:
 	{
 		LPSCENE scene = Game::GetInstance()->GetCurrentScene();
-		int marioState = ((ScenePlayer*)scene)->GetPlayer()->GetState();
 		Mushroom* mushroom = new Mushroom(x + MUSHROOM_OFFSET_X, y, ONE_UP_MUSHROOM);
 		((ScenePlayer*)scene)->AddObject(mushroom);
 		break;

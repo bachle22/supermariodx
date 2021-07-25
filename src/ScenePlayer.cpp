@@ -687,21 +687,15 @@ void ScenePlayerInputHandler::OnKeyDown(int KeyCode)
 		// Cheat keys
 	case DIK_1:
 		mario->SetMovement(UP);
-		mario->SetState(MARIO_SMALL);
+		mario->SetState(MARIO_BIG_TO_SMALL);
 		break;
 	case DIK_2:
 		mario->SetMovement(UP);
-		mario->SetState(MARIO_BIG);
+		mario->SetState(MARIO_SMALL_TO_BIG);
 		break;
 	case DIK_3:
 		mario->SetMovement(UP);
-		mario->SetState(MARIO_RACOON);
-		break;
-	case DIK_4:
-		mario->SetState(MARIO_SMALL_TO_BIG);
-		break;
-	case DIK_5:
-		mario->SetState(MARIO_BIG_TO_SMALL);
+		mario->SetState(MARIO_BIG_TO_RACOON);
 		break;
 	case DIK_R:
 		mario->Reset();

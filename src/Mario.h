@@ -49,6 +49,7 @@ constexpr int RACOON_BBOX_DUCKING_DIFF = 10;
 constexpr int SMALL_TO_BIG_DURATION = 1000;
 constexpr int BIG_TO_SMALL_DURATION = 1000;
 constexpr int RACOON_TO_BIG_DURATION = 600;
+constexpr int BIG_TO_RACOON_DURATION = 500;
 
 constexpr int MARIO_SMALL_WIDTH = 12;
 constexpr int MARIO_SMALL_HEIGHT = 15;
@@ -137,7 +138,8 @@ enum MarioState
 	MARIO_RACOON = 3,
 	MARIO_SMALL_TO_BIG = 4,
 	MARIO_BIG_TO_SMALL = 5,
-	MARIO_RACOON_TO_BIG = 6,
+	MARIO_BIG_TO_RACOON = 6,
+	MARIO_RACOON_TO_BIG = 7,
 };
 
 enum MarioSprite
