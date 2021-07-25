@@ -22,6 +22,7 @@ public:
 	void SetPosition(D3DXVECTOR2 position);
 	void SetPosition(float x, float y);
 	void SetViewSize(float left, float top, float right, float bottom);
+	void SetViewSize(float width, float height);
 
 	void Update();
 	D3DXVECTOR2* GetPosition() { return &position; }

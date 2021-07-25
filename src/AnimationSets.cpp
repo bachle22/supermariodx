@@ -3,11 +3,6 @@
 
 AnimationSets* AnimationSets::__instance = NULL;
 
-AnimationSets::AnimationSets()
-{
-
-}
-
 AnimationSets* AnimationSets::GetInstance()
 {
 	if (__instance == NULL) __instance = new AnimationSets();

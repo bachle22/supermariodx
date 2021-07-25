@@ -278,13 +278,16 @@ void ScenePlayer::_ParseSection_OBJECTS(std::string pathString)
 void ScenePlayer::_ParseSection_TILEMAP(std::string pathString)
 {
 	int id, mapRows, mapColumns, tilesheetColumns, tilesheetRows, totalTiles;
+	int viewWidth, viewHeight;
 	LPCWSTR path = ToLPCWSTR(pathString);
 	std::ifstream f;
 	f.open(path);
 	if (!f) DebugOut(L"[ERROR] Unable to open map config!\n");
 
-	f >> id >> mapRows >> mapColumns >> tilesheetRows >> tilesheetColumns >> totalTiles;
-	Camera::GetInstance()->SetViewSize(0, 0, 2560, 240);
+	f >> id >> mapRows >> mapColumns >> 
+		tilesheetRows >> tilesheetColumns >> totalTiles >>
+		viewWidth >> viewHeight;
+	Camera::GetInstance()->SetViewSize(viewWidth, viewHeight);
 
 	int** tiles = new int* [mapRows];
 	for (int i = 0; i < mapRows; i++)
@@ -612,7 +615,10 @@ void ScenePlayer::Render()
 void ScenePlayer::Unload()
 {
 	for (size_t i = 0; i < objects.size(); i++)
+	{
+		objects[i]->~GameObject();
 		delete objects[i];
+	}
 
 	objects.clear();
 	player = NULL;
@@ -716,7 +722,10 @@ void ScenePlayerInputHandler::OnKeyDown(int KeyCode)
 		mario->SetPosition(2263, 345);
 		break;
 	case DIK_F6:
-		mario->SetPosition(2690, 385);
+		Game::GetInstance()->SwitchScene(11);
+		break;
+	case DIK_F7:
+		Game::GetInstance()->SwitchScene(10);
 		break;
 	case DIK_L:
 		game->DEBUG_X++;

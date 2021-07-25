@@ -38,14 +38,24 @@ void Camera::SetViewSize(float left, float top, float right, float bottom)
 	viewBottom = bottom;
 }
 
+void Camera::SetViewSize(float width, float height)
+{
+	viewLeft = 0;
+	viewTop = 0;
+	viewRight = width;
+	viewBottom = height;
+}
+
 void Camera::Update()
 {
 	float cx, cy;
 	Mario* mario = ((ScenePlayer*)Game::GetInstance()->GetCurrentScene())->GetPlayer();
 	if (mario == NULL) return;
 	mario->GetPosition(cx, cy);
+
 	cx -= (width + 1) / 2; cy -= (height + 1) / 2;
-	if (cx < viewLeft) cx = 0;
+	if (viewRight == 0);
+	else if (cx < viewLeft) cx = 0;
 	else if (cx > viewRight) cx = viewRight;
 
 	// TODO: Only follow Mario vertical position when on the cloud
@@ -54,5 +64,5 @@ void Camera::Update()
 	else cy = viewBottom;
 	if (cy < viewTop) cy = 0;
 
-	SetPosition(ceil(cx) + Game::GetInstance()->DEBUG_X, ceil(cy) + Game::GetInstance()->DEBUG_Y);
+	SetPosition(ceil(cx) + Game::GetInstance()->DEBUG_X*2, ceil(cy) + Game::GetInstance()->DEBUG_Y*2);
 }

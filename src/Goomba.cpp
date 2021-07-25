@@ -54,8 +54,8 @@ void Goomba::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 		//DebugOut(L"min_tx %f min_ty %f nx %f ny %f rdx %f rdy %f\n", min_tx, min_ty, nx, ny, rdx, rdy);
 
-		y += min_ty * dy + ny * PUSH_BACK;
 		x += min_tx * dx + nx * PUSH_BACK;
+		y += min_ty * dy + ny * PUSH_BACK;
 
 		if (ny != 0) vy = 0;
 
@@ -77,12 +77,6 @@ void Goomba::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 				}
 				else {
 					x -= min_tx * dx + nx * PUSH_BACK - dx;
-					// Prevent from pushing object off the ground
-					if (!dynamic_cast<Mario*>(e->obj) &&
-						!dynamic_cast<Projectile*>(e->obj) && ny != 0)
-					{
-						y -= min_ty * dy + ny * PUSH_BACK - dy;
-					}
 				}
 			}
 		}

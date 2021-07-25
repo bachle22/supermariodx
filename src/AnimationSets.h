@@ -11,14 +11,12 @@ typedef AnimationSet* LPANIMATION_SET;
 class AnimationSets
 {
 	static AnimationSets* __instance;
-
 	std::unordered_map<int, LPANIMATION_SET> animation_sets;
 
 public:
-	AnimationSets();
+	AnimationSets() noexcept {};
 	void Add(int id, LPANIMATION_SET ani);
 	LPANIMATION_SET Get(int id);
-
 
 	static AnimationSets* GetInstance();
 };

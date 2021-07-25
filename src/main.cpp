@@ -39,9 +39,8 @@ void Render()
 	LPD3DXSPRITE spriteHandler = game->GetSpriteHandler();
 
 	// Clear out back buffer
-	d3ddev->BeginScene();
 	d3ddev->Clear(0, NULL, D3DCLEAR_TARGET, BACKGROUND_COLOR, 1.0f, 0);
-
+	d3ddev->BeginScene();
 
 	// Render sprites & animation
 	spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
