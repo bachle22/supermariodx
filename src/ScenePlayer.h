@@ -29,6 +29,8 @@ protected:
 	std::vector<LPGAMEOBJECT> objects;
 	std::vector<Unit*> units;
 
+	bool isTransitionDone;
+
 	void GetObjectFromGrid();
 	Grid* GetGrid() { return grid; };
 	void UpdateGrid();
@@ -52,6 +54,8 @@ public:
 	Mario* GetPlayer() { return player; }
 	void SetPlayer(Mario* mario) { player = mario; }
 	void UnsetPlayer() { player = NULL; }
+
+	void UnsetTransition() { isTransitionDone = false; }
 
 	void GetTimer(int& timer, ULONGLONG& interval);
 	void SetTimer(int timer, ULONGLONG interval);

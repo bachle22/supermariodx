@@ -321,7 +321,7 @@ void Game::SwitchScene(int scene_id)
 	DebugOut(L"[INFO] Switching to scene %d\n", scene_id);
 
 	scenes[currentScene]->Unload();
-	scenes[currentScene]->SetLoadingStatus(true);
+	scenes[currentScene]->IsLoaded(true);
 
 	Textures::GetInstance()->Clear();
 	Sprites::GetInstance()->Clear();
@@ -348,6 +348,7 @@ void Game::FastSwitchScene(int scene_id)
 	HUD* hud = ((ScenePlayer*)scenes[lastScene])->GetHUD();
 	((ScenePlayer*)scenes[lastScene])->UnsetPlayer();
 	((ScenePlayer*)scenes[lastScene])->UnsetHUD();
+	((ScenePlayer*)scenes[lastScene])->UnsetTransition();
 
 	if (!scenes[currentScene]->IsLoaded()) s->Load();
 

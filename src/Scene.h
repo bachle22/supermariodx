@@ -24,6 +24,7 @@ protected:
 	LPKEYEVENTHANDLER keyHandler;
 	bool isLoaded;
 
+
 public:
 	Scene(int id, LPCWSTR filePath);
 	~Scene();
@@ -34,7 +35,7 @@ public:
 	virtual void Render() = 0;
 
 	bool IsLoaded() { return isLoaded; }
-	void SetLoadingStatus(bool isLoaded) { this->isLoaded =  isLoaded; }
+	void IsLoaded(bool isLoaded) { this->isLoaded =  isLoaded; }
 };
 
 typedef Scene* LPSCENE;

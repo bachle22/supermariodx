@@ -32,6 +32,7 @@ Mario::Mario(float x, float y) : GameObject()
 
 	powerMeter = 0;
 
+	isUntouchable = false;
 	untouchableTimer = 0;
 	powerTimer = 0;
 	flyTimer = 0;
@@ -108,7 +109,6 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 			UnsetAction(JUMPING);
 			UnsetAction(DONE_JUMPING);
 			UnsetAction(PEAKING);
-			UnsetAction(DESCENDING);
 		}
 
 		//DebugOut(L"min_tx %f min_ty %f nx %f ny %f rdx %f rdy %f\n", min_tx, min_ty, nx, ny, rdx, rdy);
@@ -155,7 +155,7 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 			else if (dynamic_cast<Portal*>(e->obj))
 			{
 				Portal* p = dynamic_cast<Portal*>(e->obj);
-				Game::GetInstance()->SwitchScene(p->GetSceneId());
+
 			}
 
 			else if (dynamic_cast<Mushroom*>(e->obj))
@@ -163,7 +163,7 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 				vx = entry_vx;
 				x -= min_tx * dx + nx * PUSH_BACK - dx;
 
-				if (e->ny == -1)
+				if (ny != -1)
 				{
 					vy = entry_vy;
 					y -= min_ty * dy + ny * PUSH_BACK - dy;
@@ -466,7 +466,7 @@ void Mario::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 */
 void Mario::Reset()
 {
-	SetState(MARIO_BIG);
+	SetState(MARIO_SMALL);
 	SetPosition(start_x, start_y);
 	SetSpeed(0, 0);
 }

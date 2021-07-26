@@ -161,6 +161,9 @@
     <ClCompile Include="Leaf.cpp">
       <Filter>Objects\Items</Filter>
     </ClCompile>
+    <ClCompile Include="Transition.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Debug.h">
@@ -282,6 +285,9 @@
     </ClInclude>
     <ClInclude Include="Leaf.h">
       <Filter>Objects\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="Transition.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

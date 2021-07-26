@@ -56,6 +56,7 @@
     <ClCompile Include="Sprites.cpp" />
     <ClCompile Include="Strings.cpp" />
     <ClCompile Include="Textures.cpp" />
+    <ClCompile Include="Transition.cpp" />
     <ClCompile Include="Warp.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -97,6 +98,7 @@
     <ClInclude Include="Tail.h" />
     <ClInclude Include="Textures.h" />
     <ClInclude Include="TileMap.h" />
+    <ClInclude Include="Transition.h" />
     <ClInclude Include="Types.h" />
     <ClInclude Include="Warp.h" />
   </ItemGroup>

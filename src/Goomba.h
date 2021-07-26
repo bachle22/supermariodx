@@ -5,7 +5,7 @@ constexpr float GOOMBA_WALKING_SPEED = 0.03f;
 constexpr int GOOMBA_REMOVAL_DELAY = 300;
 
 constexpr float GOOMBA_SMACKED_VX = 0.03f;
-constexpr float GOOMBA_SMACKED_VY = 0.25f;
+constexpr float GOOMBA_SMACKED_VY = 0.3f;
 
 constexpr float PARAGOOMBA_SKIP_VY = 0.08f;
 constexpr float PARAGOOMBA_JUMP_VY = 0.2f;

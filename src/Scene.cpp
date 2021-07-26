@@ -1,4 +1,5 @@
 #include "Scene.h"
+#include "Transition.h"
 
 Scene::Scene(int id, LPCWSTR filePath)
 {

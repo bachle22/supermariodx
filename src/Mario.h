@@ -32,7 +32,7 @@ constexpr float MARIO_MAX_TERMINAL_VELOCITY = .25f;
 constexpr float MARIO_JUMPING_INERTIA_AX = .3f;
 constexpr float MARIO_DEFAULT_VELOCITY_THRESHOLD = .1f;
 
-constexpr float POWER_ALLOW_GAINING_THRESHOLD = .2f;
+constexpr float POWER_ALLOW_GAINING_THRESHOLD = .1f;
 
 constexpr int POWER_MAX_FLY_TIME = 3500;
 constexpr int POWER_UP_DURATION_STEP = 300;

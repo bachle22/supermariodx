@@ -4,6 +4,7 @@
 #include "Camera.h"
 #include "Sprites.h"
 #include "Textures.h"
+#include "Transition.h"
 
 #include "ScenePlayer.h"
 #include "Portal.h"
@@ -229,7 +230,7 @@ void ScenePlayer::_ParseSection_OBJECTS(std::string pathString)
 				float r = strtof(tokens[4].c_str(), NULL);
 				float b = strtof(tokens[5].c_str(), NULL);
 				int scene_id = atoi(tokens[6].c_str());
-				obj = new Portal(x, y, r, b, scene_id);
+				//obj = new Portal(x, y, r, b, scene_id);
 				break;
 			}
 			case OBJECT_TYPE_BLOCK:
@@ -404,10 +405,10 @@ void ScenePlayer::_ParseSection_GRID(std::string pathString)
 				}
 				case OBJECT_TYPE_PORTAL:
 				{
-					float r = strtof(tokens[4].c_str(), NULL);
-					float b = strtof(tokens[5].c_str(), NULL);
+					float width = strtof(tokens[3].c_str(), NULL);
+					float height = strtof(tokens[4].c_str(), NULL);
 					int scene_id = atoi(tokens[6].c_str());
-					obj = new Portal(x, y, r, b, scene_id);
+					obj = new Portal(width, height, scene_id);
 					break;
 				}
 				case OBJECT_TYPE_BLOCK:
@@ -525,13 +526,15 @@ void ScenePlayer::Load()
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
 
 	Init();
-	SetLoadingStatus(true);
+	IsLoaded(true);
 }
 
 void ScenePlayer::Init()
 {
 	hud = new HUD();
-	stats = Stats::GetInstance();
+	isTransitionDone = false;
+	Transition::GetInstance()->FadeOut();
+	Game::GetInstance()->Pause();
 }
 
 void ScenePlayer::GetObjectFromGrid()
@@ -551,7 +554,17 @@ void ScenePlayer::GetObjectFromGrid()
 
 void ScenePlayer::Update(ULONGLONG dt)
 {
+	if (!isTransitionDone)
+	{
+		if (Transition::GetInstance()->IsFinished())
+		{
+			Game::GetInstance()->Unpause();
+			isTransitionDone = true;
+		}
+	}
+
 	if (Game::GetInstance()->IsPaused()) dt = 0;
+
 	GetObjectFromGrid();
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
@@ -605,6 +618,9 @@ void ScenePlayer::Render()
 		priotizedObjects[i]->Render();
 
 	hud->Render();
+
+	Transition::GetInstance()->Render();
+	//if (!Transition::GetInstance()->IsFinished());
 }
 
 /*
@@ -620,7 +636,7 @@ void ScenePlayer::Unload()
 	objects.clear();
 	units.clear();
 
-	this->SetLoadingStatus(false);
+	this->IsLoaded(false);
 	DebugOut(L"[INFO] Scene %s unloaded! \n", sceneFilePath);
 }
 
@@ -734,13 +750,14 @@ void ScenePlayerInputHandler::OnKeyDown(int KeyCode)
 		mario->SetPosition(1825, 300);
 		break;
 	case DIK_F5:
-		mario->SetPosition(2263, 345);
+		mario->SetPosition(2272, 80);
 		break;
 	case DIK_F6:
 		Game::GetInstance()->FastSwitchScene(11);
 		break;
 	case DIK_F7:
 		Game::GetInstance()->FastSwitchScene(10);
+		
 		break;
 	case DIK_L:
 		game->DEBUG_X++;
