@@ -50,7 +50,15 @@ public:
 	virtual void Unload();
 
 	Mario* GetPlayer() { return player; }
+	void SetPlayer(Mario* mario) { player = mario; }
+	void UnsetPlayer() { player = NULL; }
+
+	void GetTimer(int& timer, ULONGLONG& interval);
+	void SetTimer(int timer, ULONGLONG interval);
+
 	HUD* GetHUD() { return hud; }
+	void SetHUD(HUD* hud) { this->hud = hud; }
+	void UnsetHUD() { this->hud = NULL; }
 	std::vector<LPGAMEOBJECT>* GetObjects(){ return &objects; }
 	void AddObject(LPGAMEOBJECT object);
 };

@@ -16,7 +16,10 @@ TileMap::TileMap(int textureId, int mapRows, int mapColumns, int tilesheetRows, 
 
 TileMap::~TileMap()
 {
-	delete tileTexture, tileSprites, tiles;
+	delete tiles;
+	tileTexture = NULL;
+	tileSprites.clear();
+	tiles = NULL;
 }
 
 void TileMap::Render()

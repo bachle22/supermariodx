@@ -33,8 +33,8 @@ void Game::Init(HWND hWnd)
 	RECT r;
 	GetClientRect(hWnd, &r);
 
-	screen_height = SCREEN_HEIGHT + 1;
-	screen_width = SCREEN_WIDTH + 1;
+	screenWidth = SCREEN_WIDTH + 1;
+	screenHeight = SCREEN_HEIGHT + 1;
 
 	// Create a device class using this information and information from the d3dpp stuct
 	d3d->CreateDevice(
@@ -85,9 +85,9 @@ void Game::Draw(int nx, float x, float y, LPDIRECT3DTEXTURE9 texture, int left, 
 }
 
 void Game::Draw(
-	int nx, float x, float y, 
-	LPDIRECT3DTEXTURE9 texture, 
-	int left, int top, int right, int bottom, 
+	int nx, float x, float y,
+	LPDIRECT3DTEXTURE9 texture,
+	int left, int top, int right, int bottom,
 	int alpha, D3DXVECTOR2 translation, int rotation)
 {
 	D3DXVECTOR3 p(ceil(x - Camera::GetInstance()->GetPosition()->x),
@@ -257,7 +257,7 @@ void Game::_ParseSection_SETTINGS(std::string line)
 
 	if (tokens.size() < 2) return;
 	if (tokens[0] == "start")
-		current_scene = atoi(tokens[1].c_str());
+		currentScene = atoi(tokens[1].c_str());
 	else
 		DebugOut(L"[ERROR] Unknown game setting %s\n", ToWSTR(tokens[0]).c_str());
 }
@@ -312,7 +312,7 @@ void Game::Load(LPCWSTR gameFile)
 
 	DebugOut(L"[INFO] Loading game file : %s has been loaded successfully\n", gameFile);
 
-	SwitchScene(current_scene);
+	SwitchScene(currentScene);
 }
 
 
@@ -320,14 +320,44 @@ void Game::SwitchScene(int scene_id)
 {
 	DebugOut(L"[INFO] Switching to scene %d\n", scene_id);
 
-	scenes[current_scene]->Unload();
+	scenes[currentScene]->Unload();
+	scenes[currentScene]->SetLoadingStatus(true);
 
 	Textures::GetInstance()->Clear();
 	Sprites::GetInstance()->Clear();
 	Animations::GetInstance()->Clear();
+	AnimationSets::GetInstance()->Clear();
 
-	current_scene = scene_id;
-	LPSCENE s = scenes[scene_id];
+	currentScene = scene_id;
+	LPSCENE s = scenes[currentScene];
 	Game::GetInstance()->SetKeyHandler(s->GetKeyEventHandler());
 	s->Load();
+}
+
+void Game::FastSwitchScene(int scene_id)
+{
+	DebugOut(L"[INFO] Fast switching to scene %d\n", scene_id);
+
+	lastScene = currentScene;
+	currentScene = scene_id;
+
+	LPSCENE s = scenes[currentScene];
+	Game::GetInstance()->SetKeyHandler(s->GetKeyEventHandler());
+
+	Mario* mario = ((ScenePlayer*)scenes[lastScene])->GetPlayer();
+	HUD* hud = ((ScenePlayer*)scenes[lastScene])->GetHUD();
+	((ScenePlayer*)scenes[lastScene])->UnsetPlayer();
+	((ScenePlayer*)scenes[lastScene])->UnsetHUD();
+
+	if (!scenes[currentScene]->IsLoaded()) s->Load();
+
+	((ScenePlayer*)s)->SetPlayer(mario);
+	mario->SetPosition(200, 50);
+	((ScenePlayer*)s)->SetHUD(hud);
+
+	int timer;
+	ULONGLONG interval;
+	((ScenePlayer*)scenes[lastScene])->GetTimer(timer, interval);
+	((ScenePlayer*)scenes[currentScene])->SetTimer(timer, interval);
+
 }

@@ -17,6 +17,7 @@ public:
 	AnimationSets() noexcept {};
 	void Add(int id, LPANIMATION_SET ani);
 	LPANIMATION_SET Get(int id);
+	void Clear();
 
 	static AnimationSets* GetInstance();
 };

@@ -20,3 +20,13 @@ void AnimationSets::Add(int id, LPANIMATION_SET ani_set)
 {
 	animation_sets[id] = ani_set;
 }
+
+void AnimationSets::Clear()
+{
+	for (auto a : animation_sets)
+	{
+		LPANIMATION_SET animset = a.second;
+		delete animset;
+	}
+	animation_sets.clear();
+}

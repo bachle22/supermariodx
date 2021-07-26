@@ -47,11 +47,13 @@ class Game
 	DIDEVICEOBJECTDATA keyEvents[KEYBOARD_BUFFER_SIZE]{};		// Buffered keyboard data
 	LPKEYEVENTHANDLER keyHandler{};
 
-	int screen_width{};
-	int screen_height{};
+	int screenWidth{};
+	int screenHeight{};
 
 	std::unordered_map<int, LPSCENE> scenes;
-	int current_scene{};
+	int currentScene{};
+	int lastScene{};
+
 	bool isPaused{};
 
 
@@ -85,11 +87,12 @@ public:
 	void _ParseSection_SCENES(std::string line);
 
 	void Load(LPCWSTR gameFile);
-	LPSCENE GetCurrentScene() { return scenes[current_scene]; }
+	LPSCENE GetCurrentScene() { return scenes[currentScene]; }
 	void SwitchScene(int scene_id);
+	void FastSwitchScene(int scene_id);
 
-	int GetScreenWidth() { return screen_width; }
-	int GetScreenHeight() { return screen_height; }
+	int GetScreenWidth() { return screenWidth; }
+	int GetScreenHeight() { return screenHeight; }
 	bool IsPaused() { return isPaused; }
 	void Pause() { isPaused = true; }
 	void Unpause() { isPaused = false; }

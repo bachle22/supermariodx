@@ -284,7 +284,7 @@ void ScenePlayer::_ParseSection_TILEMAP(std::string pathString)
 	f.open(path);
 	if (!f) DebugOut(L"[ERROR] Unable to open map config!\n");
 
-	f >> id >> mapRows >> mapColumns >> 
+	f >> id >> mapRows >> mapColumns >>
 		tilesheetRows >> tilesheetColumns >> totalTiles >>
 		viewWidth >> viewHeight;
 	Camera::GetInstance()->SetViewSize(viewWidth, viewHeight);
@@ -525,14 +525,12 @@ void ScenePlayer::Load()
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
 
 	Init();
+	SetLoadingStatus(true);
 }
 
 void ScenePlayer::Init()
 {
-	interval = 0;
-	timer = 0;
 	hud = new HUD();
-	score = 0;
 	stats = Stats::GetInstance();
 }
 
@@ -596,7 +594,7 @@ void ScenePlayer::Render()
 		if (objects[i]->IsEnabled())
 		{
 			objects[i]->Render();
-			if (objects[i]->IsPrioritized()) 
+			if (objects[i]->IsPrioritized())
 				priotizedObjects.emplace_back(objects[i]);
 		}
 
@@ -614,15 +612,15 @@ void ScenePlayer::Render()
 */
 void ScenePlayer::Unload()
 {
-	for (size_t i = 0; i < objects.size(); i++)
-	{
-		delete objects[i];
-	}
-
-	//if (grid != nullptr) grid->Clear();
-	objects.clear();
+	delete player;
 	player = NULL;
 
+	if (grid != NULL) grid->Clear();
+
+	objects.clear();
+	units.clear();
+
+	this->SetLoadingStatus(false);
 	DebugOut(L"[INFO] Scene %s unloaded! \n", sceneFilePath);
 }
 
@@ -647,6 +645,23 @@ void ScenePlayer::UpdateGrid()
 		obj->GetPosition(newPosX, newPosY);
 		units[i]->Move(newPosX, newPosY);
 	}
+}
+
+void ScenePlayer::GetTimer(int& timer, ULONGLONG& interval)
+{
+	timer = this->timer;
+	interval = this->interval;
+}
+
+void ScenePlayer::SetTimer(int timer, ULONGLONG interval)
+{
+	this->timer = timer;
+	this->interval = interval;
+	if (interval / 1000 >= timer && timer < TIME_MAX) {
+		if (DEFAULT_MAX_TIME - timer >= 0) hud->SetTime(DEFAULT_MAX_TIME - timer++);
+		else player->SetState(MARIO_DEAD);
+	}
+	hud->SetTime(DEFAULT_MAX_TIME - timer++);
 }
 
 
@@ -722,10 +737,10 @@ void ScenePlayerInputHandler::OnKeyDown(int KeyCode)
 		mario->SetPosition(2263, 345);
 		break;
 	case DIK_F6:
-		Game::GetInstance()->SwitchScene(11);
+		Game::GetInstance()->FastSwitchScene(11);
 		break;
 	case DIK_F7:
-		Game::GetInstance()->SwitchScene(10);
+		Game::GetInstance()->FastSwitchScene(10);
 		break;
 	case DIK_L:
 		game->DEBUG_X++;

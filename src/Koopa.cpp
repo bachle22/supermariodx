@@ -97,8 +97,7 @@ void Koopa::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 
 					// Only reverse when the next tile is
 					// at least 1px higher than current platform
-					if (state != KOOPA_STATE_REVIVING && y + height - 1 > t) 
-						Reverse();
+					if (y + height - 1 > t) Reverse();
 				}
 			}
 
@@ -124,8 +123,7 @@ void Koopa::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 			else {
 				x -= min_tx * dx + nx * PUSH_BACK - dx;
 				// Prevent from pushing object off the ground
-				if (!dynamic_cast<Mario*>(e->obj) &&
-					!dynamic_cast<Projectile*>(e->obj) && ny != 0)
+				if (!dynamic_cast<Mario*>(e->obj) && e->ny == -1)
 				{
 					y -= min_ty * dy + ny * PUSH_BACK - dy;
 				}
@@ -266,6 +264,7 @@ void Koopa::SetState(int state)
 		vx = -KOOPA_WALKING_SPEED;
 		height = KOOPA_WALKING_HEIGHT;
 		isFlipped = false;
+		isHit = false;
 		break;
 	case KOOPA_STATE_HIDING:
 		vx = 0;
@@ -291,6 +290,7 @@ void Koopa::SetState(int state)
 
 void Koopa::Reverse()
 {
+	if (state == KOOPA_STATE_REVIVING) return;
 	this->nx = -this->nx;
 	this->vx = -this->vx;
 }
@@ -326,6 +326,7 @@ bool Koopa::Hit()
 	timer = 0;
 	vx += nx * KOOPA_HIT_SPEED_X;
 	vy -= KOOPA_HIT_SPEED_Y;
+	bounce = 0;
 	return true;
 }
 

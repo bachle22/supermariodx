@@ -22,6 +22,7 @@ protected:
 	int id;
 	LPCWSTR sceneFilePath;
 	LPKEYEVENTHANDLER keyHandler;
+	bool isLoaded;
 
 public:
 	Scene(int id, LPCWSTR filePath);
@@ -31,6 +32,9 @@ public:
 	virtual void Unload() = 0;
 	virtual void Update(ULONGLONG dt) = 0;
 	virtual void Render() = 0;
+
+	bool IsLoaded() { return isLoaded; }
+	void SetLoadingStatus(bool isLoaded) { this->isLoaded =  isLoaded; }
 };
 
 typedef Scene* LPSCENE;
