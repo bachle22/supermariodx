@@ -5,6 +5,7 @@
 #include "ScenePlayer.h"
 #include "Debug.h"
 #include "Strings.h"
+#include "Transition.h"
 
 #define MAX_GAME_LINE 1024
 
@@ -334,7 +335,7 @@ void Game::SwitchScene(int scene_id)
 	s->Load();
 }
 
-void Game::FastSwitchScene(int scene_id)
+void Game::FastSwitchScene(int scene_id, float startX, float startY)
 {
 	DebugOut(L"[INFO] Fast switching to scene %d\n", scene_id);
 
@@ -351,14 +352,16 @@ void Game::FastSwitchScene(int scene_id)
 	((ScenePlayer*)scenes[lastScene])->UnsetTransition();
 
 	if (!scenes[currentScene]->IsLoaded()) s->Load();
+	Transition::GetInstance()->FadeOut();
 
 	((ScenePlayer*)s)->SetPlayer(mario);
-	mario->SetPosition(200, 50);
+	mario->SetPosition(startX, startY);
 	((ScenePlayer*)s)->SetHUD(hud);
 
 	int timer;
 	ULONGLONG interval;
 	((ScenePlayer*)scenes[lastScene])->GetTimer(timer, interval);
 	((ScenePlayer*)scenes[currentScene])->SetTimer(timer, interval);
-
+	
+	mario->SetAction(LEAVING_PORTAL);
 }

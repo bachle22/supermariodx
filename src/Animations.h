@@ -35,7 +35,13 @@ public:
 	void Render(float x, float y, int alpha = 255);
 	void RenderFlipped(int nx, float x, float y, int alpha = 255);
 	void Render(int nx, float x, float y, int clippingWidth, int clippingHeight);
+	void Render(
+		int nx, float x, float y,
+		int alpha, D3DXVECTOR2 translation,
+		int left, int top,
+		int right, int bottom);
 	void RenderFirstFrame(float x, float y, int rotation);
+	void RenderFirstFrame(int nx, float x, float y, D3DXVECTOR2 translation);
 };
 
 typedef Animation* LPANIMATION;

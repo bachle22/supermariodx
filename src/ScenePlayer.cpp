@@ -407,8 +407,10 @@ void ScenePlayer::_ParseSection_GRID(std::string pathString)
 				{
 					float width = strtof(tokens[3].c_str(), NULL);
 					float height = strtof(tokens[4].c_str(), NULL);
-					int scene_id = atoi(tokens[6].c_str());
-					obj = new Portal(width, height, scene_id);
+					int scene_id = atoi(tokens[5].c_str());
+					float destX = strtof(tokens[6].c_str(), NULL);
+					float destY = strtof(tokens[7].c_str(), NULL);
+					obj = new Portal(width, height, scene_id, destX, destY);
 					break;
 				}
 				case OBJECT_TYPE_BLOCK:
@@ -593,7 +595,7 @@ void ScenePlayer::Update(ULONGLONG dt)
 		if (DEFAULT_MAX_TIME - timer >= 0) hud->SetTime(DEFAULT_MAX_TIME - timer++);
 		else player->SetState(MARIO_DEAD);
 	}
-	hud->SetPowerMeter((GetPlayer()->GetPowerMeter()));
+	//hud->SetPowerMeter((GetPlayer()->GetPowerMeter()));
 
 	UpdateGrid();
 }
@@ -699,6 +701,10 @@ void ScenePlayerInputHandler::OnKeyDown(int KeyCode)
 		break;
 	case DIK_DOWN:
 		mario->SetMovement(DOWN);
+		mario->SetAction(ACTIVATING_PORTAL);
+		break;
+	case DIK_UP:
+		mario->SetAction(ACTIVATING_PORTAL);
 		break;
 	case DIK_S:
 		if (!game->IsKeyDown(DIK_X)) mario->SetAction(SUPER_JUMPING);
@@ -752,12 +758,12 @@ void ScenePlayerInputHandler::OnKeyDown(int KeyCode)
 	case DIK_F5:
 		mario->SetPosition(2272, 80);
 		break;
-	case DIK_F6:
-		Game::GetInstance()->FastSwitchScene(11);
-		break;
-	case DIK_F7:
-		Game::GetInstance()->FastSwitchScene(10);
-		
+		//case DIK_F6:
+		//	Game::GetInstance()->FastSwitchScene(11);
+		//	break;
+		//case DIK_F7:
+		//	Game::GetInstance()->FastSwitchScene(10);
+
 		break;
 	case DIK_L:
 		game->DEBUG_X++;
@@ -796,6 +802,10 @@ void ScenePlayerInputHandler::OnKeyUp(int KeyCode)
 		break;
 	case DIK_DOWN:
 		mario->UnsetMovement(DOWN);
+		mario->UnsetAction(ACTIVATING_PORTAL);
+		break;
+	case DIK_UP:
+		mario->UnsetAction(ACTIVATING_PORTAL);
 		break;
 	case DIK_S:
 		mario->UnsetAction(DONE_JUMPING);

@@ -1,10 +1,12 @@
 #include "Portal.h"
 
-Portal::Portal(int width, int height, int scene_id)
+Portal::Portal(int width, int height, int scene_id, float destX, float destY)
 {
 	this->scene_id = scene_id;
 	this->width = width;
 	this->height = height;
+	this->destX = destX;
+	this->destY = destY;
 }
 
 void Portal::Render()
@@ -18,4 +20,10 @@ void Portal::GetBoundingBox(float& left, float& top, float& right, float& bottom
 	top = y;
 	right = x + width;
 	bottom = y + height;
+}
+
+void Portal::GetDestination(float& destX, float& destY)
+{
+	destX = this->destX;
+	destY = this->destY;
 }

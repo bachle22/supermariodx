@@ -13,6 +13,26 @@ void Animation::Add(int spriteId, ULONGLONG time)
 
 void Animation::Render(
 	int nx, float x, float y,
+	int alpha, D3DXVECTOR2 translation,
+	int left, int top,
+	int right, int bottom)
+{
+	ULONGLONG now = GetTickCount64();
+	if (currentFrame == -1)
+	{
+		currentFrame = 0;
+		lastFrameTime = now;
+	}
+	else
+	 {
+		frames[currentFrame]->GetSprite()->
+			Draw(nx, x, y, alpha, translation, 
+				left, top, right, bottom);
+	}
+}
+
+void Animation::Render(
+	int nx, float x, float y,
 	int alpha, D3DXVECTOR2 translation, int rotation,
 	int clippingWidth, int clippingHeight)
 {
@@ -26,7 +46,7 @@ void Animation::Render(
 		if (clippingWidth == NULL && clippingHeight == NULL)
 			frames[currentFrame]->GetSprite()->Draw(nx, x, y, alpha, translation, rotation);
 		else
-			frames[currentFrame]->GetSprite()->Draw(nx, x, y, alpha, clippingWidth, clippingHeight);
+			frames[currentFrame]->GetSprite()->Draw(nx, x, y, alpha, translation, clippingWidth, clippingHeight);
 		return;
 	}
 	else
@@ -45,7 +65,7 @@ void Animation::Render(
 	if (clippingWidth == NULL && clippingHeight == NULL)
 		frames[currentFrame]->GetSprite()->Draw(nx, x, y, alpha, translation, rotation);
 	else
-		frames[currentFrame]->GetSprite()->Draw(nx, x, y, alpha, clippingWidth, clippingHeight);
+		frames[currentFrame]->GetSprite()->Draw(nx, x, y, alpha, translation, clippingWidth, clippingHeight);
 }
 
 void Animation::RenderFirstFrame(float x, float y, int rotation)
@@ -57,7 +77,17 @@ void Animation::RenderFirstFrame(float x, float y, int rotation)
 		lastFrameTime = now;
 	}
 	frames[currentFrame]->GetSprite()->Draw(FLIP, x, y, VISIBLE, D3DXVECTOR2(0, 0), rotation);
+}
 
+void Animation::RenderFirstFrame(int nx, float x, float y, D3DXVECTOR2 translation)
+{
+	ULONGLONG now = GetTickCount64();
+	if (currentFrame == -1)
+	{
+		currentFrame = 0;
+		lastFrameTime = now;
+	}
+	frames[currentFrame]->GetSprite()->Draw(nx, x, y, VISIBLE, translation, NOROTATE);
 }
 
 void Animation::Render(int nx, float x, float y, int alpha, D3DXVECTOR2 translation)

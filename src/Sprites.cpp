@@ -66,6 +66,16 @@ void Sprite::Draw(int nx, float x, float y, int alpha, D3DXVECTOR2 translation, 
 	game->Draw(nx, x, y, texture, left, top, left + width, top + height, alpha, translation);
 }
 
+void Sprite::Draw(int nx, float x, float y, 
+	int alpha, D3DXVECTOR2 translation, 
+	int l, int t, int r, int b)
+{
+	Game* game = Game::GetInstance();
+	game->Draw(nx, x, y, texture, 
+		left + l, top + t, left + r, top + b, 
+		alpha, translation);
+}
+
 void Sprites::Add(int id, int left, int top, int right, int bottom, LPDIRECT3DTEXTURE9 tex)
 {
 	LPSPRITE s = new Sprite(id, left, top, right, bottom, tex);

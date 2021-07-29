@@ -20,17 +20,22 @@
 #include "PSwitch.h"
 #include "Roulette.h"
 #include "Leaf.h"
+#include "Transition.h"
 
 Mario::Mario(float x, float y) : GameObject()
 {
 	state = MARIO_SMALL;
 	ax = 0; ay = 0;
-	start_x = x;
-	start_y = y;
 	this->x = x;
 	this->y = y;
+	entryX = x;
+	entryY = y;
+	tempX = 0; tempY = 0;
+	width = 0; height = 0;
+	clipY = 0;
 
 	powerMeter = 0;
+	destSceneID = NULL;
 
 	isUntouchable = false;
 	untouchableTimer = 0;
@@ -155,7 +160,32 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 			else if (dynamic_cast<Portal*>(e->obj))
 			{
 				Portal* p = dynamic_cast<Portal*>(e->obj);
+				if (e->ny != 0)
+				{
+					UnsetAction(DUCKING);
+					if (GetAction(ACTIVATING_PORTAL))
+					{
+						SetAction(ENTERING_PORTAL);
+						UnsetAction(EXITED_PORTAL);
+						p->GetDestination(tempX, tempY);
+						if (e->ny == -1)
+						{
+							SetAction(MOVING_DOWN);
+							UnsetAction(MOVING_UP);
+						}
+						else
+						{
+							SetAction(MOVING_UP);
+							UnsetAction(MOVING_DOWN);
+						}
+						destSceneID = p->GetSceneID();
+					}
 
+					if (e->ny == 1)
+					{
+						SetAction(DONE_JUMPING);
+					}
+				}
 			}
 
 			else if (dynamic_cast<Mushroom*>(e->obj))
@@ -269,7 +299,7 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 				else if (e->nx != 0)
 				{
 					if (k->GetState() != KOOPA_STATE_HIDING &&
-						k->GetState() != KOOPA_STATE_REVIVING) 
+						k->GetState() != KOOPA_STATE_REVIVING)
 						Downgrade();
 					else {
 						SetAction(KICKING);
@@ -297,8 +327,6 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 	}
 	// clean up collision events
 	for (size_t i = 0; i < coEvents.size(); i++) delete coEvents[i];
-	//DebugOut(L"x %f nx %d ax %f vx %f \n", x, nx, ax, vx);
-	//DebugOut(L"y %f ny %d ay %f vy %f \n", y, nx, ay, vy);
 }
 
 void Mario::Render()
@@ -306,9 +334,7 @@ void Mario::Render()
 	int ani = NULL;
 	D3DXVECTOR2 translation = D3DXVECTOR2(0, 0);
 
-	if (state == MARIO_DEAD)
-		ani = ANI_DEAD;
-
+	if (state == MARIO_DEAD) ani = ANI_DEAD;
 	else switch (state) {
 	case MARIO_SMALL:
 		translation.x = -MARIO_SMALL_TRANSLATE_X;
@@ -327,6 +353,12 @@ void Mario::Render()
 			ani = ANI_SMALL_JUMPING;
 			if (powerMeter == MAX_POWER_METER) ani = ANI_SMALL_JUMPING_MAX;
 		}
+		if (GetAction(ENTERING_PORTAL) || GetAction(LEAVING_PORTAL))
+		{
+			ani = ANI_SMALL_PIPE;
+			translation.y = 0;
+		}
+
 		break;
 
 	case MARIO_BIG:
@@ -357,18 +389,23 @@ void Mario::Render()
 			translation.x = nx < 0 ? 0 : -MARIO_BIG_TRANSLATE_X + 2;
 		}
 
+		if (GetAction(ENTERING_PORTAL) || GetAction(LEAVING_PORTAL))
+		{
+			ani = ANI_BIG_PIPE;
+		}
+
 		break;
 
 	case MARIO_RACOON:
 		translation.x = nx < 0 ? 0 : -MARIO_RACOON_TRANSLATE_X;
-		if (ax != 0 || AS_SHORT(movement))
+		if ((ax != 0 || AS_SHORT(movement)))
 		{
 			ani = ANI_RACOON_WALKING;
 			if (powerMeter > 2) ani = ANI_RACOON_RUNNING;
 			if (powerMeter == MAX_POWER_METER) ani = ANI_RACOON_RUNNING_MAX;
 			translation.x = nx < 0 ? -1 : -MARIO_RACOON_TRANSLATE_X + 1;
 
-			if (ax * nx < 0 && AS_SHORT(movement)) {
+			if (ax * nx < 0 && AS_SHORT(movement) && !GetAction(JUMPING)) {
 				ani = ANI_RACOON_BRAKING;
 				translation.x = -1;
 			}
@@ -426,7 +463,53 @@ void Mario::Render()
 		else flashTimer = 0;
 	}
 
-	animation_set->at(ani)->Render(nx, (x), ceil(y), alpha, translation);
+	if (GetAction(ENTERING_PORTAL))
+	{
+		if (GetAction(MOVING_DOWN))
+		{
+			animation_set->at(ani)->Render(
+				nx, x, ceil(y), VISIBLE, translation,
+				0, y - clipY - 1,
+				TILE_WIDTH, height + y - clipY);
+		}
+		else if (GetAction(MOVING_UP))
+		{
+			animation_set->at(ani)->Render(
+				nx, x, ceil(y), VISIBLE, translation,
+				0, y - clipY,
+				TILE_WIDTH, height + 1);
+		}
+	}
+	else if (GetAction(LEAVING_PORTAL))
+	{
+		if (GetAction(MOVING_DOWN))
+		{
+			animation_set->at(ani)->Render(
+				nx, x, ceil(y), VISIBLE, translation,
+				0, clipY,
+				TILE_WIDTH, height - clipY);
+		}
+		else if (GetAction(MOVING_UP))
+		{
+			DebugOut(L"clipY %f\n", clipY);
+			animation_set->at(ani)->Render(
+				nx, x, ceil(y), VISIBLE, translation,
+				0, -clipY,
+				TILE_WIDTH, height - clipY);
+		}
+	}
+	else if (Game::GetInstance()->IsPaused() && state <= MARIO_RACOON)
+	{
+		animation_set->at(ani)->RenderFirstFrame(nx, (x), ceil(y), translation);
+	}
+	else
+	{
+		animation_set->at(ani)->Render(nx, (x), ceil(y), alpha, translation);
+		//animation_set->at(ani)->Render(
+		//	nx, x, ceil(y), VISIBLE, translation,
+		//	0, Game::GetInstance()->DEBUG_X,
+		//	TILE_WIDTH, height + Game::GetInstance()->DEBUG_X);
+	}
 
 	RenderBoundingBox();
 	tail->Render();
@@ -459,6 +542,8 @@ void Mario::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 		bottom = y;
 		break;
 	}
+	width = right - left;
+	height = bottom - top;
 }
 
 /*
@@ -467,12 +552,16 @@ void Mario::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 void Mario::Reset()
 {
 	SetState(MARIO_SMALL);
-	SetPosition(start_x, start_y);
+	SetPosition(entryX, entryY);
 	SetSpeed(0, 0);
 }
 
 void Mario::Movement()
 {
+
+	if (GetAction(ENTERING_PORTAL)) EnterPortal();
+	else if (GetAction(LEAVING_PORTAL)) LeavePortal();
+
 	if (Game::GetInstance()->IsPaused()) return;
 
 	// Velocity with friction + power meter
@@ -501,12 +590,12 @@ void Mario::Movement()
 		if (GetAction(SUPER_JUMPING)) {
 			if (!GetAction(JUMPING))
 			{
-				last_y = y;
+				beforeJumpingY = y;
 				vy = -MARIO_JUMP_SPEED_HIGH;
 			}
 			float maxHeight = level == MARIO_SMALL ? 30.0f : MARIO_JUMP_HEIGHT_MAX;
 			if (!GetAction(DONE_JUMPING) &&
-				last_y - y < maxHeight + powerMeter * MARIO_JUMP_HEIGHT_POWER) {
+				beforeJumpingY - y < maxHeight + powerMeter * MARIO_JUMP_HEIGHT_POWER) {
 				vy -= MARIO_ACCELERATION_Y;
 				// Gravity compensation
 				vy -= MARIO_GRAVITY * dt;
@@ -608,6 +697,7 @@ void Mario::Movement()
 		ax += powerMeter * MARIO_POWER_INERTIA;
 	}
 
+
 	// Equalize acceleration to 0 if there's little acceleration
 	if (abs(ax) <= MARIO_INERTIA) ax = 0;
 	// ax = 1 or ax = -1 are max acceleration allowed
@@ -627,16 +717,16 @@ void Mario::SetState(int state)
 	case MARIO_SMALL_TO_BIG:
 		// Making sure Mario doesn't overlap with platform
 		y -= MARIO_BIG_HEIGHT - MARIO_SMALL_HEIGHT + 0.5f;
-		animationTimer = GetTickCount64();
+		StartAnimationTimer();
 		Game::GetInstance()->Pause();
 		break;
 	case MARIO_BIG_TO_SMALL:
-		animationTimer = GetTickCount64();
+		StartAnimationTimer();
 		Game::GetInstance()->Pause();
 		break;
 	case MARIO_BIG_TO_RACOON:
 	{
-		animationTimer = GetTickCount64();
+		StartAnimationTimer();
 		Warp* warp = new Warp(x, y + MARIO_WARP_EFFECT_Y);
 		LPSCENE scene = Game::GetInstance()->GetCurrentScene();
 		((ScenePlayer*)scene)->AddObject(warp);
@@ -646,7 +736,7 @@ void Mario::SetState(int state)
 	case MARIO_RACOON_TO_BIG:
 	{
 		tail->Disable();
-		animationTimer = GetTickCount64();
+		StartAnimationTimer();
 		Warp* warp = new Warp(x, y + MARIO_WARP_EFFECT_Y);
 		LPSCENE scene = Game::GetInstance()->GetCurrentScene();
 		((ScenePlayer*)scene)->AddObject(warp);
@@ -704,6 +794,7 @@ void Mario::UpdateState()
 		}
 		else tail->Disable();
 		break;
+
 	}
 
 
@@ -784,5 +875,51 @@ void Mario::Downgrade()
 	case MARIO_SMALL:
 		SetState(MARIO_DEAD);
 		break;
+	}
+}
+
+void Mario::EnterPortal()
+{
+	if (clipY == 0) clipY = y;
+
+	if (abs(y - clipY) <= height)
+	{
+		if (GetAction(MOVING_DOWN)) clipY += MARIO_PIPE_SPEED;
+		if (GetAction(MOVING_UP)) clipY -= MARIO_PIPE_SPEED;
+		Game::GetInstance()->Pause();
+	}
+	else if (abs(y - clipY) > height && !GetAction(EXITED_PORTAL))
+	{
+		Transition::GetInstance()->FadeIn();
+		SetAction(EXITED_PORTAL);
+	}
+	else if (Transition::GetInstance()->IsFinished())
+	{
+		UnsetAction(ENTERING_PORTAL);
+		y = 0;
+		clipY = height;
+		if (destSceneID == NULL) return;
+		if (GetAction(MOVING_DOWN))
+			Game::GetInstance()->FastSwitchScene(destSceneID, tempX, tempY);
+		else Game::GetInstance()->FastSwitchScene(destSceneID, tempX, tempY - height);
+	}
+
+}
+
+void Mario::LeavePortal()
+{
+	//if (clipY == 0) clipY = y;
+
+	if (clipY > 0)
+	{
+		Game::GetInstance()->Pause();
+		clipY -= MARIO_PIPE_SPEED;
+		UnsetAction(EXITED_PORTAL);
+	}
+	else
+	{
+		UnsetAction(LEAVING_PORTAL);
+		Game::GetInstance()->Unpause();
+		clipY = 0;
 	}
 }

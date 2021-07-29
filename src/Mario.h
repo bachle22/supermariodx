@@ -63,6 +63,7 @@ constexpr float MARIO_SMALL_TRANSLATE_X = 2;
 constexpr float MARIO_BIG_TRANSLATE_X = 2;
 constexpr float MARIO_RACOON_TRANSLATE_X = 10;
 constexpr float MARIO_RACOON_SPINNING_X = 7;
+constexpr float MARIO_PIPE_SPEED = .5f;
 
 constexpr int MARIO_FLASH_INTERVEL = 50;
 constexpr int MARIO_WARP_EFFECT_Y = 8;
@@ -114,6 +115,9 @@ enum MarioAnimation
 
 	ANI_RACOON_DUCKING = 42,
 	ANI_RACOON_SPINNING = 44,
+
+	ANI_SMALL_PIPE = 58,
+	ANI_BIG_PIPE = 59,
 };
 
 enum MarioAction
@@ -127,7 +131,13 @@ enum MarioAction
 	DESCENDING = 6,
 	DUCKING = 7,
 	SPINNING = 8,
-	KICKING = 9
+	KICKING = 9,
+	ENTERING_PORTAL = 10,
+	LEAVING_PORTAL = 11,
+	EXITED_PORTAL = 12,
+	ACTIVATING_PORTAL = 13,
+	MOVING_DOWN = 14,
+	MOVING_UP = 15
 };
 
 enum MarioState
@@ -170,16 +180,17 @@ class Mario : public GameObject
 	ULONGLONG lastTimeDecreasePowerMaxHeight;
 	
 
-	float start_x;
-	float start_y;
+	float entryX, entryY;
+	float tempX, tempY;
+	float beforeJumpingY, clipY;
+	float width, height;
 
 	int powerMeter;
-
-	float last_y;
+	int destSceneID;
 
 	bool edge[4] = { 0 };
 	bool movement[4] = { 0 };
-	bool action[10] = { 0 };
+	bool action[16] = { 0 };
 
 	Tail* tail;
 
@@ -206,9 +217,13 @@ public:
 	void ManagePowerDuration();
 	
 	void ShiftPosition(int action, int sign);
+	void StartAnimationTimer() { animationTimer = GetTickCount64(); }
 
 	void SetState(int state);
 	int GetState() { return state; }
 	void UpdateState();
 	void Reset();
+
+	void EnterPortal();
+	void LeavePortal();
 };

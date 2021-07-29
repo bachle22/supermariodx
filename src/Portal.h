@@ -14,10 +14,13 @@ class Portal : public GameObject
 	int width;
 	int height;
 
+	float destX, destY;
+
 	virtual void Render();
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 
 public:
-	Portal(int width, int height, int scene_id);
-	int GetSceneId() { return scene_id; }
+	Portal(int width, int height, int scene_id, float destX, float destY);
+	int GetSceneID() { return scene_id; }
+	void GetDestination(float& destX, float& destY);
 };

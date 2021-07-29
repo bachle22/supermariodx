@@ -31,6 +31,9 @@ public:
 	void Draw(int nx, float x, float y, 
 		int alpha, D3DXVECTOR2 translation, 
 		int width, int height);
+	void Draw(int nx, float x, float y,
+		int alpha, D3DXVECTOR2 translation,
+		int left, int top, int right, int bottom);
 };
 
 typedef Sprite* LPSPRITE;

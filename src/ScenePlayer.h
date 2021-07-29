@@ -29,7 +29,7 @@ protected:
 	std::vector<LPGAMEOBJECT> objects;
 	std::vector<Unit*> units;
 
-	bool isTransitionDone;
+	bool isTransitionDone{};
 
 	void GetObjectFromGrid();
 	Grid* GetGrid() { return grid; };
