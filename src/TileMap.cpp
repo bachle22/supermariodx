@@ -12,6 +12,8 @@ TileMap::TileMap(int textureId, int mapRows, int mapColumns, int tilesheetRows, 
 	this->tilesheetRows = tilesheetRows;
 	this->tilesheetColumns = tilesheetColumns;
 	this->totalTiles = totalTiles;
+	mapWidth = 0;
+	mapHeight = 0;
 }
 
 TileMap::~TileMap()
@@ -56,4 +58,16 @@ void TileMap::SetTileSprites()
 		LPSPRITE sprite = new Sprite(i, left, top, right, bottom, tileTexture);
 		this->tileSprites.push_back(sprite);
 	}
+}
+
+void TileMap::SetMapSize(int width, int height)
+{
+	mapWidth = width;
+	mapHeight = height;
+}
+
+void TileMap::GetMapSize(int& width, int& height)
+{
+	width = mapWidth;
+	height = mapHeight;
 }

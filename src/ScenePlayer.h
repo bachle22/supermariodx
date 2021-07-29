@@ -55,6 +55,8 @@ public:
 	void SetPlayer(Mario* mario) { player = mario; }
 	void UnsetPlayer() { player = NULL; }
 
+	TileMap* GetMap() { return map; }
+
 	void UnsetTransition() { isTransitionDone = false; }
 
 	void GetTimer(int& timer, ULONGLONG& interval);

@@ -132,12 +132,13 @@ enum MarioAction
 	DUCKING = 7,
 	SPINNING = 8,
 	KICKING = 9,
-	ENTERING_PORTAL = 10,
-	LEAVING_PORTAL = 11,
-	EXITED_PORTAL = 12,
-	ACTIVATING_PORTAL = 13,
-	MOVING_DOWN = 14,
-	MOVING_UP = 15
+	ON_PORTAL = 10,
+	ENTERING_PORTAL = 11,
+	LEAVING_PORTAL = 12,
+	EXITED_PORTAL = 13,
+	ACTIVATING_PORTAL = 14,
+	MOVING_DOWN = 15,
+	MOVING_UP = 16
 };
 
 enum MarioState
@@ -190,7 +191,7 @@ class Mario : public GameObject
 
 	bool edge[4] = { 0 };
 	bool movement[4] = { 0 };
-	bool action[16] = { 0 };
+	bool action[17] = { 0 };
 
 	Tail* tail;
 

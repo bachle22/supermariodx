@@ -279,7 +279,7 @@ void ScenePlayer::_ParseSection_OBJECTS(std::string pathString)
 void ScenePlayer::_ParseSection_TILEMAP(std::string pathString)
 {
 	int id, mapRows, mapColumns, tilesheetColumns, tilesheetRows, totalTiles;
-	int viewWidth, viewHeight;
+	int mapWidth, mapHeight;
 	LPCWSTR path = ToLPCWSTR(pathString);
 	std::ifstream f;
 	f.open(path);
@@ -287,8 +287,7 @@ void ScenePlayer::_ParseSection_TILEMAP(std::string pathString)
 
 	f >> id >> mapRows >> mapColumns >>
 		tilesheetRows >> tilesheetColumns >> totalTiles >>
-		viewWidth >> viewHeight;
-	Camera::GetInstance()->SetViewSize(viewWidth, viewHeight);
+		mapWidth >> mapHeight;
 
 	int** tiles = new int* [mapRows];
 	for (int i = 0; i < mapRows; i++)
@@ -301,6 +300,7 @@ void ScenePlayer::_ParseSection_TILEMAP(std::string pathString)
 	f.close();
 
 	map = new TileMap(id, mapRows, mapColumns, tilesheetRows, tilesheetColumns, totalTiles);
+	map->SetMapSize(mapWidth, mapHeight);
 	map->SetTileSprites();
 	map->SetTileMapData(tiles);
 }
@@ -595,7 +595,7 @@ void ScenePlayer::Update(ULONGLONG dt)
 		if (DEFAULT_MAX_TIME - timer >= 0) hud->SetTime(DEFAULT_MAX_TIME - timer++);
 		else player->SetState(MARIO_DEAD);
 	}
-	//hud->SetPowerMeter((GetPlayer()->GetPowerMeter()));
+	hud->SetPowerMeter((GetPlayer()->GetPowerMeter()));
 
 	UpdateGrid();
 }
@@ -700,7 +700,7 @@ void ScenePlayerInputHandler::OnKeyDown(int KeyCode)
 		mario->SetMovement(RIGHT);
 		break;
 	case DIK_DOWN:
-		mario->SetMovement(DOWN);
+		if (!mario->GetAction(ON_PORTAL)) mario->SetMovement(DOWN);
 		mario->SetAction(ACTIVATING_PORTAL);
 		break;
 	case DIK_UP:

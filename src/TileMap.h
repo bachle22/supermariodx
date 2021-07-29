@@ -9,6 +9,7 @@ class TileMap /*: public GameObject*/
 	int mapRows, mapColumns;
 	int tilesheetRows, tilesheetColumns;
 	int totalTiles;
+	int mapWidth, mapHeight;
 
 	LPDIRECT3DTEXTURE9 tileTexture; 
 	std::vector<LPSPRITE> tileSprites;
@@ -24,5 +25,7 @@ public:
 	//virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	void SetTileMapData(int** tiles);
 	void SetTileSprites();
+	void SetMapSize(int width, int height);
+	void GetMapSize(int& width, int& height);
 };
 

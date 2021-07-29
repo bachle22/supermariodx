@@ -114,6 +114,7 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 			UnsetAction(JUMPING);
 			UnsetAction(DONE_JUMPING);
 			UnsetAction(PEAKING);
+			UnsetAction(ON_PORTAL);
 		}
 
 		//DebugOut(L"min_tx %f min_ty %f nx %f ny %f rdx %f rdy %f\n", min_tx, min_ty, nx, ny, rdx, rdy);
@@ -159,10 +160,11 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 
 			else if (dynamic_cast<Portal*>(e->obj))
 			{
+				SetAction(ON_PORTAL);
 				Portal* p = dynamic_cast<Portal*>(e->obj);
 				if (e->ny != 0)
 				{
-					UnsetAction(DUCKING);
+
 					if (GetAction(ACTIVATING_PORTAL))
 					{
 						SetAction(ENTERING_PORTAL);
@@ -392,6 +394,7 @@ void Mario::Render()
 		if (GetAction(ENTERING_PORTAL) || GetAction(LEAVING_PORTAL))
 		{
 			ani = ANI_BIG_PIPE;
+			translation.x = -1;
 		}
 
 		break;
@@ -436,6 +439,13 @@ void Mario::Render()
 			ani = ANI_RACOON_SPINNING;
 			translation.x = nx < 0 ? 0 : -MARIO_RACOON_TRANSLATE_X;
 		}
+
+		if (GetAction(ENTERING_PORTAL) || GetAction(LEAVING_PORTAL))
+		{
+			ani = ANI_BIG_PIPE;
+			translation.x = -1;
+		}
+
 		break;
 
 	case MARIO_SMALL_TO_BIG:
@@ -469,7 +479,7 @@ void Mario::Render()
 		{
 			animation_set->at(ani)->Render(
 				nx, x, ceil(y), VISIBLE, translation,
-				0, y - clipY - 1,
+				0, y - clipY,
 				TILE_WIDTH, height + y - clipY);
 		}
 		else if (GetAction(MOVING_UP))
@@ -487,7 +497,7 @@ void Mario::Render()
 			animation_set->at(ani)->Render(
 				nx, x, ceil(y), VISIBLE, translation,
 				0, clipY,
-				TILE_WIDTH, height - clipY);
+				TILE_WIDTH, height);
 		}
 		else if (GetAction(MOVING_UP))
 		{
@@ -505,10 +515,10 @@ void Mario::Render()
 	else
 	{
 		animation_set->at(ani)->Render(nx, (x), ceil(y), alpha, translation);
-		//animation_set->at(ani)->Render(
-		//	nx, x, ceil(y), VISIBLE, translation,
-		//	0, Game::GetInstance()->DEBUG_X,
-		//	TILE_WIDTH, height + Game::GetInstance()->DEBUG_X);
+		/*animation_set->at(ani)->Render(
+			nx, x, ceil(y), VISIBLE, translation,
+			0, Game::GetInstance()->DEBUG_X,
+			TILE_WIDTH, height + Game::GetInstance()->DEBUG_Y);*/
 	}
 
 	RenderBoundingBox();
@@ -526,15 +536,16 @@ void Mario::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 	case MARIO_SMALL:
 		right = x + MARIO_SMALL_WIDTH;
 		bottom = y + MARIO_SMALL_HEIGHT;
+
 		break;
 	case MARIO_BIG:
 		right = x + MARIO_BIG_WIDTH;
-		if (GetAction(DUCKING)) bottom = y + MARIO_DUCKING_HEIGHT;
+		if (GetAction(DUCKING) && !GetAction(ON_PORTAL)) bottom = y + MARIO_DUCKING_HEIGHT;
 		else bottom = y + MARIO_BIG_HEIGHT;
 		break;
 	case MARIO_RACOON:
 		right = x + MARIO_BIG_WIDTH;
-		if (GetAction(DUCKING)) bottom = y + MARIO_DUCKING_HEIGHT;
+		if (GetAction(DUCKING) && !GetAction(ON_PORTAL)) bottom = y + MARIO_DUCKING_HEIGHT;
 		else bottom = y + MARIO_RACOON_HEIGHT;
 		break;
 	default:
@@ -542,8 +553,10 @@ void Mario::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 		bottom = y;
 		break;
 	}
+
 	width = right - left;
 	height = bottom - top;
+
 }
 
 /*
@@ -558,7 +571,6 @@ void Mario::Reset()
 
 void Mario::Movement()
 {
-
 	if (GetAction(ENTERING_PORTAL)) EnterPortal();
 	else if (GetAction(LEAVING_PORTAL)) LeavePortal();
 
@@ -660,7 +672,8 @@ void Mario::Movement()
 			}
 			// Teleport to ducking position for accurate hitboxes
 			// Prevent ducking mid-air
-			if (!GetAction(DUCKING) && !GetAction(JUMPING) && vy <= MARIO_DEFAULT_VELOCITY_THRESHOLD)
+			if (!GetAction(DUCKING) && !GetAction(JUMPING) && !GetAction(ON_PORTAL)
+				&& vy <= MARIO_DEFAULT_VELOCITY_THRESHOLD)
 			{
 				ShiftPosition(DUCKING, SHIFT);
 				SetAction(DUCKING);
@@ -901,7 +914,8 @@ void Mario::EnterPortal()
 		if (destSceneID == NULL) return;
 		if (GetAction(MOVING_DOWN))
 			Game::GetInstance()->FastSwitchScene(destSceneID, tempX, tempY);
-		else Game::GetInstance()->FastSwitchScene(destSceneID, tempX, tempY - height);
+		else if (GetAction(MOVING_UP))
+			Game::GetInstance()->FastSwitchScene(destSceneID, tempX, tempY - height);
 	}
 
 }

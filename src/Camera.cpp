@@ -1,6 +1,7 @@
 #include "Camera.h"
 #include "ScenePlayer.h"
 #include "Debug.h"
+#include "TileMap.h"
 
 Camera* Camera::__instance = NULL;
 
@@ -52,7 +53,9 @@ void Camera::Update()
 	Mario* mario = ((ScenePlayer*)Game::GetInstance()->GetCurrentScene())->GetPlayer();
 	if (mario == NULL) return;
 	mario->GetPosition(cx, cy);
-	SetPosition(ceil(cx) + Game::GetInstance()->DEBUG_X*2, ceil(cy) + Game::GetInstance()->DEBUG_Y*2);
+
+	TileMap* map = ((ScenePlayer*)Game::GetInstance()->GetCurrentScene())->GetMap();
+	if (map != NULL) map->GetMapSize(viewRight, viewBottom);
 
 	cx -= (width + 1) / 2; cy -= (height + 1) / 2;
 	if (viewRight == 0);
@@ -65,4 +68,5 @@ void Camera::Update()
 	else cy = viewBottom;
 	if (cy < viewTop) cy = 0;
 
+	SetPosition(ceil(cx) + Game::GetInstance()->DEBUG_X*2, ceil(cy) + Game::GetInstance()->DEBUG_Y*2);
 }

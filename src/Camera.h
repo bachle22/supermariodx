@@ -13,7 +13,7 @@ class Camera
 	int width, height;
 	D3DXVECTOR2 position;
 
-	float viewLeft, viewTop, viewRight, viewBottom;
+	int viewLeft, viewTop, viewRight, viewBottom;
 
 public:
 	Camera();
