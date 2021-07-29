@@ -138,7 +138,8 @@ enum MarioAction
 	EXITED_PORTAL = 13,
 	ACTIVATING_PORTAL = 14,
 	MOVING_DOWN = 15,
-	MOVING_UP = 16
+	MOVING_UP = 16,
+	TOUCHING_WOOD = 17
 };
 
 enum MarioState
@@ -191,7 +192,7 @@ class Mario : public GameObject
 
 	bool edge[4] = { 0 };
 	bool movement[4] = { 0 };
-	bool action[17] = { 0 };
+	bool action[18] = { 0 };
 
 	Tail* tail;
 
@@ -200,6 +201,8 @@ public:
 	virtual void Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
+
+	float GetHeight() { return height; }
 
 	void Downgrade();
 	void SetUntouchable() { isUntouchable = true; }

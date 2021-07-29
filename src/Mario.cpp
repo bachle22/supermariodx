@@ -21,6 +21,7 @@
 #include "Roulette.h"
 #include "Leaf.h"
 #include "Transition.h"
+#include "FloatingWood.h"
 
 Mario::Mario(float x, float y) : GameObject()
 {
@@ -156,6 +157,16 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 					vy = entry_vy;
 					y -= min_ty * dy + ny * PUSH_BACK - dy;
 				}
+			}
+
+			else if (dynamic_cast<FloatingWood*>(e->obj))
+			{
+				if (e->ny == -1) {
+					SetAction(TOUCHING_WOOD);
+					FloatingWood* w = dynamic_cast<FloatingWood*>(e->obj);
+					w->SetState(FLOATING_WOOD_FALLING);
+				}
+				if (e->ny == 1) SetAction(DONE_JUMPING);
 			}
 
 			else if (dynamic_cast<Portal*>(e->obj))
@@ -501,7 +512,6 @@ void Mario::Render()
 		}
 		else if (GetAction(MOVING_UP))
 		{
-			DebugOut(L"clipY %f\n", clipY);
 			animation_set->at(ani)->Render(
 				nx, x, ceil(y), VISIBLE, translation,
 				0, -clipY,
@@ -599,6 +609,8 @@ void Mario::Movement()
 
 	if (GetMovement(UP))
 	{
+		UnsetAction(TOUCHING_WOOD);
+
 		if (GetAction(SUPER_JUMPING)) {
 			if (!GetAction(JUMPING))
 			{

@@ -16,6 +16,7 @@ constexpr int OBJECT_TYPE_BLOCK = 5;
 constexpr int OBJECT_TYPE_PLANT= 6;
 constexpr int OBJECT_TYPE_COIN = 7;
 constexpr int OBJECT_TYPE_ROULETTE = 8;
+constexpr int OBJECT_TYPE_FLOATING_WOOD = 9;
 constexpr int OBJECT_TYPE_PORTAL = 50;
 
 constexpr float PUSH_BACK = 0.4f;

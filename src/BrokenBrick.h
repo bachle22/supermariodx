@@ -4,7 +4,7 @@
 
 constexpr int BROKEN_BRICK_ANI_ID = 78;
 constexpr float BROKEN_BRICK_ACCELERATION = 0.35f;
-constexpr int BROKEN_BRICK_TIMEOUT = 800;
+constexpr int BROKEN_BRICK_TIMEOUT = 2000;
 
 constexpr int BROKEN_BRICK_OFFSET_X = 18;
 constexpr int BROKEN_BRICK_OFFSET_Y = 10;

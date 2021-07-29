@@ -164,6 +164,9 @@
     <ClCompile Include="Transition.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="FloatingWood.cpp">
+      <Filter>Objects\World</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Debug.h">
@@ -288,6 +291,9 @@
     </ClInclude>
     <ClInclude Include="Transition.h">
       <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="FloatingWood.h">
+      <Filter>Objects\World</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

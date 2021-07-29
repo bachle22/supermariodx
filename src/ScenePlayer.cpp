@@ -17,6 +17,7 @@
 #include "Block.h"
 #include "Plant.h"
 #include "Roulette.h"
+#include "FloatingWood.h"
 
 ScenePlayer::ScenePlayer(int id, LPCWSTR filePath) : Scene(id, filePath)
 {
@@ -432,6 +433,9 @@ void ScenePlayer::_ParseSection_GRID(std::string pathString)
 				case OBJECT_TYPE_ROULETTE:
 					obj = new Roulette();
 					break;
+				case OBJECT_TYPE_FLOATING_WOOD:
+					obj = new FloatingWood();
+					break;
 				default:
 					DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 					return;
@@ -595,7 +599,7 @@ void ScenePlayer::Update(ULONGLONG dt)
 		if (DEFAULT_MAX_TIME - timer >= 0) hud->SetTime(DEFAULT_MAX_TIME - timer++);
 		else player->SetState(MARIO_DEAD);
 	}
-	hud->SetPowerMeter((GetPlayer()->GetPowerMeter()));
+	if (player != NULL) hud->SetPowerMeter(player->GetPowerMeter());
 
 	UpdateGrid();
 }
