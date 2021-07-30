@@ -10,6 +10,8 @@
 #include "Projectile.h"
 #include "Plant.h"
 #include "Hit.h"
+#include "Point.h"
+#include "ScenePlayer.h"
 
 Koopa::Koopa(int type)
 {
@@ -23,6 +25,7 @@ Koopa::Koopa(int type)
 	isFlipped = false;
 	isHit = false;
 	bounce = 0;
+	ny = 1;
 }
 
 void Koopa::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -162,7 +165,9 @@ void Koopa::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 	}
 
 
-	if (state == KOOPA_STATE_FLYING) vy += GLOBAL_GRAVITY / 2 * dt;
+	if (state == KOOPA_STATE_FLYING) {
+		if (type != PARAKOOPA_RED) vy += GLOBAL_GRAVITY / 2 * dt;
+	}
 	else vy += GLOBAL_GRAVITY * dt;
 
 	if (type == KOOPA_RED && state != KOOPA_STATE_ROLLING && state != KOOPA_STATE_HIDING)
@@ -218,7 +223,35 @@ void Koopa::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 		}
 	}
 
-	if (vy >= GLOBAL_TERMINAL_VELOCITY) vy = GLOBAL_TERMINAL_VELOCITY;
+	if (type == PARAKOOPA_RED && state == KOOPA_STATE_FLYING)
+	{
+		//if (y > entryY + 64)
+		//{
+		//	vy = -0.1f * (y - entryY) / 64;
+		//	DebugOut(L"y - ey %f \n", y - entryY);
+		//	ny = -1;
+		//}
+		//if (y < entryY - 64)
+		//{
+		//	vy = 0.1f * (entryY - y) / 64;
+		//	DebugOut(L"ey - y %f \n", entryY - y);
+		//	ny = 1;
+
+		vy += ny * PARAKOOPA_RED_SPEED / 2;
+		if (vy * ny < 0) vy += ny * PARAKOOPA_RED_SPEED;
+
+		if (y > entryY + PARAKOOPA_RED_RANGE)
+		{
+			ny = -1;
+		}
+		if (y < entryY - PARAKOOPA_RED_RANGE)
+		{
+			ny = 1;
+		}
+	}
+
+	if (vy > GLOBAL_TERMINAL_VELOCITY) vy = GLOBAL_TERMINAL_VELOCITY;
+	else if (vy < -GLOBAL_TERMINAL_VELOCITY) vy = -GLOBAL_TERMINAL_VELOCITY;
 }
 
 void Koopa::Render()
@@ -242,6 +275,9 @@ void Koopa::Render()
 	case PARAKOOPA_GREEN:
 		ani = KOOPA_GREEN_FLYING;
 		break;
+	case PARAKOOPA_RED:
+		ani = KOOPA_RED_FLYING;
+		break;
 	}
 
 	if (state == KOOPA_STATE_WALKING || state == KOOPA_STATE_FLYING)
@@ -261,7 +297,7 @@ void Koopa::SetState(int state)
 	{
 	case KOOPA_STATE_WALKING:
 		nx = -1;
-		vx = -KOOPA_WALKING_SPEED;
+		if (type != PARAKOOPA_RED) vx = -KOOPA_WALKING_SPEED;
 		height = KOOPA_WALKING_HEIGHT;
 		isFlipped = false;
 		isHit = false;
@@ -281,7 +317,11 @@ void Koopa::SetState(int state)
 		break;
 	case KOOPA_STATE_FLYING:
 		nx = -1;
-		vx = -KOOPA_WALKING_SPEED;
+		if (type == PARAKOOPA_RED) {
+			vy = KOOPA_PLATFORM_THRESHOLD;
+			ny = 1;
+		}
+		else vx = -KOOPA_WALKING_SPEED;
 		height = KOOPA_WALKING_HEIGHT;
 		break;
 	}
@@ -312,9 +352,31 @@ void Koopa::Downgrade()
 		SetState(KOOPA_STATE_WALKING);
 		if (type == PARAKOOPA_GREEN) type = KOOPA_GREEN;
 		else type = KOOPA_RED;
+
+		Point* point = new Point(x, y, POINT_100);
+		LPSCENE scene = Game::GetInstance()->GetCurrentScene();
+		((ScenePlayer*)scene)->AddObject(point);
+
 	}
-	else if (state == KOOPA_STATE_WALKING) SetState(KOOPA_STATE_HIDING);
-	else SetState(KOOPA_STATE_ROLLING);
+	else if (state == KOOPA_STATE_WALKING)
+	{
+		SetState(KOOPA_STATE_HIDING);
+
+		Point* point = new Point(x, y, POINT_100);
+		LPSCENE scene = Game::GetInstance()->GetCurrentScene();
+		((ScenePlayer*)scene)->AddObject(point);
+	}
+
+	else
+	{
+		SetState(KOOPA_STATE_ROLLING);
+
+		Point* point = new Point(x, y, POINT_200);
+		LPSCENE scene = Game::GetInstance()->GetCurrentScene();
+		((ScenePlayer*)scene)->AddObject(point);
+	}
+
+
 }
 
 bool Koopa::Hit()
@@ -332,9 +394,16 @@ bool Koopa::Hit()
 
 void Koopa::Bounce()
 {
-	if (bounce < 2)
+	if (bounce < KOOPA_MAX_BOUNCE)
 	{
 		bounce++;
 		vy -= KOOPA_BOUNCE_SPEED / bounce;
 	}
+}
+
+void Koopa::SetPosition(float x, float y)
+{
+	GameObject::SetPosition(x, y);
+	entryX = x;
+	entryY = y;
 }

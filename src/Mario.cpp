@@ -146,6 +146,14 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 					SetAction(DONE_JUMPING);
 					b->Hit();
 				}
+
+				if (e->ny == -1) {
+					if (GetAction(TOUCHING_WOOD))
+					{
+						UnsetAction(TOUCHING_WOOD);
+						vy = 0;
+					}
+				}
 			}
 
 			else if (dynamic_cast<Block*>(e->obj))

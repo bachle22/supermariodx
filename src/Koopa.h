@@ -10,6 +10,10 @@ constexpr float KOOPA_BOUNCE_SPEED = 0.1f;
 constexpr float KOOPA_HIT_SPEED_X = 0.08f;
 constexpr float KOOPA_HIT_SPEED_Y = 0.38f;
 constexpr float KOOPA_HIT_MIN_SPEED = 0.002f;
+constexpr float PARAKOOPA_RED_SPEED = 0.001f;
+constexpr int PARAKOOPA_RED_RANGE = 26;
+
+constexpr int KOOPA_MAX_BOUNCE = 2;
 
 constexpr int KOOPA_WIDTH = 14;
 constexpr int KOOPA_WALKING_HEIGHT = 20;
@@ -62,10 +66,16 @@ class Koopa : public GameObject
 {
 	int type;
 	bool isFlipped, isHit;
+
+	int ny;
 	int bounce;
+
 	float height;
 	float leftBounding, rightBounding;
+	float entryX, entryY;
+
 	ULONGLONG timer;
+
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
@@ -74,6 +84,7 @@ class Koopa : public GameObject
 public:
 	Koopa(int type);
 	virtual void SetState(int state);
+	virtual void SetPosition(float x, float y);
 	void Reverse();
 	void Downgrade();
 	bool Hit();

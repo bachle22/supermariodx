@@ -7,6 +7,7 @@ FloatingWood::FloatingWood()
 {
 	SetState(FLOATING_WOOD_MOVING);
 	isTouched = false;
+	priority = PRIORITY_HIGH;
 }
 
 void FloatingWood::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -46,8 +47,8 @@ void FloatingWood::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 		else isTouched = false;
 	}
 
-	if (vy >= GLOBAL_TERMINAL_VELOCITY) vy = GLOBAL_TERMINAL_VELOCITY;
-	else if (isTouched || vy != 0) vy += 0.0035f;
+	if (vy > GLOBAL_TERMINAL_VELOCITY) vy = GLOBAL_TERMINAL_VELOCITY;
+	else if (isTouched || vy != 0) vy += FLOATING_WOOD_GRAVITY;
 
 }
 
@@ -58,7 +59,7 @@ void FloatingWood::SetState(int state)
 	switch (state)
 	{
 	case FLOATING_WOOD_MOVING:
-		vx = -.03f;
+		vx = -FLOATING_WOOD_SPEED;
 		vy = 0;
 		break;
 	case FLOATING_WOOD_FALLING:

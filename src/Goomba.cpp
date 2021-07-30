@@ -85,7 +85,7 @@ void Goomba::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 	if (state == GOOMBA_STATE_SKIPPING) vy += GLOBAL_GRAVITY / 2 * dt;
 	else vy += GLOBAL_GRAVITY * dt;
 
-	if (vy >= GLOBAL_TERMINAL_VELOCITY) vy = GLOBAL_TERMINAL_VELOCITY;
+	if (vy > GLOBAL_TERMINAL_VELOCITY) vy = GLOBAL_TERMINAL_VELOCITY;
 
 	if (state == GOOMBA_STATE_DIE)
 	{

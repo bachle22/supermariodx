@@ -4,6 +4,9 @@
 constexpr int FLOATING_WOOD_WIDTH = 48;
 constexpr int FLOATING_WOOD_HEIGHT = 16;
 
+constexpr float FLOATING_WOOD_SPEED = .03f;
+constexpr float FLOATING_WOOD_GRAVITY = 0.0035f;
+
 enum FloatingWoodState
 {
 	FLOATING_WOOD_MOVING = 0,
