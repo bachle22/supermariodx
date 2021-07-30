@@ -1,14 +1,14 @@
 #include <fstream>
 
 #include "SceneMenu.h"
-#include "Strings.h"
+#include "Game.h"
+#include "MenuObject.h"
 #include "Textures.h"
 #include "Sprites.h"
 #include "Definition.h"
-#include "Brick.h"
-#include "Debug.h"
 #include "Transition.h"
-#include "Game.h"
+#include "Strings.h"
+#include "Debug.h"
 
 //#include "WorldMapObject.h"
 #define WORLDOBJECT		10
@@ -190,6 +190,13 @@ void SceneMenu::_ParseSection_OBJECTS(std::string pathString)
 
 				DebugOut(L"[INFO] Player object created!\n");
 				break;
+
+			case OBJECT_TYPE_MENUOBJECT:
+			{
+				int type = atoi(tokens[4].c_str());
+				obj = new MenuObject(type);
+				break;
+			}
 			default:
 				DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 				return;
@@ -305,7 +312,7 @@ void SceneMenu::Init()
 	//hud = new HUD();
 	isTransitionDone = false;
 	Transition::GetInstance()->FadeOut();
-	Game::GetInstance()->Pause();
+	//Game::GetInstance()->Pause();
 }
 
 void SceneMenu::Update(ULONGLONG dt)

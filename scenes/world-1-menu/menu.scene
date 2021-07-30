@@ -3,7 +3,7 @@
 -100	..\assets\sprites\bbox.png	255	255	255
 -1	..\assets\sprites\background.png	255	255	255
 0	..\assets\sprites\mario.png	68	145	190
-10	..\assets\sprites\enemies.png	0	255	255
+10	..\assets\sprites\worlds.png	166	185	255
 20	..\assets\sprites\misc.png	166	185	255
 34	..\assets\maps\world-1-menu.png	255	0	0
 40	..\assets\sprites\UI.png	0	224	142
@@ -12,13 +12,13 @@
 ..\scenes\world-1-menu\menu.map
 
 [SPRITES]
-..\scenes\common\common.sprites
+..\scenes\world-1-menu\menu.sprites
 
 [ANIMATIONS]
-..\scenes\common\common.animations
+..\scenes\world-1-menu\menu.animations
 
 [ANIMATION_SETS]
-..\scenes\common\common.animsets
+..\scenes\world-1-menu\menu.animsets
 
 [OBJECTS]
 ..\scenes\world-1-menu\menu.objects
