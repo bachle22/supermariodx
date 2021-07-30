@@ -35,6 +35,7 @@ void GameObject::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 
 void GameObject::RenderBoundingBox()
 {
+	if (!Game::GetInstance()->IsKeyDown(DIK_B)) return;
 	D3DXVECTOR3 p(x, y, 0);
 	RECT rect;
 

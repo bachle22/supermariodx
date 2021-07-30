@@ -50,23 +50,53 @@ void Camera::SetViewSize(float width, float height)
 void Camera::Update()
 {
 	float cx, cy;
+	if (viewRight == MOVING_MAP_WIDTH) {
+		if (viewLeft < MOVING_MAP_WIDTH - SCREEN_WIDTH + 16) viewLeft += 0.5f;
+		cx = 0; cy = 0;
+	}
 	Mario* mario = ((ScenePlayer*)Game::GetInstance()->GetCurrentScene())->GetPlayer();
-	if (mario == NULL) return;
-	mario->GetPosition(cx, cy);
+	if (mario != NULL)
+	{
+		if (viewRight != MOVING_MAP_WIDTH) mario->GetPosition(cx, cy);
+	}
+	
 
 	TileMap* map = ((ScenePlayer*)Game::GetInstance()->GetCurrentScene())->GetMap();
-	if (map != NULL) map->GetMapSize(viewRight, viewBottom);
+	int w, h;
+	if (map != NULL)
+	{
+		map->GetMapSize(w, h);
+		viewRight = (float)w;
+		viewBottom = (float)h;
+	}
+	else
+	{
+		viewRight = 0;
+		viewBottom = 0;
+	}
 
 	cx -= (width + 1) / 2; cy -= (height + 1) / 2;
 	if (viewRight == 0);
-	else if (cx < viewLeft) cx = 0;
+	else if (cx < viewLeft) cx = viewLeft;
 	else if (cx > viewRight) cx = viewRight;
 
-	// TODO: Only follow Mario vertical position when on the cloud
 	if (cy < CAMERA_CEIL_Y)
 		cy = viewBottom - CAMERA_CEIL_Y + cy;
 	else cy = viewBottom;
 	if (cy < viewTop) cy = 0;
 
+	if (viewRight == 0 && viewBottom == 0)
+	{
+		cx = 0;
+		cy = 0;
+	}
 	SetPosition(ceil(cx) + Game::GetInstance()->DEBUG_X*2, ceil(cy) + Game::GetInstance()->DEBUG_Y*2);
+}
+
+void Camera::GetViewSize(float& viewLeft, float& viewTop, float& viewRight, float& viewBottom)
+{
+	viewLeft = this->viewLeft;
+	viewTop = this->viewTop;
+	viewRight = this->viewRight;
+	viewBottom = this->viewBottom;
 }

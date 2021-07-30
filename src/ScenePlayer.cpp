@@ -623,7 +623,6 @@ void ScenePlayer::Render()
 	hud->Render();
 
 	Transition::GetInstance()->Render();
-	//if (!Transition::GetInstance()->IsFinished());
 }
 
 /*

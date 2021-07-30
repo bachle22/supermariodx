@@ -41,7 +41,7 @@ void Transition::Render()
 
 	x = Camera::GetInstance()->GetPosition()->x;
 	y = Camera::GetInstance()->GetPosition()->y;
-	Game::GetInstance()->Draw(NOFLIP, x, y, background, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, opacity);
+	//Game::GetInstance()->Draw(NOFLIP, x, y, background, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, opacity);
 }
 
 void Transition::FadeIn()

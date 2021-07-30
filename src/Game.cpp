@@ -347,6 +347,7 @@ void Game::SwitchScene(int scene_id)
 	currentScene = scene_id;
 	LPSCENE s = scenes[currentScene];
 	Game::GetInstance()->SetKeyHandler(s->GetKeyEventHandler());
+	((ScenePlayer*)scenes[currentScene])->UnsetTransition();
 	s->Load();
 }
 

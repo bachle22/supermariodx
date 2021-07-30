@@ -173,6 +173,9 @@
     <ClCompile Include="MenuObject.cpp">
       <Filter>Objects\UI</Filter>
     </ClCompile>
+    <ClCompile Include="MenuPlayer.cpp">
+      <Filter>Objects\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Debug.h">
@@ -305,6 +308,9 @@
       <Filter>Scenes</Filter>
     </ClInclude>
     <ClInclude Include="MenuObject.h">
+      <Filter>Objects\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuPlayer.h">
       <Filter>Objects\UI</Filter>
     </ClInclude>
   </ItemGroup>

@@ -4,6 +4,7 @@
 #include "GameObject.h"
 #include "HUD.h"
 #include "TileMap.h"
+#include "MenuPlayer.h"
 
 class SceneMenu : public Scene
 {
@@ -11,11 +12,13 @@ class SceneMenu : public Scene
 	friend class SceneMenuInputHandler;
 
 protected:
+	MenuPlayer* player{};
+
 	ULONGLONG interval{};
 	int timer{};
 	int score{};
 
-	//HUD* hud{};
+	HUD* hud{};
 	TileMap* map{};
 	std::vector<LPGAMEOBJECT> objects;
 
@@ -31,11 +34,14 @@ protected:
 
 public:
 	SceneMenu(int id, LPCWSTR filePath);
+
 	void Init();
 	virtual void Load();
 	virtual void Update(ULONGLONG dt);
 	virtual void Render();
 	virtual void Unload();
+
+	MenuPlayer* GetPlayer() { return player; }
 };
 
 class SceneMenuInputHandler : public SceneInputHandler

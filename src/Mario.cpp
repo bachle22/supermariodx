@@ -22,6 +22,7 @@
 #include "Leaf.h"
 #include "Transition.h"
 #include "FloatingWood.h"
+#include "Camera.h"
 
 Mario::Mario(float x, float y) : GameObject()
 {
@@ -292,6 +293,7 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 				y -= min_ty * dy + ny * PUSH_BACK - dy;
 
 				dynamic_cast<Roulette*>(e->obj)->Withdraw();
+				SetAction(DONE_PLAYING);
 			}
 
 			else if (dynamic_cast<Koopa*>(e->obj))
@@ -349,6 +351,15 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 	}
 	// clean up collision events
 	for (size_t i = 0; i < coEvents.size(); i++) delete coEvents[i];
+
+	ViewUpdate();
+	if (GetAction(DONE_PLAYING))
+	{
+		vx = MARIO_WALKING_SPEED_SMALL;
+		vy += MARIO_GRAVITY * dt;
+		nx = 1;
+	}
+
 }
 
 void Mario::Render()
@@ -953,4 +964,16 @@ void Mario::LeavePortal()
 		Game::GetInstance()->Unpause();
 		clipY = 0;
 	}
+}
+
+void Mario::ViewUpdate()
+{
+	float l, t, r, b;
+	Camera::GetInstance()->GetViewSize(l, t, r, b);
+	if (x < l) x = l;
+	if (x > r + SCREEN_WIDTH && GetAction(DONE_PLAYING))
+	{
+		Game::GetInstance()->SwitchScene(1);
+	}
+	
 }

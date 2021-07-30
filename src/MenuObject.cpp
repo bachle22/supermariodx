@@ -32,7 +32,10 @@ void MenuObject::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 
 void MenuObject::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-
+	left = x;
+	top = y;
+	right = left + TILE_WIDTH;
+	bottom = top + TILE_HEIGHT;
 }
 
 void MenuObject::SetPosition(float x, float y)
@@ -42,3 +45,10 @@ void MenuObject::SetPosition(float x, float y)
 	entryY = y;
 }
 
+void MenuObject::SetMovement(bool left, bool right, bool up, bool down)
+{
+	movement[LEFT] = left;
+	movement[RIGHT] = right;
+	movement[UP] = up;
+	movement[DOWN] = down;
+}

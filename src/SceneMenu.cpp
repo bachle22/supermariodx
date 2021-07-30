@@ -9,9 +9,7 @@
 #include "Transition.h"
 #include "Strings.h"
 #include "Debug.h"
-
-//#include "WorldMapObject.h"
-#define WORLDOBJECT		10
+#include "Camera.h"
 
 
 SceneMenu::SceneMenu(int id, LPCWSTR filePath) : Scene(id, filePath)
@@ -186,8 +184,13 @@ void SceneMenu::_ParseSection_OBJECTS(std::string pathString)
 			switch (object_type)
 			{
 			case OBJECT_TYPE_MARIO:
-
-
+				if (player != NULL)
+				{
+					DebugOut(L"[ERROR] PLAYER object was created before!\n");
+					return;
+				}
+				obj = new MenuPlayer();
+				player = (MenuPlayer*)obj;
 				DebugOut(L"[INFO] Player object created!\n");
 				break;
 
@@ -195,6 +198,18 @@ void SceneMenu::_ParseSection_OBJECTS(std::string pathString)
 			{
 				int type = atoi(tokens[4].c_str());
 				obj = new MenuObject(type);
+				if (type == OBJECT_TYPE_PANEL || type == OBJECT_TYPE_STOP)
+				{
+					bool l, r, u, d;
+					l = atof(tokens[5].c_str());
+					r = atof(tokens[6].c_str());
+					u = atof(tokens[7].c_str());
+					d = atof(tokens[8].c_str());
+					((MenuObject*)obj)->SetMovement(l, r, u, d);
+
+					int id = atof(tokens[9].c_str());
+					((MenuObject*)obj)->SetSceneId(id);
+				}
 				break;
 			}
 			default:
@@ -309,7 +324,7 @@ void SceneMenu::Load()
 
 void SceneMenu::Init()
 {
-	//hud = new HUD();
+	hud = new HUD();
 	isTransitionDone = false;
 	Transition::GetInstance()->FadeOut();
 	//Game::GetInstance()->Pause();
@@ -317,6 +332,7 @@ void SceneMenu::Init()
 
 void SceneMenu::Update(ULONGLONG dt)
 {
+	Camera::GetInstance()->Update();
 	if (!isTransitionDone)
 	{
 		if (Transition::GetInstance()->IsFinished())
@@ -345,9 +361,8 @@ void SceneMenu::Update(ULONGLONG dt)
 void SceneMenu::Render()
 {
 	map->Render();
-	for (int i = 0; i < objects.size(); i++)
-		objects[i]->Render();
-	//hud->Render();
+	for (int i = 0; i < objects.size(); i++) objects[i]->Render();
+	hud->Render();
 }
 
 /*
@@ -358,18 +373,37 @@ void SceneMenu::Unload()
 	for (int i = 0; i < objects.size(); i++)
 		delete objects[i];
 	objects.clear();
+	player = NULL;
 
 	DebugOut(L"[INFO] Scene %s unloaded! \n", sceneFilePath);
 }
 
 
-
 void SceneMenuInputHandler::OnKeyDown(int KeyCode)
 {
-	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
+	MenuPlayer* player = ((SceneMenu*)scene)->GetPlayer();
+	if (player != NULL)
+	{
+		switch (KeyCode)
+		{
+		case DIK_RIGHT:
+			player->SetState(PLAYER_STATE_RIGHT);
+			break;
+		case DIK_LEFT:
+			player->SetState(PLAYER_STATE_LEFT);
+			break;
+		case DIK_UP:
+			player->SetState(PLAYER_STATE_UP);
+			break;
+		case DIK_DOWN:
+			player->SetState(PLAYER_STATE_DOWN);
+			break;
+		case DIK_S:
+			player->SwitchScene();
+			break;
 
-	Game* game = Game::GetInstance();
-
+		}
+	}
 }
 
 void SceneMenuInputHandler::OnKeyUp(int KeyCode)
@@ -384,5 +418,5 @@ void SceneMenuInputHandler::KeyState(BYTE* states)
 {
 	Game* game = Game::GetInstance();
 
-	
+
 }

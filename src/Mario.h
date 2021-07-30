@@ -139,7 +139,8 @@ enum MarioAction
 	ACTIVATING_PORTAL = 14,
 	MOVING_DOWN = 15,
 	MOVING_UP = 16,
-	TOUCHING_WOOD = 17
+	TOUCHING_WOOD = 17,
+	DONE_PLAYING = 18
 };
 
 enum MarioState
@@ -193,7 +194,7 @@ class Mario : public GameObject
 
 	bool edge[4] = { 0 };
 	bool movement[4] = { 0 };
-	bool action[18] = { 0 };
+	bool action[19] = { 0 };
 
 	Tail* tail;
 
@@ -220,6 +221,8 @@ public:
 	void SetPowerMeter(int value) { powerMeter = value; }
 	int GetPowerMeter() { return powerMeter; }
 	void ManagePowerDuration();
+
+	void ViewUpdate();
 	
 	void ShiftPosition(int action, int sign);
 	void StartAnimationTimer() { animationTimer = GetTickCount64(); }

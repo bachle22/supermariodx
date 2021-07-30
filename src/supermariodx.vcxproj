@@ -41,6 +41,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="MenuObject.cpp" />
+    <ClCompile Include="MenuPlayer.cpp" />
     <ClCompile Include="Mushroom.cpp" />
     <ClCompile Include="Plant.cpp" />
     <ClCompile Include="Platform.cpp" />
@@ -86,6 +87,7 @@
     <ClInclude Include="Leaf.h" />
     <ClInclude Include="Mario.h" />
     <ClInclude Include="MenuObject.h" />
+    <ClInclude Include="MenuPlayer.h" />
     <ClInclude Include="Mushroom.h" />
     <ClInclude Include="Plant.h" />
     <ClInclude Include="Platform.h" />
