@@ -1,12 +1,15 @@
 #include "Portal.h"
 
-Portal::Portal(int width, int height, int scene_id, float destX, float destY)
+Portal::Portal(
+	int width, int height, int scene_id, 
+	float destX, float destY, int direction)
 {
 	this->scene_id = scene_id;
 	this->width = width;
 	this->height = height;
 	this->destX = destX;
 	this->destY = destY;
+	this->direction = direction;
 }
 
 void Portal::Render()

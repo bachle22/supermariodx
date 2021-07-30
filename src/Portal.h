@@ -13,6 +13,7 @@ class Portal : public GameObject
 
 	int width;
 	int height;
+	int direction;
 
 	float destX, destY;
 
@@ -20,7 +21,8 @@ class Portal : public GameObject
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 
 public:
-	Portal(int width, int height, int scene_id, float destX, float destY);
+	Portal(int width, int height, int scene_id, float destX, float destY, int direction);
 	int GetSceneID() { return scene_id; }
 	void GetDestination(float& destX, float& destY);
+	int GetDirection() { return direction; }
 };

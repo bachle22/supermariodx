@@ -186,6 +186,7 @@ class Mario : public GameObject
 	float tempX, tempY;
 	float beforeJumpingY, clipY;
 	float width, height;
+	int exitDirection{};
 
 	int powerMeter;
 	int destSceneID;

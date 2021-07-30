@@ -200,6 +200,7 @@ void Mario::Update(ULONGLONG dt, std::vector<LPGAMEOBJECT>* coObjects)
 							UnsetAction(MOVING_DOWN);
 						}
 						destSceneID = p->GetSceneID();
+						exitDirection = p->GetDirection();
 					}
 
 					if (e->ny == 1)
@@ -511,14 +512,14 @@ void Mario::Render()
 	}
 	else if (GetAction(LEAVING_PORTAL))
 	{
-		if (GetAction(MOVING_DOWN))
+		if (exitDirection == DOWN)
 		{
 			animation_set->at(ani)->Render(
 				nx, x, ceil(y), VISIBLE, translation,
 				0, clipY,
 				TILE_WIDTH, height);
 		}
-		else if (GetAction(MOVING_UP))
+		else if (exitDirection == UP)
 		{
 			animation_set->at(ani)->Render(
 				nx, x, ceil(y), VISIBLE, translation,
@@ -932,9 +933,9 @@ void Mario::EnterPortal()
 		y = 0;
 		clipY = height;
 		if (destSceneID == NULL) return;
-		if (GetAction(MOVING_DOWN))
+		if (exitDirection == DOWN)
 			Game::GetInstance()->FastSwitchScene(destSceneID, tempX, tempY);
-		else if (GetAction(MOVING_UP))
+		else if (exitDirection == UP)
 			Game::GetInstance()->FastSwitchScene(destSceneID, tempX, tempY - height);
 	}
 

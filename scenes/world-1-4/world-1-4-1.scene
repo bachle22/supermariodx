@@ -1,0 +1,18 @@
+[TEXTURES]
+# id	file_path	transparent_color_r	g	b
+33	..\assets\maps\world-1-4-1.png	255	255	255
+
+[TILEMAP]
+..\scenes\world-1-4\world-1-4-1.map
+
+[SPRITES]
+..\scenes\common\common.sprites
+
+[ANIMATIONS]
+..\scenes\common\common.animations
+
+[ANIMATION_SETS]
+..\scenes\common\common.animsets
+
+[GRID]
+..\scenes\world-1-4\world-1-4-1.grid

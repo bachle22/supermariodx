@@ -411,7 +411,8 @@ void ScenePlayer::_ParseSection_GRID(std::string pathString)
 					int scene_id = atoi(tokens[5].c_str());
 					float destX = strtof(tokens[6].c_str(), NULL);
 					float destY = strtof(tokens[7].c_str(), NULL);
-					obj = new Portal(width, height, scene_id, destX, destY);
+					int direction = atoi(tokens[8].c_str());
+					obj = new Portal(width, height, scene_id, destX, destY, direction);
 					break;
 				}
 				case OBJECT_TYPE_BLOCK:
