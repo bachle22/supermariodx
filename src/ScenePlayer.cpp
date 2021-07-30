@@ -27,10 +27,6 @@ ScenePlayer::ScenePlayer(int id, LPCWSTR filePath) : Scene(id, filePath)
 /*
 	Load scene resources from scene file (textures, sprites, animations and objects)
 */
-
-
-#define MAX_SCENE_LINE 1024
-
 void ScenePlayer::_ParseSection_TEXTURES(std::string line)
 {
 	std::vector<std::string> tokens = split(line);
@@ -588,7 +584,7 @@ void ScenePlayer::Update(ULONGLONG dt)
 			objects[i]->Update(dt, &coObjects);
 	}
 
-	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
+	// skip the rest if scene was already unloaded (Mario::Update might trigger ScenePlayer::Unload)
 	if (player == NULL) return;
 	player->Update(dt, &coObjects);
 

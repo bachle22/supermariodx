@@ -534,10 +534,6 @@ void Mario::Render()
 	else
 	{
 		animation_set->at(ani)->Render(nx, (x), ceil(y), alpha, translation);
-		/*animation_set->at(ani)->Render(
-			nx, x, ceil(y), VISIBLE, translation,
-			0, Game::GetInstance()->DEBUG_X,
-			TILE_WIDTH, height + Game::GetInstance()->DEBUG_Y);*/
 	}
 
 	RenderBoundingBox();

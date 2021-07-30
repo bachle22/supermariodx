@@ -167,6 +167,9 @@
     <ClCompile Include="FloatingWood.cpp">
       <Filter>Objects\World</Filter>
     </ClCompile>
+    <ClCompile Include="SceneMenu.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Debug.h">
@@ -294,6 +297,9 @@
     </ClInclude>
     <ClInclude Include="FloatingWood.h">
       <Filter>Objects\World</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneMenu.h">
+      <Filter>Scenes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

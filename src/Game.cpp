@@ -3,6 +3,7 @@
 #include "Game.h"
 #include "Camera.h"
 #include "ScenePlayer.h"
+#include "SceneMenu.h"
 #include "Debug.h"
 #include "Strings.h"
 #include "Transition.h"
@@ -270,9 +271,23 @@ void Game::_ParseSection_SCENES(std::string line)
 	if (tokens.size() < 2) return;
 	int id = atoi(tokens[0].c_str());
 	LPCWSTR path = ToLPCWSTR(tokens[1]);
+	int type = atoi(tokens[2].c_str());
 
-	LPSCENE scene = new ScenePlayer(id, path);
-	scenes[id] = scene;
+	switch (type)
+	{
+	case SCENE_TYPE_SCENEMENU:
+	{
+		LPSCENE scene = new SceneMenu(id, path);
+		scenes[id] = scene;
+		break;
+	}
+	case SCENE_TYPE_SCENEPLAYER:
+	{
+		LPSCENE scene = new ScenePlayer(id, path);
+		scenes[id] = scene;
+		break;
+	}
+	}
 }
 
 
@@ -362,6 +377,6 @@ void Game::FastSwitchScene(int scene_id, float startX, float startY)
 	ULONGLONG interval;
 	((ScenePlayer*)scenes[lastScene])->GetTimer(timer, interval);
 	((ScenePlayer*)scenes[currentScene])->SetTimer(timer, interval);
-	
+
 	mario->SetAction(LEAVING_PORTAL);
 }

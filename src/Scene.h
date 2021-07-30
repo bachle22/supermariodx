@@ -2,6 +2,14 @@
 
 #include "Input.h"
 
+constexpr int MAX_SCENE_LINE = 1024;
+
+enum SceneType
+{
+	SCENE_TYPE_SCENEMENU = 1,
+	SCENE_TYPE_SCENEPLAYER = 2
+};
+
 enum SceneSection
 {
 	SCENE_SECTION_UNKNOWN = -1,

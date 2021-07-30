@@ -3,7 +3,7 @@
 #include "GameObject.h"
 
 constexpr float KOOPA_WALKING_SPEED = 0.03f;
-constexpr float KOOPA_ROLLING_SPEED = 0.2f;
+constexpr float KOOPA_ROLLING_SPEED = 0.15f;
 constexpr float KOOPA_FLYING_SPEED = 0.2f;
 constexpr float KOOPA_PLATFORM_THRESHOLD = 0.05f;
 constexpr float KOOPA_BOUNCE_SPEED = 0.1f;
