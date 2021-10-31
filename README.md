@@ -1,21 +1,19 @@
 <p align="center">
-<img height="512" src="https://github.com/bachle22/supermariodx/raw/main/assets/icon/mario.png" />
+  <img height="256" src="./assets/icon/mario.png" />
 </p>
 
 <h1 align="center">supermariodx</h1>
-<p align="center">A remake of Super Mario Bros 3 on Windows using DirectX API</p>
-
-<p align=center>
-<a href="https://github.com/bachle22/supermariodx/releases/">Releases</a>  ·
-<a href="mailto:contact@bachle.vn">Contact</a>
-</p>
-</p>
+<p align="center">A remake of NES Super Mario Bros 3 for Windows using DirectX API</p>
 
 ---
 
-## Features
+## Gameplay
 
-> To be updated...
+<div>
+<img style="width: 32%" src="./assets/screen1.png" />
+<img style="width: 32%" src="./assets/screen2.png" />
+<img style="width: 32%" src="./assets/screen3.png" />
+</div>
 
 ## How to play
 
